@@ -1,0 +1,48 @@
+{
+  "name": "tsw",
+  "version": "1.0.0",
+  "description": "A web extension to set timers for specific domains",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,json}\""
+  },
+  "dependencies": {
+    "plasmo": "^0.65.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.1.13"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.237",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.32",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.32.2",
+    "jest": "^29.5.0",
+    "prettier": "^2.8.7",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.3"
+  },
+  "manifest": {
+    "name": "Site Timer",
+    "description": "Set timers for specific domains",
+    "version": "0.0.1",
+    "host_permissions": [
+      "https://*/*"
+    ],
+    "permissions": [
+      "tabs",
+      "storage",
+      "alarms",
+      "activeTab"
+    ]
+  }
+}
