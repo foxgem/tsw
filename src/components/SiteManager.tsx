@@ -4,26 +4,28 @@ import styled from "styled-components";
 const Container = styled.div`
   max-height: 400px;
   overflow-y: auto;
-  padding: 20px;
   background-color: #f5f5f5;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 300px;
-  margin: 0 auto;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  width: 280px;
+  padding: 24px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const InputGroup = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 `;
 
 const Input = styled.input`
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-bottom: 10px;
-  width: 100%;
+  width: 95%;
+  margin-bottom: 12px;
   box-sizing: border-box;
 `;
 
@@ -31,11 +33,11 @@ const Button = styled.button`
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: 95%;
   box-sizing: border-box;
 
   &:hover {
@@ -51,7 +53,9 @@ const List = styled.ul`
 const ListItem = styled.li`
   background-color: white;
   padding: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 `;
@@ -60,9 +64,16 @@ const TimerInfo = styled.div`
   margin-bottom: 5px;
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+`;
+
 const RemoveButton = styled(Button)`
   background-color: #f44336;
   font-size: 0.9em;
+  width: 48%;
 
   &:hover {
     background-color: #d32f2f;
@@ -73,6 +84,7 @@ const EditButton = styled(Button)`
   background-color: #2196f3;
   font-size: 0.9em;
   margin-right: 5px;
+  width: 48%;
 
   &:hover {
     background-color: #1e88e5;
@@ -166,8 +178,10 @@ const SiteManager: React.FC = () => {
             <TimerInfo>
               {timer.domain}: {timer.time} seconds
             </TimerInfo>
-            <EditButton onClick={() => handleEditTimer(timer)}>Edit</EditButton>
-            <RemoveButton onClick={() => handleRemoveTimer(timer.domain)}>Remove</RemoveButton>
+            <ButtonGroup>
+              <EditButton onClick={() => handleEditTimer(timer)}>Edit</EditButton>
+              <RemoveButton onClick={() => handleRemoveTimer(timer.domain)}>Remove</RemoveButton>
+            </ButtonGroup>
           </ListItem>
         ))}
       </List>
