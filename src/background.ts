@@ -22,13 +22,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "closePage" && request.domain) {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id && tabs[0]?.url) {
-        const tabDomain = new URL(tabs[0].url).hostname;
-        if (tabDomain === request.domain) {
-          chrome.tabs.remove(tabs[0].id);
+    chrome.tabs.query({ url: `*://${request.domain}/*` }, (tabs) => {
+      tabs.forEach((tab) => {
+        if (tab.id) {
+          chrome.tabs.remove(tab.id);
         }
-      }
+      });
     });
   }
 });
