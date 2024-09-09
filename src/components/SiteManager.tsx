@@ -69,6 +69,16 @@ const RemoveButton = styled(Button)`
   }
 `;
 
+const EditButton = styled(Button)`
+  background-color: #2196f3;
+  font-size: 0.9em;
+  margin-right: 5px;
+
+  &:hover {
+    background-color: #1e88e5;
+  }
+`;
+
 interface SiteTimer {
   domain: string;
   time: number;
@@ -78,6 +88,7 @@ const SiteManager: React.FC = () => {
   const [siteTimers, setSiteTimers] = useState<SiteTimer[]>([]);
   const [newDomain, setNewDomain] = useState("");
   const [newTime, setNewTime] = useState(0);
+  const [editingTimer, setEditingTimer] = useState<SiteTimer | null>(null);
 
   useEffect(() => {
     loadSiteTimers();
@@ -109,6 +120,25 @@ const SiteManager: React.FC = () => {
     });
   };
 
+  const handleEditTimer = (timer: SiteTimer) => {
+    setEditingTimer(timer);
+    setNewDomain(timer.domain);
+    setNewTime(timer.time);
+  };
+
+  const handleUpdateTimer = () => {
+    if (editingTimer && newDomain && newTime > 0) {
+      chrome.storage.local.remove(editingTimer.domain, () => {
+        chrome.storage.local.set({ [newDomain]: newTime }, () => {
+          loadSiteTimers();
+          setEditingTimer(null);
+          setNewDomain("");
+          setNewTime(0);
+        });
+      });
+    }
+  };
+
   return (
     <Container>
       <InputGroup>
@@ -124,7 +154,11 @@ const SiteManager: React.FC = () => {
           onChange={(e) => setNewTime(parseInt(e.target.value))}
           placeholder="Enter time in seconds"
         />
-        <Button onClick={handleAddTimer}>Add Timer</Button>
+        {editingTimer ? (
+          <Button onClick={handleUpdateTimer}>Update Timer</Button>
+        ) : (
+          <Button onClick={handleAddTimer}>Add Timer</Button>
+        )}
       </InputGroup>
       <List>
         {siteTimers.map((timer) => (
@@ -132,6 +166,7 @@ const SiteManager: React.FC = () => {
             <TimerInfo>
               {timer.domain}: {timer.time} seconds
             </TimerInfo>
+            <EditButton onClick={() => handleEditTimer(timer)}>Edit</EditButton>
             <RemoveButton onClick={() => handleRemoveTimer(timer.domain)}>Remove</RemoveButton>
           </ListItem>
         ))}

@@ -6,6 +6,7 @@ let closeTimeout: number | undefined;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "startTimer") {
     const remainingTime = request.remainingTime;
+    const domain = request.domain;
 
     // Clear existing timeouts if any
     if (warningTimeout) window.clearTimeout(warningTimeout);
@@ -23,7 +24,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     // Set timeout for closing the page
     closeTimeout = window.setTimeout(() => {
-      chrome.runtime.sendMessage({ action: "closePage" });
+      chrome.runtime.sendMessage({ action: "closePage", domain: domain });
     }, remainingTime * 1000) as unknown as number;
   } else if (request.action === "showWarning") {
     showWarning();
