@@ -28,6 +28,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }, remainingTime * 1000) as unknown as number;
   } else if (request.action === "showWarning") {
     showWarning();
+  } else if (request.action === "stopTimer") {
+    // Clear all started timers
+    if (warningTimeout) window.clearTimeout(warningTimeout);
+    if (closeTimeout) window.clearTimeout(closeTimeout);
   }
 });
 

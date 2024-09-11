@@ -21,13 +21,21 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  chrome.storage.local.remove(`timer_started_${tabId}`);
+  chrome.tabs.sendMessage(tabId, { action: "stopTimer" }, () => {
+    if (chrome.runtime.lastError) {
+      console.log("Could not send stopTimer message:", chrome.runtime.lastError.message);
+    }
+  });
+});
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "closePage" && request.domain) {
     chrome.tabs.query({ url: `*://${request.domain}/*` }, (tabs) => {
       tabs.forEach((tab) => {
         if (tab.id) {
           chrome.tabs.remove(tab.id);
-          chrome.storage.local.remove(`timer_started_${tab.id}`);
         }
       });
     });
