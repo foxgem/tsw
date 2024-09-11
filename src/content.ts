@@ -1,41 +1,74 @@
 import { createWarningPopup } from "./WarningPopup";
 
+const splitTab = (leftWidth = 80) => {
+  const rightWidth = 100 - leftWidth;
+
+  const createPart = (side: "left" | "right", width: number) => {
+    const part = document.createElement("div");
+    part.style.cssText = `
+      position: fixed;
+      top: 0;
+      ${side}: 0;
+      width: ${width}%;
+      height: 100%;
+      z-index: 9999;
+      overflow: auto;
+      ${side === "right" ? "background-color: white;" : ""}
+    `;
+    return part;
+  };
+
+  const leftPart = createPart("left", leftWidth);
+  leftPart.innerHTML = document.body.innerHTML;
+
+  const rightPart = createPart("right", rightWidth);
+  rightPart.textContent = "The summary";
+
+  document.body.innerHTML = "";
+  document.body.appendChild(leftPart);
+  document.body.appendChild(rightPart);
+};
+
 let warningTimeout: number | undefined;
 let closeTimeout: number | undefined;
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === "startTimer") {
-    const remainingTime = request.remainingTime;
-    const domain = request.domain;
+const handleTimer = (remainingTime: number, domain: string) => {
+  clearTimeout(warningTimeout);
+  clearTimeout(closeTimeout);
 
-    // Clear existing timeouts if any
-    if (warningTimeout) window.clearTimeout(warningTimeout);
-    if (closeTimeout) window.clearTimeout(closeTimeout);
-
-    // Set timeout for showing warning
-    if (remainingTime > 10) {
-      warningTimeout = window.setTimeout(() => {
-        showWarning();
-      }, (remainingTime - 10) * 1000) as unknown as number;
-    } else {
-      // If less than 10 seconds left, show warning immediately
-      showWarning();
-    }
-
-    // Set timeout for closing the page
-    closeTimeout = window.setTimeout(() => {
-      chrome.runtime.sendMessage({ action: "closePage", domain: domain });
-    }, remainingTime * 1000) as unknown as number;
-  } else if (request.action === "showWarning") {
+  if (remainingTime > 10) {
+    warningTimeout = window.setTimeout(
+      showWarning,
+      (remainingTime - 10) * 1000
+    ) as unknown as number;
+  } else {
     showWarning();
-  } else if (request.action === "stopTimer") {
-    // Clear all started timers
-    if (warningTimeout) window.clearTimeout(warningTimeout);
-    if (closeTimeout) window.clearTimeout(closeTimeout);
+  }
+
+  closeTimeout = window.setTimeout(() => {
+    chrome.runtime.sendMessage({ action: "closePage", domain });
+  }, remainingTime * 1000) as unknown as number;
+};
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.action) {
+    case "splitTab":
+      splitTab(request.leftWidth);
+      break;
+    case "startTimer":
+      handleTimer(request.remainingTime, request.domain);
+      break;
+    case "showWarning":
+      showWarning();
+      break;
+    case "stopTimer":
+      clearTimeout(warningTimeout);
+      clearTimeout(closeTimeout);
+      break;
   }
 });
 
-function showWarning() {
+const showWarning = () => {
   let popupContainer = document.getElementById("tsw-warning-popup-container");
   if (!popupContainer) {
     popupContainer = document.createElement("div");
@@ -47,13 +80,11 @@ function showWarning() {
     if (popupContainer && popupContainer.firstChild) {
       (popupContainer.firstChild as HTMLElement).style.transform = "translateY(-100%)";
       setTimeout(() => {
-        if (popupContainer && popupContainer.parentNode) {
-          popupContainer.parentNode.removeChild(popupContainer);
-        }
-      }, 300); // Wait for the transition to complete
+        popupContainer?.parentNode?.removeChild(popupContainer);
+      }, 300);
     }
   };
 
   const warningElement = createWarningPopup(handleDismiss);
   popupContainer.appendChild(warningElement);
-}
+};
