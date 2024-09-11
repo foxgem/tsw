@@ -1,32 +1,46 @@
 import { createWarningPopup } from "./WarningPopup";
 
-const splitTab = (leftWidth = 80) => {
-  const rightWidth = 100 - leftWidth;
+const summarize = (leftWidth = 80) => {
+  const existingLeftPart = document.querySelector(
+    'div[style*="position: fixed"][style*="left: 0"]'
+  );
+  const existingRightPart = document.querySelector(
+    'div[style*="position: fixed"][style*="right: 0"]'
+  );
 
-  const createPart = (side: "left" | "right", width: number) => {
-    const part = document.createElement("div");
-    part.style.cssText = `
-      position: fixed;
-      top: 0;
-      ${side}: 0;
-      width: ${width}%;
-      height: 100%;
-      z-index: 9999;
-      overflow: auto;
-      ${side === "right" ? "background-color: white;" : ""}
-    `;
-    return part;
-  };
+  if (existingLeftPart && existingRightPart) {
+    document.body.removeChild(existingLeftPart);
+    document.body.removeChild(existingRightPart);
+    document.body.innerHTML = (existingLeftPart as HTMLElement).innerHTML;
+  } else {
+    const originalContent = document.body.innerHTML;
+    const rightWidth = 100 - leftWidth;
 
-  const leftPart = createPart("left", leftWidth);
-  leftPart.innerHTML = document.body.innerHTML;
+    const createPart = (side: "left" | "right", width: number) => {
+      const part = document.createElement("div");
+      part.style.cssText = `
+        position: fixed;
+        top: 0;
+        ${side}: 0;
+        width: ${width}%;
+        height: 100%;
+        z-index: 9999;
+        overflow: auto;
+        ${side === "right" ? "background-color: white;" : ""}
+      `;
+      return part;
+    };
 
-  const rightPart = createPart("right", rightWidth);
-  rightPart.textContent = "The summary";
+    const leftPart = createPart("left", leftWidth);
+    leftPart.innerHTML = originalContent;
 
-  document.body.innerHTML = "";
-  document.body.appendChild(leftPart);
-  document.body.appendChild(rightPart);
+    const rightPart = createPart("right", rightWidth);
+    rightPart.textContent = "The summary";
+
+    document.body.innerHTML = "";
+    document.body.appendChild(leftPart);
+    document.body.appendChild(rightPart);
+  }
 };
 
 let warningTimeout: number | undefined;
@@ -52,8 +66,8 @@ const handleTimer = (remainingTime: number, domain: string) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   switch (request.action) {
-    case "splitTab":
-      splitTab(request.leftWidth);
+    case "summarize":
+      summarize(request.leftWidth);
       break;
     case "startTimer":
       handleTimer(request.remainingTime, request.domain);
