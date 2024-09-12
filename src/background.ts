@@ -1,3 +1,17 @@
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.contextMenus.create({
+    id: "explainSelected",
+    title: "Explain Selected Text",
+    contexts: ["selection"],
+  });
+});
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+  if (info.menuItemId === "explainSelected" && tab?.id) {
+    chrome.tabs.sendMessage(tab.id, { action: "explainSelected", text: info.selectionText });
+  }
+});
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete" && tab.url) {
     const domain = new URL(tab.url).hostname;

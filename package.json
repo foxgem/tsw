@@ -10,6 +10,8 @@
     "format": "prettier --write \"**/*.{ts,tsx,json}\""
   },
   "dependencies": {
+    "@google/generative-ai": "^0.18.0",
+    "marked": "^14.1.2",
     "plasmo": "^0.65.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,17 +34,21 @@
     "typescript": "^5.0.3"
   },
   "manifest": {
+    "permissions": [
+      "contextMenus",
+      "tabs",
+      "storage",
+      "alarms",
+      "activeTab"
+    ],
+    "background": {
+      "service_worker": "background.ts"
+    },
     "name": "Site Timer",
     "description": "Set timers for specific domains",
     "version": "0.0.1",
     "host_permissions": [
       "https://*/*"
-    ],
-    "permissions": [
-      "tabs",
-      "storage",
-      "alarms",
-      "activeTab"
     ]
   }
 }

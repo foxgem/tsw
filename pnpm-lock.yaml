@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@google/generative-ai':
+        specifier: ^0.18.0
+        version: 0.18.0
+      marked:
+        specifier: ^14.1.2
+        version: 14.1.2
       plasmo:
         specifier: ^0.65.0
         version: 0.65.3(ejs@3.1.10)(lodash@4.17.21)(postcss@8.4.45)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(srcset@4.0.0)(terser@5.31.6)
@@ -417,6 +423,10 @@ packages:
   '@expo/spawn-async@1.7.0':
     resolution: {integrity: sha512-sqPAjOEFTrjaTybrh9SnPFLInDXcoMC06psEFmH68jLTmoipSQCq8GCEfIoHhxRDALWB+DsiwXJSbXlE/iVIIQ==}
     engines: {node: '>=12'}
+
+  '@google/generative-ai@0.18.0':
+    resolution: {integrity: sha512-AhaIWSpk2tuhYHrBhUqC0xrWWznmYEja1/TRDIb+5kruBU5kUzMlFsXCQNO9PzyTZ4clUJ3CX/Rvy+Xm9x+w3g==}
+    engines: {node: '>=18.0.0'}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -3117,6 +3127,11 @@ packages:
   makeerror@1.0.12:
     resolution: {integrity: sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==}
 
+  marked@14.1.2:
+    resolution: {integrity: sha512-f3r0yqpz31VXiDB/wj9GaOB0a2PRLQl6vJmXiFrniNwjkKdvakqJRULhjFKJpxOchlCRiG5fcacoUZY5Xa6PEQ==}
+    engines: {node: '>= 18'}
+    hasBin: true
+
   mdn-data@2.0.14:
     resolution: {integrity: sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==}
 
@@ -4526,6 +4541,8 @@ snapshots:
   '@expo/spawn-async@1.7.0':
     dependencies:
       cross-spawn: 7.0.3
+
+  '@google/generative-ai@0.18.0': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -8051,6 +8068,8 @@ snapshots:
   makeerror@1.0.12:
     dependencies:
       tmpl: 1.0.5
+
+  marked@14.1.2: {}
 
   mdn-data@2.0.14: {}
 
