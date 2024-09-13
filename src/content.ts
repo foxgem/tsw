@@ -1,5 +1,5 @@
 import { createWarningPopup } from "./WarningPopup";
-import { explain } from "./ai";
+import { explainSentence, explainWord } from "./ai";
 
 const summarize = (leftWidth = 80) => {
   const existingLeftPart = document.querySelector(
@@ -85,7 +85,8 @@ const explainSelected = async (text: string) => {
   const leftWidth = 60;
   const rightWidth = 40;
 
-  const explanation = await explain(text);
+  const explanation =
+    text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
 
   const leftPart = createPart("left", leftWidth);
   leftPart.innerHTML = originalContent;
