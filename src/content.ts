@@ -1,5 +1,5 @@
 import { createWarningPopup } from "./WarningPopup";
-import { explainSentence, explainWord } from "./ai";
+import { explainSentence, explainWord, summariseLink } from "./ai";
 
 const createSplitView = (
   leftContent: string,
@@ -26,13 +26,13 @@ const createSplitView = (
   };
 };
 
-const summarize = () => {
+const summarize = async () => {
   const resetView = createSplitView(
     document.body.innerHTML,
     `
       <div style="padding: 20px; height: 100%; overflow-y: auto;">
         <button id="tsw-close-summary" style="position: fixed; top: 10px; right: 10px;">Close</button>
-        <div>The summary</div>
+        ${await summariseLink(window.location.href)}
       </div>
     `
   );
