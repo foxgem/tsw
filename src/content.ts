@@ -1,47 +1,43 @@
 import { createWarningPopup } from "./WarningPopup";
 import { explainSentence, explainWord } from "./ai";
 
-const summarize = (leftWidth = 80) => {
-  const existingLeftPart = document.querySelector(
-    'div[style*="position: fixed"][style*="left: 0"]'
+const createSplitView = (
+  leftContent: string,
+  rightContent: string,
+  leftWidth = 60,
+  rightWidth = 40
+) => {
+  const originalContent = document.body.innerHTML;
+
+  const leftPart = createPart("left", leftWidth);
+  leftPart.innerHTML = leftContent;
+
+  const rightPart = createPart("right", rightWidth);
+  rightPart.innerHTML = rightContent;
+
+  document.body.innerHTML = "";
+  document.body.appendChild(leftPart);
+  document.body.appendChild(rightPart);
+
+  return () => {
+    document.body.removeChild(leftPart);
+    document.body.removeChild(rightPart);
+    document.body.innerHTML = originalContent;
+  };
+};
+
+const summarize = () => {
+  const resetView = createSplitView(
+    document.body.innerHTML,
+    `
+      <div style="padding: 20px; height: 100%; overflow-y: auto;">
+        <button id="tsw-close-summary" style="position: fixed; top: 10px; right: 10px;">Close</button>
+        <div>The summary</div>
+      </div>
+    `
   );
-  const existingRightPart = document.querySelector(
-    'div[style*="position: fixed"][style*="right: 0"]'
-  );
 
-  if (existingLeftPart && existingRightPart) {
-    document.body.removeChild(existingLeftPart);
-    document.body.removeChild(existingRightPart);
-    document.body.innerHTML = (existingLeftPart as HTMLElement).innerHTML;
-  } else {
-    const originalContent = document.body.innerHTML;
-    const rightWidth = 100 - leftWidth;
-
-    const createPart = (side: "left" | "right", width: number) => {
-      const part = document.createElement("div");
-      part.style.cssText = `
-        position: fixed;
-        top: 0;
-        ${side}: 0;
-        width: ${width}%;
-        height: 100%;
-        z-index: 9999;
-        overflow: auto;
-        ${side === "right" ? "background-color: white;" : ""}
-      `;
-      return part;
-    };
-
-    const leftPart = createPart("left", leftWidth);
-    leftPart.innerHTML = originalContent;
-
-    const rightPart = createPart("right", rightWidth);
-    rightPart.textContent = "The summary";
-
-    document.body.innerHTML = "";
-    document.body.appendChild(leftPart);
-    document.body.appendChild(rightPart);
-  }
+  document.getElementById("tsw-close-summary")?.addEventListener("click", resetView);
 };
 
 let warningTimeout: number | undefined;
@@ -81,33 +77,22 @@ const createPart = (side: "left" | "right", width: number) => {
 };
 
 const explainSelected = async (text: string) => {
-  const originalContent = document.body.innerHTML;
-  const leftWidth = 60;
-  const rightWidth = 40;
-
   const explanation =
     text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
 
-  const leftPart = createPart("left", leftWidth);
-  leftPart.innerHTML = originalContent;
-
-  const rightPart = createPart("right", rightWidth);
-  rightPart.innerHTML = `
+  const resetView = createSplitView(
+    document.body.innerHTML,
+    `
     <div style="padding: 20px; height: 100%; overflow-y: auto;">
       <p>语法解析：${text}</p>
       <hr>
       ${explanation}
       <button id="tsw-close-explanation" style="position: fixed; top: 10px; right: 10px;">Close</button>
     </div>
-  `;
+  `
+  );
 
-  document.body.innerHTML = "";
-  document.body.appendChild(leftPart);
-  document.body.appendChild(rightPart);
-
-  document.getElementById("tsw-close-explanation")?.addEventListener("click", () => {
-    document.body.innerHTML = originalContent;
-  });
+  document.getElementById("tsw-close-explanation")?.addEventListener("click", resetView);
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -118,7 +103,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       }
       break;
     case "summarize":
-      summarize(request.leftWidth);
+      summarize();
       break;
     case "startTimer":
       handleTimer(request.remainingTime, request.domain);
