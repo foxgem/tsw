@@ -32,12 +32,23 @@ const summarize = async () => {
     `
       <div style="padding: 20px; height: 100%; overflow-y: auto;">
         <button id="tsw-close-summary" style="position: fixed; top: 10px; right: 10px;">Close</button>
-        ${await summariseLink(window.location.href)}
+        <div id="tsw-summary-content">
+          <div style="text-align: center; padding: 20px;">
+            <div class="loading-spinner"></div>
+            <p>Summarizing...</p>
+          </div>
+        </div>
       </div>
     `
   );
 
   document.getElementById("tsw-close-summary")?.addEventListener("click", resetView);
+
+  const summaryContent = await summariseLink(window.location.href);
+  const summaryElement = document.getElementById("tsw-summary-content");
+  if (summaryElement) {
+    summaryElement.innerHTML = summaryContent;
+  }
 };
 
 let warningTimeout: number | undefined;
@@ -77,22 +88,32 @@ const createPart = (side: "left" | "right", width: number) => {
 };
 
 const explainSelected = async (text: string) => {
-  const explanation =
-    text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
-
   const resetView = createSplitView(
     document.body.innerHTML,
     `
     <div style="padding: 20px; height: 100%; overflow-y: auto;">
       <p>语法解析：${text}</p>
       <hr>
-      ${explanation}
+      <div id="tsw-explanation-content">
+        <div style="text-align: center; padding: 20px;">
+          <div class="loading-spinner"></div>
+          <p>Explaining...</p>
+        </div>
+      </div>
       <button id="tsw-close-explanation" style="position: fixed; top: 10px; right: 10px;">Close</button>
     </div>
   `
   );
 
   document.getElementById("tsw-close-explanation")?.addEventListener("click", resetView);
+
+  const explanation =
+    text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
+
+  const explanationElement = document.getElementById("tsw-explanation-content");
+  if (explanationElement) {
+    explanationElement.innerHTML = explanation;
+  }
 };
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
