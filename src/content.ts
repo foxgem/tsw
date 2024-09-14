@@ -1,48 +1,54 @@
 import { createWarningPopup } from "./WarningPopup";
 import { explainSentence, explainWord, summariseLink } from "./ai";
 
-const createSplitView = (
-  leftContent: string,
-  rightContent: string,
-  leftWidth = 60,
-  rightWidth = 40
-) => {
-  const originalContent = document.body.innerHTML;
+let rightPart: HTMLElement | null = null;
+let originalContent: string | null = null;
 
-  const leftPart = createPart("left", leftWidth);
-  leftPart.innerHTML = leftContent;
+const createOrUpdateSplitView = (rightContent: string, leftWidth = 60, rightWidth = 40) => {
+  if (!originalContent) {
+    originalContent = document.body.innerHTML;
+  }
 
-  const rightPart = createPart("right", rightWidth);
+  if (!rightPart) {
+    const leftPart = createPart("left", leftWidth);
+    leftPart.innerHTML = originalContent;
+
+    rightPart = createPart("right", rightWidth);
+
+    document.body.innerHTML = "";
+    document.body.appendChild(leftPart);
+    document.body.appendChild(rightPart);
+  }
+
   rightPart.innerHTML = rightContent;
 
-  document.body.innerHTML = "";
-  document.body.appendChild(leftPart);
-  document.body.appendChild(rightPart);
+  const closeButton = rightPart.querySelector("#tsw-close-right-part");
+  if (closeButton) {
+    closeButton.addEventListener("click", closeSplitView);
+  }
+};
 
-  return () => {
-    document.body.removeChild(leftPart);
+const closeSplitView = () => {
+  if (rightPart && originalContent) {
     document.body.removeChild(rightPart);
+    rightPart = null;
     document.body.innerHTML = originalContent;
-  };
+    originalContent = null;
+  }
 };
 
 const summarize = async () => {
-  const resetView = createSplitView(
-    document.body.innerHTML,
-    `
-      <div style="padding: 20px; height: 100%; overflow-y: auto;">
-        <button id="tsw-close-summary" style="position: fixed; top: 10px; right: 10px;">Close</button>
-        <div id="tsw-summary-content">
-          <div style="text-align: center; padding: 20px;">
-            <div class="loading-spinner"></div>
-            <p>Summarizing...</p>
-          </div>
+  createOrUpdateSplitView(`
+    <div style="padding: 20px; height: 100%; overflow-y: auto;">
+      <button id="tsw-close-right-part" style="position: fixed; top: 10px; right: 10px;">Close</button>
+      <div id="tsw-summary-content">
+        <div style="text-align: center; padding: 20px;">
+          <div class="loading-spinner"></div>
+          <p>Summarizing...</p>
         </div>
       </div>
-    `
-  );
-
-  document.getElementById("tsw-close-summary")?.addEventListener("click", resetView);
+    </div>
+  `);
 
   const summaryContent = await summariseLink(window.location.href);
   const summaryElement = document.getElementById("tsw-summary-content");
@@ -88,9 +94,7 @@ const createPart = (side: "left" | "right", width: number) => {
 };
 
 const explainSelected = async (text: string) => {
-  const resetView = createSplitView(
-    document.body.innerHTML,
-    `
+  createOrUpdateSplitView(`
     <div style="padding: 20px; height: 100%; overflow-y: auto;">
       <p>语法解析：${text}</p>
       <hr>
@@ -100,12 +104,9 @@ const explainSelected = async (text: string) => {
           <p>Explaining...</p>
         </div>
       </div>
-      <button id="tsw-close-explanation" style="position: fixed; top: 10px; right: 10px;">Close</button>
+      <button id="tsw-close-right-part" style="position: fixed; top: 10px; right: 10px;">Close</button>
     </div>
-  `
-  );
-
-  document.getElementById("tsw-close-explanation")?.addEventListener("click", resetView);
+  `);
 
   const explanation =
     text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
