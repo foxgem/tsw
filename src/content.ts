@@ -75,7 +75,7 @@ const createPart = (side: "left" | "right", width: number) => {
     height: 100%;
     z-index: 9999;
     overflow: auto;
-    ${side === "right" ? "background-color: white;" : ""}
+    ${side === "right" ? "background-color: white; color: black;" : ""}
   `;
   return part;
 };
