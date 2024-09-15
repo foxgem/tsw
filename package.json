@@ -1,7 +1,7 @@
 {
   "name": "tsw",
   "version": "1.0.0",
-  "description": "A web extension to set timers for specific domains",
+  "description": "Your tiny smart worker",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
@@ -45,8 +45,8 @@
     "background": {
       "service_worker": "background.ts"
     },
-    "name": "Site Timer",
-    "description": "Set timers for specific domains",
+    "name": "tsw",
+    "description": "Your tiny smart worker",
     "version": "0.0.1",
     "host_permissions": [
       "https://*/*"
