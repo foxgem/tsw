@@ -94,9 +94,11 @@ const createPart = (side: "left" | "right", width: number) => {
 };
 
 const explainSelected = async (text: string) => {
+  const isWord = text.split(" ").length === 1;
+  const title = isWord ? "单词释义" : "语法解析";
   createOrUpdateSplitView(`
     <div style="padding: 20px; height: 100%; overflow-y: auto;">
-      <p>语法解析：${text}</p>
+      <p>${title}：${text}</p>
       <hr>
       <div id="tsw-explanation-content">
         <div style="text-align: center; padding: 20px;">
@@ -108,8 +110,7 @@ const explainSelected = async (text: string) => {
     </div>
   `);
 
-  const explanation =
-    text.split(" ").length === 1 ? await explainWord(text) : await explainSentence(text);
+  const explanation = isWord ? await explainWord(text) : await explainSentence(text);
 
   const explanationElement = document.getElementById("tsw-explanation-content");
   if (explanationElement) {
