@@ -1,5 +1,5 @@
 import { createWarningPopup } from "./WarningPopup";
-import { explainSentence, explainWord, summariseLink } from "./ai";
+import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;

@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import {
+  deleteTimerForDomain,
+  getAllTimersForDomains,
+  TimerForDomain,
+  upsertTimerForDomain,
+} from "../utils/db";
 
 const Container = styled.div`
   max-height: 400px;
@@ -91,64 +97,42 @@ const EditButton = styled(Button)`
   }
 `;
 
-interface SiteTimer {
-  domain: string;
-  time: number;
-}
-
 const SiteManager: React.FC = () => {
-  const [siteTimers, setSiteTimers] = useState<SiteTimer[]>([]);
+  const [TimerForDomains, setTimerForDomains] = useState<TimerForDomain[]>([]);
   const [newDomain, setNewDomain] = useState("");
   const [newTime, setNewTime] = useState(0);
-  const [editingTimer, setEditingTimer] = useState<SiteTimer | null>(null);
+  const [editingTimer, setEditingTimer] = useState<TimerForDomain | null>(null);
 
   useEffect(() => {
-    loadSiteTimers();
+    loadTimerForDomains();
   }, []);
 
-  const loadSiteTimers = () => {
-    chrome.storage.local.get(null, (items) => {
-      const timers: SiteTimer[] = Object.entries(items).map(([domain, time]) => ({
-        domain,
-        time: time as number,
-      }));
-      setSiteTimers(timers);
-    });
+  const loadTimerForDomains = async () => {
+    const timerForDomains: TimerForDomain[] = await getAllTimersForDomains();
+    setTimerForDomains(timerForDomains);
   };
 
-  const handleAddTimer = () => {
+  const handleUpsertTimer = async () => {
     if (newDomain && newTime > 0) {
-      chrome.storage.local.set({ [newDomain]: newTime }, () => {
-        loadSiteTimers();
-        setNewDomain("");
-        setNewTime(0);
+      await upsertTimerForDomain({
+        domain: newDomain,
+        time: newTime,
       });
+      loadTimerForDomains();
+      setNewDomain("");
+      setNewTime(0);
     }
   };
 
-  const handleRemoveTimer = (domain: string) => {
-    chrome.storage.local.remove(domain, () => {
-      loadSiteTimers();
-    });
+  const handleRemoveTimer = async (domain: string) => {
+    await deleteTimerForDomain(domain);
+    loadTimerForDomains();
   };
 
-  const handleEditTimer = (timer: SiteTimer) => {
+  const handleEditTimer = (timer: TimerForDomain) => {
     setEditingTimer(timer);
     setNewDomain(timer.domain);
     setNewTime(timer.time);
-  };
-
-  const handleUpdateTimer = () => {
-    if (editingTimer && newDomain && newTime > 0) {
-      chrome.storage.local.remove(editingTimer.domain, () => {
-        chrome.storage.local.set({ [newDomain]: newTime }, () => {
-          loadSiteTimers();
-          setEditingTimer(null);
-          setNewDomain("");
-          setNewTime(0);
-        });
-      });
-    }
   };
 
   return (
@@ -166,14 +150,10 @@ const SiteManager: React.FC = () => {
           onChange={(e) => setNewTime(parseInt(e.target.value))}
           placeholder="Enter time in seconds"
         />
-        {editingTimer ? (
-          <Button onClick={handleUpdateTimer}>Update Timer</Button>
-        ) : (
-          <Button onClick={handleAddTimer}>Add Timer</Button>
-        )}
+        <Button onClick={handleUpsertTimer}>{editingTimer ? "Update Timer" : "Add Timer"}</Button>
       </InputGroup>
       <List>
-        {siteTimers.map((timer) => (
+        {TimerForDomains.map((timer) => (
           <ListItem key={timer.domain}>
             <TimerInfo>
               {timer.domain}: {timer.time} seconds

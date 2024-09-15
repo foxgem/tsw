@@ -6,22 +6,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
-    "types": [
-      "chrome",
-      "node",
-      "@types/react"
-    ]
+    "moduleResolution": "node16",
+    "module": "Node16",
+    "types": ["chrome", "node", "@types/react"]
   },
-  "include": [
-    ".plasmo/index.d.ts",
-    "./**/*.ts",
-    "./**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ],
-  "files": [
-    "types.d.ts"
-  ]
+  "include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
+  "exclude": ["node_modules"],
+  "files": ["types.d.ts"]
 }
