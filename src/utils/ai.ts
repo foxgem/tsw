@@ -24,7 +24,7 @@ export const explainSentence = (sentences: string) =>
 
 export const explainWord = (word: string) =>
   generateTextAIFunction(
-    `解释该英语单词："${word}"，翻译并介绍其词源、词根、典型例句，以及同义词和反义词。`,
+    `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher
   );
 
