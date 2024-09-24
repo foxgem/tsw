@@ -8,7 +8,11 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node16",
     "module": "Node16",
-    "types": ["chrome", "node", "@types/react"]
+    "types": ["chrome", "node", "@types/react"],
+    "paths": {
+      "@/*": ["./*"]
+    },
+    "baseUrl": "./src"
   },
   "include": [".plasmo/index.d.ts", "./**/*.ts", "./**/*.tsx"],
   "exclude": ["node_modules"],

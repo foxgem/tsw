@@ -1,4 +1,5 @@
 import { Storage } from "@plasmohq/storage";
+import { z } from "zod";
 
 const storage = new Storage();
 
@@ -36,3 +37,8 @@ export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
     time: Number(time),
   }));
 }
+
+export const timerSchema = z.object({
+    domain: z.string().min(1, "Domain is required").regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid domain format"),
+    time: z.number().positive("Time must be greater than 0"),
+});

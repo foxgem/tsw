@@ -39,8 +39,8 @@ const closeSplitView = () => {
 
 const summarize = async () => {
   createOrUpdateSplitView(`
-    <div style="padding: 20px; height: 100%; overflow-y: auto;">
-      <button id="tsw-close-right-part" style="position: fixed; top: 10px; right: 10px;">Close</button>
+    <div  class="tsw-panel"">
+      <button id="tsw-close-right-part">Close</button>
       <div id="tsw-summary-content">
         <div style="text-align: center; padding: 20px;">
           <div class="loading-spinner"></div>
@@ -97,8 +97,8 @@ const explainSelected = async (text: string) => {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
   createOrUpdateSplitView(`
-    <div style="padding: 20px; height: 100%; overflow-y: auto;">
-      <p>${title}：${text}</p>
+    <div class="tsw-panel">
+      <p class="tsw-panel-title">${title}：${text}</p>
       <hr>
       <div id="tsw-explanation-content">
         <div style="text-align: center; padding: 20px;">
@@ -106,7 +106,7 @@ const explainSelected = async (text: string) => {
           <p>Explaining...</p>
         </div>
       </div>
-      <button id="tsw-close-right-part" style="position: fixed; top: 10px; right: 10px;">Close</button>
+      <button id="tsw-close-right-part" style="" >Close</button>
     </div>
   `);
 
