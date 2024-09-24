@@ -4,6 +4,42 @@ import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
 
+function addStyles() {
+  const style = document.createElement("style");
+  style.textContent = `
+    .tsw-code-wrapper {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      margin: 10px 0;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+const wrapLongCodeBlocks = () => {
+  const codeBlocks = document.getElementsByTagName("code");
+  addStyles();
+
+  for (let i = 0; i < codeBlocks.length; i++) {
+    const codeBlock = codeBlocks[i];
+
+    if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
+      continue;
+    }
+
+    const lines = codeBlock.innerHTML.split("\n");
+    if (lines.length > 10) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "tsw-code-wrapper";
+      codeBlock.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+    }
+  }
+};
+
 const createOrUpdateSplitView = (rightContent: string, leftWidth = 60, rightWidth = 40) => {
   if (!originalContent) {
     originalContent = document.body.innerHTML;
@@ -137,6 +173,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     case "stopTimer":
       clearTimeout(warningTimeout);
       clearTimeout(closeTimeout);
+      break;
+    case "wrapCodeBlocks":
+      wrapLongCodeBlocks();
       break;
   }
 });

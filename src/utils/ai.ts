@@ -8,6 +8,8 @@ const siEnglishTeacher =
 const siSummariser =
   "You are good at summarising articles. Based on a link passed by user, your task is to highlight the main key points in the article pointed by that link and output them in the format as users expect.";
 
+const siCodeExplainer = "You are a coding expert. You can explain a code snippet clearly.";
+
 const generateTextAIFunction = async (prompt: string, systemInstruction: string) => {
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
@@ -38,4 +40,14 @@ export const summariseLink = (link: string) =>
     段落大意：将文中每个段落用两三句话总结，并按原文一样的顺序排列输出。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
     siSummariser
+  );
+
+export const explainCode = (code: string) =>
+  generateTextAIFunction(
+    `分析代码： ${code} ，并给出清晰的解释，输出：
+    1. 编程语言
+    2. 代码功能
+    忽略代码中的注释、导入、类型定义、打印输出，只解释代码的逻辑和功能。
+    `,
+    siCodeExplainer
   );
