@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: 242, 88.4%, 66.3%, 1;
+    --accent: 240 4.8% 95.9%;
+    --popover: 255, 100%, 100%, 1;
+    --border: 252, 13%, 46%, 0.2;
+    --item: 240 4.8% 95.9%;
+  }
+
+  .dark {
+    --primary: 242, 88.4%, 66.3%, 1;
+    --accent: 252, 13%, 23%, 1;
+    --popover: 0, 0%, 20%, 1;
+    --border: 259, 12%, 75%, 0.2;
+    --item: 0, 0%, 100%, 0.1
+  }
+}
+
+.tsw-panel {
+  padding: 20px 12px;
+  height: 100%;
+  overflow-y: auto;
+  border-left: 1px dashed gray;
+  margin-left: 12px;
+
+}
+
+.tsw-panel-title {
+  padding-bottom: 6px
+}
+
+#tsw-explanation-content {
+  padding-top: 6px
+}
+
+.focus-visible\:ring-2:focus-visible {
+  box-shadow: none !important;
+}
+
+*:focus,
+*:focus-visible {
+  outline: none;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+#tsw-summary-content {
+  margin-top: 30px;
+}
+
+#tsw-close-right-part:hover {
+  background-color: rgb(209 213 219);
+}
+
+#tsw-close-right-part {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.25rem;
+  padding: 0.25rem 0.5rem;
+  background-color: rgb(229 231 235);
+  border-radius: .25rem;
+  cursor: pointer;
+  border-width: 0px;
+  height: 28px;
+  width: 52px
+}
+
+.tsw-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(44, 62, 80, 0.9);
+  color: white;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  transform: translateY(-100%);
+  z-index: 9999;
+}
+
+.tsw-warning-container {
+  display: flex;
+  align-items: center;
+}
+
+.tsw-warning-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 5px;
+}
