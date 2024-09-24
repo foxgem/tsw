@@ -9,8 +9,6 @@ interface LayoutProps {
   footerPosition?: string;
   children: React.ReactNode;
   headerRightElement?: React.ReactNode;
-
-
 }
 
 export default function Layout({ title, children, headerRightElement, footerPosition }: LayoutProps) {

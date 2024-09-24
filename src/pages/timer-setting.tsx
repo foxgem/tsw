@@ -6,9 +6,8 @@ import {
   timerSchema,
   upsertTimerForDomain,
 } from "../utils/db";
-import { Check, ChevronLeft, FilePenLine, Plus, Trash2, X } from "lucide-react";
+import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import TSWIcon from "@/components/TSWIcon";
 import { Input } from "@/components/ui/input";
@@ -16,7 +15,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Layout from "@/components/Layout";
 
 function TimerSettingPage() {
-  const navigate = useNavigate()
   const [TimerForDomains, setTimerForDomains] = useState<TimerForDomain[]>([]);
   const [newDomain, setNewDomain] = useState("");
   const [newTime, setNewTime] = useState(0);
@@ -24,8 +22,6 @@ function TimerSettingPage() {
   const [isAdding, setIsAdding] = useState(false);
   const [domainError, setDomainError] = useState<string | null>(null);
   const [timeError, setTimeError] = useState<string | null>(null);
-
-
 
   useEffect(() => {
     loadTimerForDomains();
@@ -57,7 +53,6 @@ function TimerSettingPage() {
           setTimeError(err.message);
         }
       });
-
     }
   };
 
