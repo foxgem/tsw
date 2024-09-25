@@ -64,7 +64,7 @@
     "background": {
       "service_worker": "background.ts"
     },
-    "name": "tsw",
+    "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
     "version": "0.0.1",
     "host_permissions": [
