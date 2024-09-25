@@ -1,10 +1,13 @@
-import { explainCode } from "../src/utils/ai";
+import { rewriteCode } from "../src/utils/ai";
 
-explainCode(`
+rewriteCode(
+  `
   // For debugging
   setInterval(async () => {
     console.log(await chrome.storage.local.get());
     console.log(timerStartedMap);
     console.log(await storage.getAll());
   }, 3000);
-  `).then(console.log);
+  `,
+  "rust"
+).then(console.log);

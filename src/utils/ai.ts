@@ -8,7 +8,10 @@ const siEnglishTeacher =
 const siSummariser =
   "You are good at summarising articles. Based on a link passed by user, your task is to highlight the main key points in the article pointed by that link and output them in the format as users expect.";
 
-const siCodeExplainer = "You are a coding expert. You can explain a code snippet clearly.";
+const siCodeExpert = `
+  You are a coding expert. You are good at:
+  1.  Explaining code snippets.
+  2.  Rewriting an existing code snippet into a new code snippet with a specified programming language.`;
 
 const generateTextAIFunction = async (prompt: string, systemInstruction: string) => {
   const model = genAI.getGenerativeModel({
@@ -49,5 +52,8 @@ export const explainCode = (code: string) =>
     2. 代码功能
     忽略代码中的注释、导入、类型定义、打印输出，只解释代码的逻辑和功能。
     `,
-    siCodeExplainer
+    siCodeExpert
   );
+
+export const rewriteCode = (code: string, targetLang: string) =>
+  generateTextAIFunction(`将 ${code} 代码重写为 ${targetLang} 语言的代码。`, siCodeExpert);
