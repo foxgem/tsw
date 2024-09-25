@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { Content, GoogleGenerativeAI, Part } from "@google/generative-ai";
 import { marked } from "marked";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!);
@@ -13,7 +13,19 @@ const siCodeExpert = `
   1.  Explaining code snippets.
   2.  Rewriting an existing code snippet into a new code snippet with a specified programming language.`;
 
-const generateTextAIFunction = async (prompt: string, systemInstruction: string) => {
+const ocrExpert = `
+  OCR this image. Extract text as it is without analyzing it and without summarizing it.
+  Before you OCR, consider using one or more of the following methods to pre-process the image so that you can more accurately recognize the text in the image:
+  1. Noise reduction (removing speckles or blurring)
+  2. Image binarization (converting to black and white)
+  3. Deskewing (correcting for tilted images)
+  4. Sharpen the image
+  5. Character Recognition`;
+
+const generateTextAIFunction = async (
+  prompt: string | Array<string | Part>,
+  systemInstruction: string | Part | Content
+) => {
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction,
@@ -57,3 +69,15 @@ export const explainCode = (code: string) =>
 
 export const rewriteCode = (code: string, targetLang: string) =>
   generateTextAIFunction(`将 ${code} 代码重写为 ${targetLang} 语言的代码。`, siCodeExpert);
+
+// TODO: Use some external image APIs for image preprocessing
+// (noise reduction, binarization, deskewing, sharpening, and so on)
+export const ocr = (imageBuffer: Buffer, imageMimeType: string) =>
+  generateTextAIFunction(
+    [
+      {
+        inlineData: { mimeType: imageMimeType, data: imageBuffer.toString("base64") },
+      },
+    ],
+    ocrExpert
+  );
