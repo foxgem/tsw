@@ -1,1 +1,1 @@
-export const TIMER_LIMIT = 3;
+export const TIMER_COUNT_LIMIT = 3;
