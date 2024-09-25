@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 import { explainCode } from '@/utils/ai';
 import { cn } from '@/lib/utils';
 import { TAB_CSS, TABCONTENT_CSS } from '@/utils/constants';
+import SelectLang from './SelectLang';
 
 interface CodeWrapperProps {
   children: React.ReactNode;
@@ -14,6 +15,9 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
 
   const [isExplaining, setIsExplaining] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
+
+  const [selectedLanguage, setSelectedLanguage] = useState("Java");
+
   const [content, setContent] = useState('');
 
   const getChildrenContent = () => {
@@ -34,7 +38,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
     if (!tabs) return;
 
     const codeExplain = tabs.querySelector('div[data-state="active"] #tsw-code-explain');
-if (!codeExplain) return;
+    if (!codeExplain) return;
 
     if (!codeExplain) return;
 
@@ -44,7 +48,7 @@ if (!codeExplain) return;
     }
 
     setIsExplaining(true);
-    const code=getChildrenContent()
+    const code = getChildrenContent()
     const result = await explainCode(code)
     codeExplain.innerHTML = result;
     setContent(result)
@@ -52,9 +56,12 @@ if (!codeExplain) return;
   };
 
 
-  const handleRewriteClick = () => {
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+    console.log(language)
     setIsRewriting(true)
-  }
+
+  };
 
   return (
     <div className="tsw-code-wrapper" >
@@ -68,7 +75,7 @@ if (!codeExplain) return;
           >
             <FileKey className="mr-1" />Explain
           </TabsTrigger>
-          <TabsTrigger value="write" className={cn(TAB_CSS)} onClick={handleRewriteClick}
+          <TabsTrigger value="write" className={cn(TAB_CSS)}
           >
             <SquarePen className="mr-1" />Rewrite
           </TabsTrigger>
@@ -83,6 +90,7 @@ if (!codeExplain) return;
 
         </TabsContent>
         <TabsContent value="write" className={cn(TABCONTENT_CSS)} >
+          <SelectLang lang={selectedLanguage} onLanguageChange={handleLanguageChange} />
           {isRewriting &&
             <Spinner />}
 
