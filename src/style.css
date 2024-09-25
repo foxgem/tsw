@@ -112,7 +112,7 @@
   border-width: 0px;
   height: 28px;
   width: 52px;
-  color:black
+  color: black
 }
 
 .tsw-warning {
@@ -145,4 +145,8 @@
   font-size: 16px;
   cursor: pointer;
   padding: 0 5px;
+}
+
+#tsw-code-explain {
+  line-height: 12px;
 }
