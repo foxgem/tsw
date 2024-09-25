@@ -39,6 +39,9 @@ export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
 }
 
 export const timerSchema = z.object({
-    domain: z.string().min(1, "Domain is required").regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid domain format"),
-    time: z.number().positive("Time must be greater than 0"),
+  domain: z
+    .string()
+    .min(1, "Domain required.")
+    .regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid domain format"),
+  time: z.number().min(10, "too short").max(3600, "too long"),
 });
