@@ -20,6 +20,7 @@
   }
 }
 
+
 .tsw-panel {
   padding: 20px 12px;
   height: 100%;
@@ -35,6 +36,29 @@
 
 #tsw-explanation-content {
   padding-top: 6px
+}
+
+#tsw-explanation-content h1,
+#tsw-explanation-content h2,
+#tsw-explanation-content h3,
+#tsw-explanation-content h4,
+#tsw-explanation-content h5,
+#tsw-explanation-content h6,
+#tsw-explanation-content p,
+#tsw-explanation-content li,
+#tsw-explanation-content div,
+#tsw-explanation-content code,
+#tsw-summary-content h1,
+#tsw-summary-content h2,
+#tsw-summary-content h3,
+#tsw-summary-content h4,
+#tsw-summary-content h5,
+#tsw-summary-content h6,
+#tsw-summary-content p,
+#tsw-summary-content li,
+#tsw-summary-content div,
+#tsw-summary-content code {
+  color: black !important;
 }
 
 .focus-visible\:ring-2:focus-visible {
@@ -87,7 +111,8 @@
   cursor: pointer;
   border-width: 0px;
   height: 28px;
-  width: 52px
+  width: 52px;
+  color:black
 }
 
 .tsw-warning {
