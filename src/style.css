@@ -20,6 +20,10 @@
   }
 }
 
+h1, [data-theme="dark-mode"] h2, [data-theme="dark-mode"] h3, [data-theme="dark-mode"] h4, [data-theme="dark-mode"] h5, [data-theme="dark-mode"] h6 {
+    color:black !important;
+}
+
 .tsw-panel {
   padding: 20px 12px;
   height: 100%;
@@ -87,7 +91,8 @@
   cursor: pointer;
   border-width: 0px;
   height: 28px;
-  width: 52px
+  width: 52px;
+  color:black
 }
 
 .tsw-warning {
