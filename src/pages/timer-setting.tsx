@@ -13,6 +13,7 @@ import TSWIcon from "@/components/TSWIcon";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Layout from "@/components/Layout";
+import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 
 function TimerSettingPage() {
   const [TimerForDomains, setTimerForDomains] = useState<TimerForDomain[]>([]);
@@ -34,6 +35,9 @@ function TimerSettingPage() {
 
   const handleUpsertTimer = async () => {
     try {
+      if (TimerForDomains.length === TIMER_COUNT_LIMIT) {
+        return;
+      }
       resetError();
       timerSchema.parse({ domain: newDomain, time: newTime });
 
@@ -119,13 +123,13 @@ function TimerSettingPage() {
   );
 
   const addElement = () => (
-    <div className="" onClick={() => handleAddTimer()}>
+    <div onClick={() => handleAddTimer()}>
       <TSWIcon><Plus size={20} /></TSWIcon>
     </div>
   )
 
   return (
-    <Layout title="Time Spend Watcher" headerRightElement={addElement()} footerPosition={TimerForDomains.length > 3 ? "" : "fixed"}>
+    <Layout title="Time Spend Watcher" headerRightElement={TimerForDomains.length < TIMER_COUNT_LIMIT ? addElement() : null} footerPosition="fixed">
       <Card className="overflow-y-auto mx-auto border-0 shadow-none">
         <CardContent className="p-0 shadow-none pb-4">
           {isAdding && renderTimerInput()}

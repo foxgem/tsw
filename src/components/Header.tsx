@@ -22,9 +22,8 @@ const Header: React.FC = () => {
         <img src={logo} className="w-6" />
         <p className="font-bold text-sm ml-1">TSW</p>
       </div>
-      <div className="flex itemx-center">
+      <div className="flex items-center">
         <ThemeToggle />
-
         <Menubar className="border-0">
           <MenubarMenu>
             <MenubarTrigger className="w-9 h-9" >
