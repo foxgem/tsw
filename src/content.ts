@@ -27,7 +27,7 @@ const wrapLongCodeBlocks = () => {
     if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
       continue;
     }
-
+    
     const lines = codeBlock.innerHTML.split("\n");
     if (lines.length > 10) {
       const root = createRoot(codeBlock.parentElement as HTMLElement);

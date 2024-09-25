@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SquareCode, StickyNote } from 'lucide-react';
+import { FileKey, SquareCode, SquarePen, StickyNote } from 'lucide-react';
 import Spinner from './Spinner';
 import { explainCode } from '@/utils/ai';
 import { cn } from '@/lib/utils';
@@ -12,10 +12,30 @@ interface CodeWrapperProps {
 
 const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isExplaining, setIsExplaining] = useState(false);
+  const [isRewriting, setIsRewriting] = useState(false);
   const [content, setContent] = useState('');
-  const handleExplainClick = async () => {
-    const codeExplain = document.getElementById("tsw-code-explain");
+
+  const getChildrenContent = () => {
+    if (React.isValidElement(children)) {
+      if (children.props.children) {
+        return children.props.children;
+      }
+      return children.props.value || children.props.dangerouslySetInnerHTML?.__html;
+    } else if (typeof children === 'string') {
+      return children;
+    }
+    return null;
+  };
+
+  const handleExplainClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const trigger = event.currentTarget;
+    const tabs = trigger.closest('.tsw-code-wrapper');
+    if (!tabs) return;
+
+    const codeExplain = tabs.querySelector('div[data-state="active"] #tsw-code-explain');
+if (!codeExplain) return;
+
     if (!codeExplain) return;
 
     if (content) {
@@ -23,38 +43,49 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
       return
     }
 
-    setIsLoading(true);
-    const result = await explainCode(`
-                    // For debugging
-                    setInterval(async () => {
-                      console.log(await chrome.storage.local.get());
-                      console.log(timerStartedMap);
-                      console.log(await storage.getAll());
-                    }, 3000);
-                    `)
-    if (codeExplain) {
-      codeExplain.innerHTML = result;
-      setContent(result)
-    }
-    setIsLoading(false);
+    setIsExplaining(true);
+    const code=getChildrenContent()
+    const result = await explainCode(code)
+    codeExplain.innerHTML = result;
+    setContent(result)
+    setIsExplaining(false);
   };
+
+
+  const handleRewriteClick = () => {
+    setIsRewriting(true)
+  }
 
   return (
     <div className="tsw-code-wrapper" >
       <Tabs defaultValue="code" className="w-full">
         <TabsList className='p-0'>
           <TabsTrigger value="code" className={cn(TAB_CSS)}
-          ><SquareCode className="mr-1" />Code</TabsTrigger>
-          <TabsTrigger value="explain" className={cn(TAB_CSS)} onClick={handleExplainClick}
-          ><StickyNote className="mr-1" />Explain</TabsTrigger>
+          >
+            <SquareCode className="mr-1" />Code
+          </TabsTrigger>
+          <TabsTrigger value="explain" className={cn(TAB_CSS)} onClick={(e) => handleExplainClick(e)}
+          >
+            <FileKey className="mr-1" />Explain
+          </TabsTrigger>
+          <TabsTrigger value="write" className={cn(TAB_CSS)} onClick={handleRewriteClick}
+          >
+            <SquarePen className="mr-1" />Rewrite
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="code" className={cn(TABCONTENT_CSS)}>
           {children}
         </TabsContent>
         <TabsContent value="explain" className={cn(TABCONTENT_CSS)} >
-          {isLoading &&
+          {isExplaining &&
             <Spinner />}
           <div id="tsw-code-explain"></div>
+
+        </TabsContent>
+        <TabsContent value="write" className={cn(TABCONTENT_CSS)} >
+          {isRewriting &&
+            <Spinner />}
+
         </TabsContent>
       </Tabs>
     </div>
