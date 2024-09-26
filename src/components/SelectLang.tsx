@@ -11,14 +11,14 @@ export default function SelectLang({ lang = "Java", onLanguageChange }: selectLa
 
   return (
     <Select defaultValue={lang} onValueChange={onLanguageChange}>
-      <SelectTrigger className="w-[210px] rounded shadow">
-        <span className="text-muted-foreground">Language: </span>
+      <SelectTrigger className="tsw-select-trigger">
+        <span>Language: </span>
         <SelectValue placeholder="Select" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="tsw-select-content">
         <SelectGroup>
           {LANG_LIST.map((language) => (
-            <SelectItem key={language} value={language}>
+            <SelectItem key={language} value={language} className="tsw-select-item">
               {language}
             </SelectItem>
           ))}

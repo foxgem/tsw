@@ -34,10 +34,7 @@ const wrapLongCodeBlocks = () => {
       root.render(
         React.createElement(
           CodeWrapper,
-          null,
-          React.createElement('div', {
-            dangerouslySetInnerHTML: { __html: codeBlock.outerHTML }
-          })
+          { originCodes: codeBlock.innerText,codeBlock: codeBlock.innerHTML}
         )
       );
       codeBlock.remove();

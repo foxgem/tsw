@@ -78,7 +78,7 @@
           "<all_urls>"
         ],
         "css": [
-          "/src/style.css"
+          "/src/css/global.css"
         ]
       }
     ]
