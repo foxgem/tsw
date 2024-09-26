@@ -3,15 +3,15 @@ import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
-import CodeWrapper from './components/CodeWrapper';
+import CodeWrapper from "./components/CodeWrapper";
 import React from "react";
-import { createRoot } from 'react-dom/client';
+import { createRoot } from "react-dom/client";
 
 function addStyles() {
   const style = document.createElement("style");
   style.textContent = `
     .tsw-code-wrapper {
-      
+
     }
   `;
   document.head.appendChild(style);
@@ -27,15 +27,15 @@ const wrapLongCodeBlocks = () => {
     if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
       continue;
     }
-    
-    const lines = codeBlock.innerHTML.split("\n");
+
+    const lines = codeBlock.innerText.split("\n");
     if (lines.length > 10) {
       const root = createRoot(codeBlock.parentElement as HTMLElement);
       root.render(
-        React.createElement(
-          CodeWrapper,
-          { originCodes: codeBlock.innerText,codeBlock: codeBlock.innerHTML}
-        )
+        React.createElement(CodeWrapper, {
+          originCodes: codeBlock.innerText,
+          codeBlock: codeBlock.innerHTML,
+        })
       );
       codeBlock.remove();
     }
