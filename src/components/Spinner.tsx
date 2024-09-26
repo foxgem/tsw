@@ -8,7 +8,7 @@ const Spinner: React.FC<SpinnerProps> = ({ title = "Loading" }) => {
 
 
   return (
-    <div className='text-center pt-10'>
+    <div className='tsw-spinner'>
       <div className="loading-spinner"></div>
       <p>{title}...</p>
     </div>

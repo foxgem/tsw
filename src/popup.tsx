@@ -4,7 +4,7 @@ import MainPage from "./pages/home";
 import TimerSettingPage from "./pages/timer-setting";
 import { ThemeProvider } from "./components/ThemeProvider";
 import AboutPage from "./pages/about";
-import "./style.css"
+import "./css/extention.css"
 
 function IndexPopup() {
 

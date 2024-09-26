@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: 242, 88.4%, 66.3%, 1;
+    --accent: 240 4.8% 95.9%;
+    --popover: 255, 100%, 100%, 1;
+    --border: 252, 13%, 46%, 0.2;
+    --item: 240 4.8% 95.9%;
+  }
+
+  .dark {
+    --primary: 242, 88.4%, 66.3%, 1;
+    --accent: 252, 13%, 23%, 1;
+    --popover: 0, 0%, 20%, 1;
+    --border: 259, 12%, 75%, 0.2;
+    --item: 0, 0%, 100%, 0.1
+  }
+} 

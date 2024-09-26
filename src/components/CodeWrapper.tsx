@@ -1,42 +1,24 @@
-import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileKey, SquareCode, SquarePen } from "lucide-react";
-import Spinner from "./Spinner";
-import { explainCode, rewriteCode } from "@/utils/ai";
-import { cn } from "@/lib/utils";
-import { TAB_CSS, TABCONTENT_CSS } from "@/utils/constants";
-import SelectLang from "./SelectLang";
-import { Button } from "./ui/button";
+import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { FileKey, SquareCode, SquarePen } from 'lucide-react';
+import Spinner from './Spinner';
+import { explainCode, rewriteCode } from '@/utils/ai';
+import { cn } from '@/lib/utils';
+import SelectLang from './SelectLang';
+import "../css/wrapper.css"
 
 interface CodeWrapperProps {
-  children: React.ReactNode;
+  codeBlock: string;
+  originCodes: string;
 }
 
-const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
+const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => {
   const [isExplaining, setIsExplaining] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("Java");
   const [explainContent, setExplainContent] = useState("");
   const [rewriteContent, setRewriteContent] = useState("");
 
-  const getChildrenContent = () => {
-    if (React.isValidElement(children)) {
-      if (children.props.children) {
-        return typeof children.props.children === "string" ? children.props.children : null;
-      }
-      if (children.props.value) {
-        return children.props.value;
-      }
-      if (children.props.dangerouslySetInnerHTML?.__html) {
-        const tempDiv = document.createElement("div");
-        tempDiv.innerHTML = children.props.dangerouslySetInnerHTML.__html;
-        return tempDiv.innerText;
-      }
-    } else if (typeof children === "string") {
-      return children;
-    }
-    return null;
-  };
 
   const handleExplainClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const trigger = event.currentTarget;
@@ -51,16 +33,22 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
       return;
     }
 
-    setIsExplaining(true);
-    const code = getChildrenContent();
-    const result = await explainCode(code);
-    codeExplain.innerHTML = result;
-    setExplainContent(result);
-    setIsExplaining(false);
+    try {
+      setIsExplaining(true);
+      const result = await explainCode(originCodes);
+      codeExplain.innerHTML = result;
+      setExplainContent(result);
+      setIsExplaining(false);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsExplaining(false);
+    }
   };
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
+    setRewriteContent("")
   };
 
   const handleRewriteClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -72,17 +60,21 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
 
   const handleRewriteSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const trigger = event.currentTarget;
-    if (rewriteContent) {
+    if (!rewriteContent) {
       loadCodeRewriter(trigger, rewriteContent);
-      return;
     }
+    try {
 
-    setIsRewriting(true);
-    const code = getChildrenContent();
-    const result = await rewriteCode(code, selectedLanguage);
-    loadCodeRewriter(trigger, result);
-    setRewriteContent(result);
-    setIsRewriting(false);
+      setIsRewriting(true);
+      const result = await rewriteCode(originCodes, selectedLanguage);
+      loadCodeRewriter(trigger, result);
+      setRewriteContent(result);
+
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsRewriting(false);
+    }
   };
 
   const loadCodeRewriter = (trigger: EventTarget & HTMLButtonElement, content: string) => {
@@ -92,53 +84,50 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
     const codeRewriter = tabs.querySelector('div[data-state="active"] #tsw-code-rewriter');
     if (!codeRewriter) return;
 
-    if (content) {
-      codeRewriter.innerHTML = content;
-      return;
-    }
+    codeRewriter.innerHTML = content;
   };
 
   return (
     <div className="tsw-code-wrapper">
       <Tabs defaultValue="code" className="w-full">
         <TabsList className="p-0">
-          <TabsTrigger value="code" className={cn(TAB_CSS)}>
+          <TabsTrigger value="code" className={cn("tsw-tab")}>
             <SquareCode className="mr-1" />
             Code
           </TabsTrigger>
           <TabsTrigger
             value="explain"
-            className={cn(TAB_CSS)}
+            className={cn("tsw-tab")}
             onClick={(e) => handleExplainClick(e)}
           >
             <FileKey className="mr-1" />
             Explain
           </TabsTrigger>
-          <TabsTrigger value="write" className={cn(TAB_CSS)} onClick={(e) => handleRewriteClick(e)}>
-            <SquarePen className="mr-1" />
-            Rewrite
+          <TabsTrigger value="write" className={cn("tsw-tab")} onClick={(e) => handleRewriteClick(e)}
+          >
+            <SquarePen className="mr-1" />Rewrite
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="code" className={cn(TABCONTENT_CSS)}>
-          {children}
+        <TabsContent value="code" className={cn("tsw-tab-content")}>
+          <div dangerouslySetInnerHTML={{ __html: codeBlock }} />
         </TabsContent>
-        <TabsContent value="explain" className={cn(TABCONTENT_CSS)}>
-          {isExplaining && <Spinner />}
+        <TabsContent value="explain" className={cn("tsw-tab-content")} >
+          {isExplaining &&
+            <Spinner title="Explaining" />}
           <div id="tsw-code-explainer"></div>
         </TabsContent>
-        <TabsContent value="write" className={cn(TABCONTENT_CSS)}>
-          <div className="flex items-center mb-2">
+        <TabsContent value="write" className={cn("tsw-tab-content")} >
+          <div className="tsw-select">
             <SelectLang lang={selectedLanguage} onLanguageChange={handleLanguageChange} />
-            <Button
-              onClick={(e) => handleRewriteSubmit(e)}
-              className="ml-2 rounded bg-primary text-white transition-opacity duration-300 hover:bg-primary hover:opacity-50 font-bold"
-            >
-              Submit
-            </Button>
+            {!rewriteContent && (
+              <button onClick={(e) => handleRewriteSubmit(e)} className='tsw-submit' disabled={isRewriting}>Submit{isRewriting}</button>
+            )}
           </div>
 
           <div id="tsw-code-rewriter"></div>
-          {isRewriting && <Spinner />}
+          {isRewriting &&
+            <Spinner title="Rewriting" />}
+
         </TabsContent>
       </Tabs>
     </div>
