@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FileKey, SquareCode, SquarePen, StickyNote } from 'lucide-react';
+import { FileKey, SquareCode, SquarePen } from 'lucide-react';
 import Spinner from './Spinner';
 import { explainCode } from '@/utils/ai';
 import { cn } from '@/lib/utils';
@@ -15,9 +15,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
 
   const [isExplaining, setIsExplaining] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
-
   const [selectedLanguage, setSelectedLanguage] = useState("Java");
-
   const [content, setContent] = useState('');
 
   const getChildrenContent = () => {
@@ -37,9 +35,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
     const tabs = trigger.closest('.tsw-code-wrapper');
     if (!tabs) return;
 
-    const codeExplain = tabs.querySelector('div[data-state="active"] #tsw-code-explain');
-    if (!codeExplain) return;
-
+    const codeExplain = tabs.querySelector('div[data-state="active"] #tsw-code-explainer');
     if (!codeExplain) return;
 
     if (content) {
@@ -55,12 +51,10 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
     setIsExplaining(false);
   };
 
-
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
     console.log(language)
     setIsRewriting(true)
-
   };
 
   return (
@@ -86,7 +80,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ children }) => {
         <TabsContent value="explain" className={cn(TABCONTENT_CSS)} >
           {isExplaining &&
             <Spinner />}
-          <div id="tsw-code-explain"></div>
+          <div id="tsw-code-explainer"></div>
 
         </TabsContent>
         <TabsContent value="write" className={cn(TABCONTENT_CSS)} >
