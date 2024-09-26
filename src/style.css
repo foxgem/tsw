@@ -67,7 +67,8 @@
 
 *:focus,
 *:focus-visible {
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .loading-spinner {
@@ -111,8 +112,8 @@
   cursor: pointer;
   border-width: 0px;
   height: 28px;
-  width: 52px;
-  color:black
+  width: 60px;
+  color: black
 }
 
 .tsw-warning {
@@ -145,4 +146,8 @@
   font-size: 16px;
   cursor: pointer;
   padding: 0 5px;
+}
+
+#tsw-code-explain {
+  line-height: 12px;
 }

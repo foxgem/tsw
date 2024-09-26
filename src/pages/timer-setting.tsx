@@ -96,25 +96,29 @@ function TimerSettingPage() {
   }
 
   const renderTimerInput = () => (
-    <div className=" bg-gray-100">
+    <div className="bg-gray-100">
       <div>
         <Input
           type="text"
           value={newDomain}
           onChange={(e) => setNewDomain(e.target.value)}
           placeholder="Enter domain (e.g., example.com)"
-          className={cn("p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100", domainError ? 'border-red-500' : 'border-gray-300')}
+          className={cn("p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100 text-black", domainError ? 'border-red-500' : 'border-gray-300')}
         />
+        {domainError && <p className="text-red-500 text-xs mt-1">{domainError}</p>}
       </div>
-      <div className="flex justify-between items-center">
-        <Input
-          type="number"
-          value={newTime}
-          onChange={(e) => setNewTime(parseInt(e.target.value))}
-          placeholder="Enter time (seconds)"
-          className={cn("p-0 pl-2 border-0 border-b w-full box-border bg-gray-100", timeError ? 'border-red-500' : 'border-gray-300')}
-        />
-        <div className="flex space-x-1">
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex-grow">
+          <Input
+            type="number"
+            value={newTime}
+            onChange={(e) => setNewTime(parseInt(e.target.value))}
+            placeholder="Enter time (seconds)"
+            className={cn("p-0 pl-2 border-0 border-b w-full box-border bg-gray-100  text-black", timeError ? 'border-red-500' : 'border-gray-300')}
+          />
+          {timeError && <p className="text-red-500 text-xs mt-1">{timeError}</p>}
+        </div>
+        <div className="flex space-x-1 ml-2">
           <TSWIcon><Check size={20} onClick={handleUpsertTimer} className="text-green-500" /></TSWIcon>
           <TSWIcon><X size={20} onClick={() => handleCancel()} className="text-red-500" /></TSWIcon>
         </div>
@@ -129,7 +133,7 @@ function TimerSettingPage() {
   )
 
   return (
-    <Layout title="Time Spend Watcher" headerRightElement={TimerForDomains.length < TIMER_COUNT_LIMIT ? addElement() : null} footerPosition="fixed">
+    <Layout title="Time Spend Watcher" headerRightElement={TimerForDomains.length < TIMER_COUNT_LIMIT ? addElement() : <div className="font-bold">Limited</div>} footerPosition="fixed">
       <Card className="overflow-y-auto mx-auto border-0 shadow-none">
         <CardContent className="p-0 shadow-none pb-4">
           {isAdding && renderTimerInput()}
@@ -159,6 +163,8 @@ function TimerSettingPage() {
                 <div className="w-full text-center font-bold text-xl mt-8">No timer, please add one.</div>
               )}
             </ul>
+            {TimerForDomains.length > 0 && TIMER_COUNT_LIMIT - TimerForDomains.length > 0 && (<div className="text-right w-full font-bold py-2 text-base">Left: {TIMER_COUNT_LIMIT - TimerForDomains.length}</div>)}
+
           </ScrollArea>
         </CardContent>
       </Card>

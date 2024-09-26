@@ -3,17 +3,15 @@ import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
+import CodeWrapper from './components/CodeWrapper';
+import React from "react";
+import { createRoot } from 'react-dom/client';
 
 function addStyles() {
   const style = document.createElement("style");
   style.textContent = `
     .tsw-code-wrapper {
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 10px;
-      margin: 10px 0;
-      max-height: 300px;
-      overflow-y: auto;
+      
     }
   `;
   document.head.appendChild(style);
@@ -29,13 +27,20 @@ const wrapLongCodeBlocks = () => {
     if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
       continue;
     }
-
+    
     const lines = codeBlock.innerHTML.split("\n");
     if (lines.length > 10) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "tsw-code-wrapper";
-      codeBlock.parentNode?.insertBefore(wrapper, codeBlock);
-      wrapper.appendChild(codeBlock);
+      const root = createRoot(codeBlock.parentElement as HTMLElement);
+      root.render(
+        React.createElement(
+          CodeWrapper,
+          null,
+          React.createElement('div', {
+            dangerouslySetInnerHTML: { __html: codeBlock.outerHTML }
+          })
+        )
+      );
+      codeBlock.remove();
     }
   }
 };
