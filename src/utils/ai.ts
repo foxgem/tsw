@@ -14,13 +14,16 @@ const siCodeExpert = `
   2.  Rewriting an existing code snippet into a new code snippet with a specified programming language.`;
 
 const ocrExpert = `
-  OCR this image. Extract text as it is without analyzing it and without summarizing it.
-  Before you OCR, consider using one or more of the following methods to pre-process the image so that you can more accurately recognize the text in the image:
-  1. Noise reduction (removing speckles or blurring)
-  2. Image binarization (converting to black and white)
-  3. Deskewing (correcting for tilted images)
-  4. Sharpen the image
-  5. Character Recognition`;
+  OCR this image. Extract the text as it is, without analyzing or summarizing.
+
+  Before OCR, consider the following pre-processing steps:
+  1. **Noise reduction:** Apply Gaussian blur with a sigma of 1.5 to reduce noise.
+  2. **Binarization:** Use adaptive thresholding with a block size of 11 and C=2 to convert the image to black and white.
+  3. **Deskewing:** Correct the image tilt using OpenCV's 'findContours' and 'minAreaRect' functions.
+  4. **Sharpening:** Apply unsharp masking with a kernel size of 3, sigma of 1, and amount of 0.5 to enhance edges.
+
+  If the text is handwritten or the image has a complex background, consider additional steps like morphological operations or perspective correction.
+`;
 
 const generateTextAIFunction = async (
   prompt: string | Array<string | Part>,
