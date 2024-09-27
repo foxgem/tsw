@@ -42,6 +42,13 @@
     border-radius: 0 0.25rem 0.25rem 0.25rem;
 }
 
+.tsw-tab-content textarea{
+    color:black !important;
+    height: 250px !important;
+    overflow:scroll !important;
+}
+
+
 .tsw-select {
     display: flex;
     align-items: center;

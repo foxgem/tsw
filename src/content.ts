@@ -3,6 +3,7 @@ import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 import CodeWrapper from "./components/CodeWrapper";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { LOGO_SVG } from "./utils/constants";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
@@ -43,16 +44,34 @@ const wrapLongCodeBlocks = () => {
 
     const lines = codeText.split("\n");
 
-    if (lines.length > 10) {
-      const root = createRoot(codeBlock.parentElement as HTMLElement);
-      root.render(
-        React.createElement(CodeWrapper, {
-          originCodes: codeText,
-          codeBlock:
-            window.location.hostname === "github.com" ? codeBlock.outerHTML : codeBlock.innerHTML,
-        })
-      );
-      codeBlock.remove();
+    if (lines.length > 5) {
+      const containerDiv = document.createElement('div');
+      containerDiv.className = 'tsw-code-container';
+      const iconDiv = document.createElement('div');
+      iconDiv.className = 'tsw-code-icon';
+      iconDiv.innerHTML = LOGO_SVG
+      containerDiv.appendChild(iconDiv);
+      codeBlock.parentElement?.insertBefore(containerDiv, codeBlock);
+      containerDiv.appendChild(codeBlock);
+
+      containerDiv.addEventListener('mouseenter', () => {
+        iconDiv.style.display = 'block';
+      });
+
+      containerDiv.addEventListener('mouseleave', () => {
+        iconDiv.style.display = 'none';
+      });
+      iconDiv.addEventListener('click', () => {
+        const root = createRoot(containerDiv);
+        root.render(
+          React.createElement(CodeWrapper, {
+            originCodes: codeText,
+            codeBlock:
+              window.location.hostname === "github.com" ? codeBlock.outerHTML : codeBlock.innerHTML,
+          })
+        );
+        codeBlock.remove();
+      });
     }
   }
 };
