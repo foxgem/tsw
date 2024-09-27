@@ -1,11 +1,11 @@
 import { createWarningPopup } from "./WarningPopup";
 import { explainSentence, explainWord, summariseLink } from "./utils/ai";
-
-let rightPart: HTMLElement | null = null;
-let originalContent: string | null = null;
 import CodeWrapper from "./components/CodeWrapper";
 import React from "react";
 import { createRoot } from "react-dom/client";
+
+let rightPart: HTMLElement | null = null;
+let originalContent: string | null = null;
 
 function addStyles() {
   const style = document.createElement("style");
