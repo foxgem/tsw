@@ -25,7 +25,7 @@ const ocrExpert = `
   If the text is handwritten or the image has a complex background, consider additional steps like morphological operations or perspective correction.
 `;
 
-const generateTextAIFunction = async (
+const genAIFunction = async (
   prompt: string | Array<string | Part>,
   systemInstruction: string | Part | Content
 ) => {
@@ -38,19 +38,19 @@ const generateTextAIFunction = async (
 };
 
 export const explainSentence = (sentences: string) =>
-  generateTextAIFunction(
+  genAIFunction(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
     siEnglishTeacher
   );
 
 export const explainWord = (word: string) =>
-  generateTextAIFunction(
+  genAIFunction(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher
   );
 
 export const summariseLink = (link: string) =>
-  generateTextAIFunction(
+  genAIFunction(
     `分析链接： ${link} ，输出格式要求如下：
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
     关键字： 5 个以内
@@ -61,7 +61,7 @@ export const summariseLink = (link: string) =>
   );
 
 export const explainCode = (code: string) =>
-  generateTextAIFunction(
+  genAIFunction(
     `分析代码： ${code} ，并给出清晰的解释，输出：
     1. 编程语言
     2. 代码功能
@@ -71,12 +71,12 @@ export const explainCode = (code: string) =>
   );
 
 export const rewriteCode = (code: string, targetLang: string) =>
-  generateTextAIFunction(`将 ${code} 代码重写为 ${targetLang} 语言的代码。`, siCodeExpert);
+  genAIFunction(`将 ${code} 代码重写为 ${targetLang} 语言的代码。`, siCodeExpert);
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
 export const ocr = (imageBuffer: Buffer, imageMimeType: string) =>
-  generateTextAIFunction(
+  genAIFunction(
     [
       {
         inlineData: { mimeType: imageMimeType, data: imageBuffer.toString("base64") },
