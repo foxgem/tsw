@@ -18,23 +18,38 @@ function addStyles() {
 }
 
 const wrapLongCodeBlocks = () => {
-  const codeBlocks = document.getElementsByTagName("code");
+  const codeBlocks =
+    window.location.hostname === "github.com"
+      ? [document.getElementById("read-only-cursor-text-area")]
+      : document.getElementsByTagName("code");
+
   addStyles();
 
   for (let i = 0; i < codeBlocks.length; i++) {
     const codeBlock = codeBlocks[i];
 
+    if (!codeBlock) {
+      continue;
+    }
+
     if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
       continue;
     }
 
-    const lines = codeBlock.innerText.split("\n");
+    const codeText = codeBlock.innerText || codeBlock.textContent;
+    if (!codeText) {
+      continue;
+    }
+
+    const lines = codeText.split("\n");
+
     if (lines.length > 10) {
       const root = createRoot(codeBlock.parentElement as HTMLElement);
       root.render(
         React.createElement(CodeWrapper, {
-          originCodes: codeBlock.innerText,
-          codeBlock: codeBlock.innerHTML,
+          originCodes: codeText,
+          codeBlock:
+            window.location.hostname === "github.com" ? codeBlock.outerHTML : codeBlock.innerHTML,
         })
       );
       codeBlock.remove();
