@@ -38,7 +38,6 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => 
       const result = await explainCode(originCodes);
       codeExplain.innerHTML = result;
       setExplainContent(result);
-      setIsExplaining(false);
     } catch (e) {
       console.log(e);
     } finally {

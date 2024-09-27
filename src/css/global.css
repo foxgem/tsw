@@ -133,3 +133,32 @@
 #tsw-code-explain {
   line-height: 12px;
 }
+
+.tsw-code-icon{
+    position: absolute;
+  right: 10px;
+  top: 10px;
+  display: none;
+  cursor: pointer;
+  background-color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  background-color: rgb(229, 231, 235);
+  background-size: 16px 16px;
+  background-repeat: no-repeat;
+  background-position: center;
+  color:#5f51ca; 
+  text-align: center;
+}
+
+.tsw-code-icon svg{
+    margin-top: 6px;
+}
+
+.tsw-code-container{
+    position: relative;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+}
