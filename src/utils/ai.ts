@@ -10,8 +10,9 @@ const siSummariser =
 
 const siCodeExpert = `
   You are a coding expert. You are good at:
-  1.  Explaining code snippets.
-  2.  Rewriting an existing code snippet into a new code snippet with a specified programming language.`;
+  1. Explaining code snippets.
+  2. Rewriting an existing code snippet into a new code snippet with a specified programming language.
+  3. Explaining the reason of the given error messages.`;
 
 const ocrExpert = `
   OCR this image. Extract the text as it is, without analyzing or summarizing.
@@ -60,12 +61,13 @@ export const summariseLink = (link: string) =>
     siSummariser
   );
 
-export const explainCode = (code: string) =>
+export const explainCode = (message: string) =>
   genAIFunction(
-    `分析代码： ${code} ，并给出清晰的解释，输出：
-    1. 编程语言
-    2. 代码功能
-    忽略代码中的注释、导入、类型定义、打印输出，只解释代码的逻辑和功能。
+    `分析： ${message} ，并给出清晰的解释。
+    1. 识别类型：代码、错误信息或命令行输出。
+    2. 如果是代码，则给出可能的开发语言，解释代码的逻辑和功能，忽略代码中的注释、导入、类型定义、打印输出。
+    3. 如果是错误信息，则解释错误的原因和解决方法。
+    4. 如果是命令行输出，则解释命令的功能和输出的含义。
     `,
     siCodeExpert
   );
