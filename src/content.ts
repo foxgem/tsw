@@ -9,70 +9,112 @@ let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
 
 function addStyles() {
-  const style = document.createElement("style");
-  style.textContent = `
-    .tsw-code-wrapper {
-
-    }
-  `;
-  document.head.appendChild(style);
+  if (!document.querySelector("style[data-tsw-styles]")) {
+    const style = document.createElement("style");
+    style.setAttribute("data-tsw-styles", "");
+    style.textContent = `
+      .tsw-code-wrapper {
+        /* Add your styles for tsw-code-wrapper here */
+      }
+    `;
+    document.head.appendChild(style);
+  }
 }
 
+const findAllCodeBlocks = () => {
+  if (window.location.hostname === "github.com") {
+    const block = document.getElementById("read-only-cursor-text-area");
+    return block ? [block] : [];
+  } else if (window.location.hostname === "gist.github.com") {
+    const table = document.querySelector("table.highlight");
+    return table ? [table] : [];
+  }
+  return document.getElementsByTagName("code");
+};
+
 const wrapLongCodeBlocks = () => {
-  const codeBlocks =
-    window.location.hostname === "github.com"
-      ? [document.getElementById("read-only-cursor-text-area")]
-      : document.getElementsByTagName("code");
+  const codeBlocks = findAllCodeBlocks();
+
+  if (codeBlocks.length === 0) {
+    return;
+  }
 
   addStyles();
 
-  for (let i = 0; i < codeBlocks.length; i++) {
-    const codeBlock = codeBlocks[i];
-
-    if (!codeBlock) {
-      continue;
+  const processCodeBlock = (codeBlock: Element) => {
+    if (!codeBlock || codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
+      return;
     }
 
-    if (codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
-      continue;
-    }
-
-    const codeText = codeBlock.innerText || codeBlock.textContent;
+    const codeText = codeBlock.textContent;
     if (!codeText) {
-      continue;
+      return;
     }
 
     const lines = codeText.split("\n");
 
     if (lines.length > 5) {
-      const containerDiv = document.createElement('div');
-      containerDiv.className = 'tsw-code-container';
-      const iconDiv = document.createElement('div');
-      iconDiv.className = 'tsw-code-icon';
-      iconDiv.innerHTML = LOGO_SVG
-      containerDiv.appendChild(iconDiv);
-      codeBlock.parentElement?.insertBefore(containerDiv, codeBlock);
-      containerDiv.appendChild(codeBlock);
+      const codeBlockContainer = document.createElement("div");
+      codeBlockContainer.style.position = "relative";
+      codeBlock.parentNode?.insertBefore(codeBlockContainer, codeBlock);
+      codeBlockContainer.appendChild(codeBlock);
 
-      containerDiv.addEventListener('mouseenter', () => {
-        iconDiv.style.display = 'block';
-      });
+      let floatingButton: HTMLElement | null = null;
 
-      containerDiv.addEventListener('mouseleave', () => {
-        iconDiv.style.display = 'none';
-      });
-      iconDiv.addEventListener('click', () => {
-        const root = createRoot(containerDiv);
-        root.render(
-          React.createElement(CodeWrapper, {
-            originCodes: codeText,
-            codeBlock:
-              window.location.hostname === "github.com" ? codeBlock.outerHTML : codeBlock.innerHTML,
-          })
-        );
-        codeBlock.remove();
-      });
+      const showFloatingButton = () => {
+        if (!floatingButton) {
+          floatingButton = document.createElement("div");
+          floatingButton.className = "tsw-floating-button";
+          floatingButton.innerHTML = LOGO_SVG;
+          floatingButton.style.cssText = `
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+          `;
+          codeBlockContainer.appendChild(floatingButton);
+
+          floatingButton.addEventListener("click", () => {
+            const containerDiv = document.createElement("div");
+            containerDiv.className = "tsw-code-container";
+            codeBlockContainer.insertBefore(containerDiv, codeBlock);
+            containerDiv.appendChild(codeBlock);
+
+            const root = createRoot(containerDiv);
+            root.render(
+              React.createElement(CodeWrapper, {
+                originCodes: codeText,
+                codeBlock: window.location.hostname.includes("github.com")
+                  ? codeBlock.outerHTML
+                  : codeBlock.innerHTML,
+              })
+            );
+
+            floatingButton?.remove();
+            floatingButton = null;
+            codeBlockContainer.removeEventListener("mouseenter", showFloatingButton);
+            codeBlockContainer.removeEventListener("mouseleave", hideFloatingButton);
+          });
+        }
+        floatingButton.style.opacity = "1";
+      };
+
+      const hideFloatingButton = () => {
+        if (floatingButton) {
+          floatingButton.style.opacity = "0";
+        }
+      };
+
+      codeBlockContainer.addEventListener("mouseenter", showFloatingButton);
+      codeBlockContainer.addEventListener("mouseleave", hideFloatingButton);
     }
+  };
+
+  for (let i = 0; i < codeBlocks.length; i++) {
+    processCodeBlock(codeBlocks[i]);
   }
 };
 
