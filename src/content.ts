@@ -34,8 +34,71 @@ const findAllCodeBlocks = () => {
 };
 
 const wrapLongCodeBlocks = () => {
+  const createFloatingButton = (codeBlock: Element, codeText: string) => {
+    const codeBlockContainer = document.createElement("div");
+    codeBlockContainer.style.position = "relative";
+    codeBlock.parentNode?.insertBefore(codeBlockContainer, codeBlock);
+    codeBlockContainer.appendChild(codeBlock);
+
+    const floatingButton = document.createElement("div");
+    floatingButton.className = "tsw-floating-button";
+    floatingButton.innerHTML = LOGO_SVG;
+    floatingButton.style.cssText = `
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      `;
+    codeBlockContainer.appendChild(floatingButton);
+
+    const handleButtonClick = () => {
+      const containerDiv = document.createElement("div");
+      containerDiv.className = "tsw-code-container";
+      codeBlockContainer.insertBefore(containerDiv, codeBlock);
+      containerDiv.appendChild(codeBlock);
+
+      const root = createRoot(containerDiv);
+      root.render(
+        React.createElement(CodeWrapper, {
+          originCodes: codeText,
+          codeBlock: window.location.hostname.includes("github.com")
+            ? codeBlock.outerHTML
+            : codeBlock.innerHTML,
+        })
+      );
+
+      floatingButton?.remove();
+      codeBlockContainer.removeEventListener("mouseenter", showFloatingButton);
+      codeBlockContainer.removeEventListener("mouseleave", hideFloatingButton);
+    };
+
+    floatingButton.addEventListener("click", handleButtonClick);
+
+    const showFloatingButton = () => {
+      if (floatingButton) {
+        floatingButton.style.opacity = "1";
+      }
+    };
+
+    const hideFloatingButton = () => {
+      if (floatingButton) {
+        floatingButton.style.opacity = "0";
+      }
+    };
+
+    codeBlockContainer.addEventListener("mouseenter", showFloatingButton);
+    codeBlockContainer.addEventListener("mouseleave", hideFloatingButton);
+  };
+
   const processCodeBlock = (codeBlock: Element) => {
-    if (!codeBlock || codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
+    if (
+      !codeBlock ||
+      codeBlock.parentElement?.classList.contains("tsw-code-wrapper") ||
+      codeBlock.closest("div")?.querySelector(".tsw-floating-button")
+    ) {
       return;
     }
 
@@ -46,63 +109,8 @@ const wrapLongCodeBlocks = () => {
 
     const lines = codeText.split("\n");
 
-    if (lines.length > 5) {
-      const codeBlockContainer = document.createElement("div");
-      codeBlockContainer.style.position = "relative";
-      codeBlock.parentNode?.insertBefore(codeBlockContainer, codeBlock);
-      codeBlockContainer.appendChild(codeBlock);
-
-      let floatingButton: HTMLElement | null = null;
-
-      const showFloatingButton = () => {
-        if (!floatingButton) {
-          floatingButton = document.createElement("div");
-          floatingButton.className = "tsw-floating-button";
-          floatingButton.innerHTML = LOGO_SVG;
-          floatingButton.style.cssText = `
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            cursor: pointer;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-          `;
-          codeBlockContainer.appendChild(floatingButton);
-
-          floatingButton.addEventListener("click", () => {
-            const containerDiv = document.createElement("div");
-            containerDiv.className = "tsw-code-container";
-            codeBlockContainer.insertBefore(containerDiv, codeBlock);
-            containerDiv.appendChild(codeBlock);
-
-            const root = createRoot(containerDiv);
-            root.render(
-              React.createElement(CodeWrapper, {
-                originCodes: codeText,
-                codeBlock: window.location.hostname.includes("github.com")
-                  ? codeBlock.outerHTML
-                  : codeBlock.innerHTML,
-              })
-            );
-
-            floatingButton?.remove();
-            floatingButton = null;
-            codeBlockContainer.removeEventListener("mouseenter", showFloatingButton);
-            codeBlockContainer.removeEventListener("mouseleave", hideFloatingButton);
-          });
-        }
-        floatingButton.style.opacity = "1";
-      };
-
-      const hideFloatingButton = () => {
-        if (floatingButton) {
-          floatingButton.style.opacity = "0";
-        }
-      };
-
-      codeBlockContainer.addEventListener("mouseenter", showFloatingButton);
-      codeBlockContainer.addEventListener("mouseleave", hideFloatingButton);
+    if (lines.length >= 5) {
+      createFloatingButton(codeBlock, codeText);
     }
   };
 
@@ -124,7 +132,7 @@ const wrapLongCodeBlocks = () => {
   const observer = new MutationObserver(
     debounce(() => {
       processAllCodeBlocks();
-    }, 300)
+    }, 1000)
   );
 
   observer.observe(document.body, {
@@ -134,7 +142,7 @@ const wrapLongCodeBlocks = () => {
 
   setTimeout(() => {
     observer.disconnect();
-  }, 3000);
+  }, 5000);
 };
 
 const createOrUpdateSplitView = (rightContent: string, leftWidth = 60, rightWidth = 40) => {
