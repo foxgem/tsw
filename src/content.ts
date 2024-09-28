@@ -107,9 +107,10 @@ const wrapLongCodeBlocks = () => {
       return;
     }
 
-    const lines = codeText.split("\n");
+    const longEnough =
+      codeText.split("\n").length >= 5 || codeBlock.querySelectorAll("div, span").length >= 5;
 
-    if (lines.length >= 5) {
+    if (longEnough) {
       createFloatingButton(codeBlock, codeText);
     }
   };
