@@ -4,6 +4,7 @@ import CodeWrapper from "./components/CodeWrapper";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { LOGO_SVG } from "./utils/constants";
+import { debounce } from "lodash";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
@@ -33,14 +34,6 @@ const findAllCodeBlocks = () => {
 };
 
 const wrapLongCodeBlocks = () => {
-  const codeBlocks = findAllCodeBlocks();
-
-  if (codeBlocks.length === 0) {
-    return;
-  }
-
-  addStyles();
-
   const processCodeBlock = (codeBlock: Element) => {
     if (!codeBlock || codeBlock.parentElement?.classList.contains("tsw-code-wrapper")) {
       return;
@@ -113,9 +106,35 @@ const wrapLongCodeBlocks = () => {
     }
   };
 
-  for (let i = 0; i < codeBlocks.length; i++) {
-    processCodeBlock(codeBlocks[i]);
-  }
+  const processAllCodeBlocks = () => {
+    const codeBlocks = findAllCodeBlocks();
+    if (codeBlocks.length === 0) {
+      return;
+    }
+
+    addStyles();
+
+    for (let i = 0; i < codeBlocks.length; i++) {
+      processCodeBlock(codeBlocks[i]);
+    }
+  };
+
+  processAllCodeBlocks();
+
+  const observer = new MutationObserver(
+    debounce(() => {
+      processAllCodeBlocks();
+    }, 300)
+  );
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  setTimeout(() => {
+    observer.disconnect();
+  }, 3000);
 };
 
 const createOrUpdateSplitView = (rightContent: string, leftWidth = 60, rightWidth = 40) => {
