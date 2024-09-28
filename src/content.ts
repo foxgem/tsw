@@ -29,7 +29,11 @@ const findAllCodeBlocks = () => {
   } else if (window.location.hostname === "gist.github.com") {
     const table = document.querySelector("table.highlight");
     return table ? [table] : [];
+  } else if (window.location.hostname === "medium.com") {
+    const spanTags = document.querySelectorAll("pre > span");
+    return Array.from(spanTags);
   }
+
   return document.getElementsByTagName("code");
 };
 
@@ -97,8 +101,9 @@ const wrapLongCodeBlocks = () => {
     if (
       !codeBlock ||
       codeBlock.parentElement?.classList.contains("tsw-code-wrapper") ||
-      codeBlock.closest("div")?.querySelector(".tsw-floating-button")
+      codeBlock.parentElement?.querySelector(".tsw-floating-button")
     ) {
+      console.log("Code block already processed");
       return;
     }
 
