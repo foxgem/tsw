@@ -1,11 +1,24 @@
 export const TIMER_COUNT_LIMIT = 3;
 
-export const TAB_CSS = "data-[state=active]:bg-white data-[state=active]:shadow-sm font-bold data-[state=active]:rounded-t data-[state=active]:border data-[state=active]:border-b-0"
+export const TAB_CSS =
+  "data-[state=active]:bg-white data-[state=active]:shadow-sm font-bold data-[state=active]:rounded-t data-[state=active]:border data-[state=active]:border-b-0";
 
-export const TABCONTENT_CSS = "border p-5 mt-0 h-[267px] overflow-scroll rounded-b rounded-tr"
+export const TABCONTENT_CSS = "border p-5 mt-0 h-[267px] overflow-scroll rounded-b rounded-tr";
 
-export const GITHUB_ROOT = "https://github.com/foxgem/tsw"
+export const GITHUB_ROOT = "https://github.com/foxgem/tsw";
 
-export const LANG_LIST = ["Java", "Javascript", "Typescript", "Rust", "Python", "Go"]
+export const LANG_LIST = [
+  "Java",
+  "Javascript",
+  "Typescript",
+  "Rust",
+  "Python",
+  "Go",
+  "Svelte",
+  "React",
+  "Ionic",
+  "Angular",
+];
 
-export const LOGO_SVG='<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'
+export const LOGO_SVG =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flower"><circle cx="12" cy="12" r="3"/><path d="M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5"/><path d="M12 7.5V9"/><path d="M7.5 12H9"/><path d="M16.5 12H15"/><path d="M12 16.5V15"/><path d="m8 8 1.88 1.88"/><path d="M14.12 9.88 16 8"/><path d="m8 16 1.88-1.88"/><path d="M14.12 14.12 16 16"/></svg>';

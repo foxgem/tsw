@@ -48,13 +48,7 @@ const wrapLongCodeBlocks = () => {
     floatingButton.className = "tsw-floating-button";
     floatingButton.innerHTML = LOGO_SVG;
     floatingButton.style.cssText = `
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        cursor: pointer;
-        z-index: 1000;
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
+       
       `;
     codeBlockContainer.appendChild(floatingButton);
 
