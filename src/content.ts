@@ -39,7 +39,18 @@ const findAllCodeBlocks = () => {
 };
 
 const findAllImages = () => {
-  return document.getElementsByTagName("img");
+  const imgTags = document.getElementsByTagName("img");
+  return Array.from(imgTags).filter((img) => {
+    const src = img.getAttribute("src");
+    const classes = img.className.split(" ");
+    return (
+      src &&
+      src.trim() !== "" &&
+      !classes.some((cls) => cls.startsWith("avatar") || cls.startsWith("icon")) &&
+      img.width >= 200 &&
+      img.height >= 200
+    );
+  });
 };
 
 const wrapTargetTags = () => {
@@ -123,7 +134,6 @@ const wrapTargetTags = () => {
   const processImgElm = (imgElm: Element) => {
     if (
       !imgElm ||
-      !imgElm.getAttribute("src") ||
       imgElm.parentElement?.classList.contains("tsw-code-wrapper") ||
       imgElm.parentElement?.querySelector(".tsw-floating-button")
     ) {
