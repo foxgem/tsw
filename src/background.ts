@@ -25,7 +25,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   }
 
   if (changeInfo.status === "complete") {
-    chrome.tabs.sendMessage(tabId, { action: "wrapCodeBlocks" });
+    chrome.tabs.sendMessage(tabId, { action: "wrapTargetTags" });
   }
 
   if (changeInfo.status === "complete" && !timerStartedMap.has(tabId)) {

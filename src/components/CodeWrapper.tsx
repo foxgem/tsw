@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FileKey, SquareCode, SquarePen } from 'lucide-react';
-import Spinner from './Spinner';
-import { explainCode, rewriteCode } from '@/utils/ai';
-import { cn } from '@/lib/utils';
-import SelectLang from './SelectLang';
-import "../css/wrapper.css"
+import React, { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FileKey, SquareCode, SquarePen } from "lucide-react";
+import Spinner from "./Spinner";
+import { explainCode, rewriteCode } from "@/utils/ai";
+import { cn } from "@/lib/utils";
+import SelectLang from "./SelectLang";
+import "../css/wrapper.css";
 
 interface CodeWrapperProps {
   codeBlock: string;
-  originCodes: string;
+  rawCode: string;
 }
 
-const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => {
+const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, rawCode }) => {
   const [isExplaining, setIsExplaining] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("Java");
   const [explainContent, setExplainContent] = useState("");
   const [rewriteContent, setRewriteContent] = useState("");
-
 
   const handleExplainClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     const trigger = event.currentTarget;
@@ -35,7 +34,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => 
 
     try {
       setIsExplaining(true);
-      const result = await explainCode(originCodes);
+      const result = await explainCode(rawCode);
       codeExplain.innerHTML = result;
       setExplainContent(result);
     } catch (e) {
@@ -47,7 +46,7 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => 
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
-    setRewriteContent("")
+    setRewriteContent("");
   };
 
   const handleRewriteClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -63,12 +62,10 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => 
       loadCodeRewriter(trigger, rewriteContent);
     }
     try {
-
       setIsRewriting(true);
-      const result = await rewriteCode(originCodes, selectedLanguage);
+      const result = await rewriteCode(rawCode, selectedLanguage);
       loadCodeRewriter(trigger, result);
       setRewriteContent(result);
-
     } catch (e) {
       console.log(e);
     } finally {
@@ -102,31 +99,38 @@ const CodeWrapper: React.FC<CodeWrapperProps> = ({ codeBlock, originCodes }) => 
             <FileKey className="mr-1" />
             Explain
           </TabsTrigger>
-          <TabsTrigger value="write" className={cn("tsw-tab")} onClick={(e) => handleRewriteClick(e)}
+          <TabsTrigger
+            value="write"
+            className={cn("tsw-tab")}
+            onClick={(e) => handleRewriteClick(e)}
           >
-            <SquarePen className="mr-1" />Rewrite
+            <SquarePen className="mr-1" />
+            Rewrite
           </TabsTrigger>
         </TabsList>
         <TabsContent value="code" className={cn("tsw-tab-content")}>
           <div dangerouslySetInnerHTML={{ __html: codeBlock }} />
         </TabsContent>
-        <TabsContent value="explain" className={cn("tsw-tab-content")} >
-          {isExplaining &&
-            <Spinner title="Explaining" />}
+        <TabsContent value="explain" className={cn("tsw-tab-content")}>
+          {isExplaining && <Spinner title="Explaining" />}
           <div id="tsw-code-explainer"></div>
         </TabsContent>
-        <TabsContent value="write" className={cn("tsw-tab-content")} >
+        <TabsContent value="write" className={cn("tsw-tab-content")}>
           <div className="tsw-select">
             <SelectLang lang={selectedLanguage} onLanguageChange={handleLanguageChange} />
             {!rewriteContent && (
-              <button onClick={(e) => handleRewriteSubmit(e)} className='tsw-submit' disabled={isRewriting}>Submit{isRewriting}</button>
+              <button
+                onClick={(e) => handleRewriteSubmit(e)}
+                className="tsw-submit"
+                disabled={isRewriting}
+              >
+                Submit{isRewriting}
+              </button>
             )}
           </div>
 
           <div id="tsw-code-rewriter"></div>
-          {isRewriting &&
-            <Spinner title="Rewriting" />}
-
+          {isRewriting && <Spinner title="Rewriting" />}
         </TabsContent>
       </Tabs>
     </div>

@@ -1,10 +1,11 @@
-import { createWarningPopup } from "./WarningPopup";
-import { explainSentence, explainWord, summariseLink } from "./utils/ai";
-import CodeWrapper from "./components/CodeWrapper";
+import { debounce } from "lodash";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { createWarningPopup } from "./WarningPopup";
+import CodeWrapper from "./components/CodeWrapper";
+import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 import { LOGO_SVG } from "./utils/constants";
-import { debounce } from "lodash";
+import ImgWrapper from "./components/ImgWrapper";
 
 let rightPart: HTMLElement | null = null;
 let originalContent: string | null = null;
@@ -37,8 +38,12 @@ const findAllCodeBlocks = () => {
   return document.getElementsByTagName("code");
 };
 
-const wrapLongCodeBlocks = () => {
-  const createFloatingButton = (codeBlock: Element, codeText: string) => {
+const findAllImages = () => {
+  return document.getElementsByTagName("img");
+};
+
+const wrapTargetTags = () => {
+  const createFloatingButton = (codeBlock: Element, reactComponent: React.ReactElement) => {
     const codeBlockContainer = document.createElement("div");
     codeBlockContainer.style.position = "relative";
     codeBlock.parentNode?.insertBefore(codeBlockContainer, codeBlock);
@@ -48,7 +53,7 @@ const wrapLongCodeBlocks = () => {
     floatingButton.className = "tsw-floating-button";
     floatingButton.innerHTML = LOGO_SVG;
     floatingButton.style.cssText = `
-       
+
       `;
     codeBlockContainer.appendChild(floatingButton);
 
@@ -59,14 +64,7 @@ const wrapLongCodeBlocks = () => {
       containerDiv.appendChild(codeBlock);
 
       const root = createRoot(containerDiv);
-      root.render(
-        React.createElement(CodeWrapper, {
-          originCodes: codeText,
-          codeBlock: window.location.hostname.includes("github.com")
-            ? codeBlock.outerHTML
-            : codeBlock.innerHTML,
-        })
-      );
+      root.render(reactComponent);
 
       floatingButton?.remove();
       codeBlockContainer.removeEventListener("mouseenter", showFloatingButton);
@@ -110,13 +108,43 @@ const wrapLongCodeBlocks = () => {
       codeText.split("\n").length >= 5 || codeBlock.querySelectorAll("div, span").length >= 5;
 
     if (longEnough) {
-      createFloatingButton(codeBlock, codeText);
+      createFloatingButton(
+        codeBlock,
+        React.createElement(CodeWrapper, {
+          rawCode: codeText,
+          codeBlock: window.location.hostname.includes("github.com")
+            ? codeBlock.outerHTML
+            : codeBlock.innerHTML,
+        })
+      );
     }
   };
 
-  const processAllCodeBlocks = () => {
+  const processImgElm = (imgElm: Element) => {
+    if (
+      !imgElm ||
+      !imgElm.getAttribute("src") ||
+      imgElm.parentElement?.classList.contains("tsw-code-wrapper") ||
+      imgElm.parentElement?.querySelector(".tsw-floating-button")
+    ) {
+      console.log("Img already processed");
+      return;
+    }
+
+    createFloatingButton(
+      imgElm,
+      React.createElement(ImgWrapper, {
+        imgSrc: imgElm.getAttribute("src")!,
+        imgBlock: imgElm.outerHTML,
+      })
+    );
+  };
+
+  const processAllFoundTags = () => {
     const codeBlocks = findAllCodeBlocks();
-    if (codeBlocks.length === 0) {
+    const images = findAllImages();
+
+    if (codeBlocks.length + images.length === 0) {
       return;
     }
 
@@ -125,13 +153,17 @@ const wrapLongCodeBlocks = () => {
     for (let i = 0; i < codeBlocks.length; i++) {
       processCodeBlock(codeBlocks[i]);
     }
+
+    for (let i = 0; i < images.length; i++) {
+      processImgElm(images[i]);
+    }
   };
 
-  processAllCodeBlocks();
+  processAllFoundTags();
 
   const observer = new MutationObserver(
     debounce(() => {
-      processAllCodeBlocks();
+      processAllFoundTags();
     }, 1000)
   );
 
@@ -279,8 +311,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       clearTimeout(warningTimeout);
       clearTimeout(closeTimeout);
       break;
-    case "wrapCodeBlocks":
-      wrapLongCodeBlocks();
+    case "wrapTargetTags":
+      wrapTargetTags();
       break;
   }
 });
