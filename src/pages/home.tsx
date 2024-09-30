@@ -1,13 +1,16 @@
+import { ListOrdered, TimerReset } from "lucide-react";
 import React from "react";
-import { ListOrdered, TimerReset, } from 'lucide-react';
-import { useNavigate } from "react-router-dom"
+
+import { Key } from "lucide-react";
+
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Footer from "@/components/Footer";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const gotoSummary = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
@@ -20,12 +23,15 @@ function MainPage() {
         console.error("Unable to access current tab");
       }
     });
-  }
+  };
 
   const gotoTimerSetting = () => {
-    navigate("/timer-setting", {})
-  }
+    navigate("/timer-setting", {});
+  };
 
+  const gotoApiKeySetting = () => {
+    navigate("/setting-api-key", {});
+  };
 
   return (
     <div className="w-[280px] h-[296px]">
@@ -35,25 +41,42 @@ function MainPage() {
           variant="outline"
           onClick={() => gotoSummary()}
           className={cn(
-            "px-4 py-2 rounded-full h-12 mb-5  border-0 justify-start",
+            "px-4 py-2 rounded-full h-12 mb-4 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
             "bg-accent hover:bg-primary hover:text-white dark:text-white"
           )}
         >
-          <ListOrdered size={24} className="mr-2" />Summary
+          <ListOrdered size={24} className="mr-2" />
+          Summary
         </Button>
+
         <Button
           variant="outline"
           onClick={() => gotoTimerSetting()}
           className={cn(
-            "px-4 py-2 rounded-full h-12 border-0  justify-start",
+            "px-4 py-2 rounded-full h-12 mb-4 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent  hover:bg-primary hover:text-white dark:text-white"
+            "bg-accent hover:bg-primary hover:text-white dark:text-white"
           )}
         >
-          <TimerReset className="mr-2" />Timer Setting
+          <TimerReset className="mr-2" />
+          Timer Setting
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => gotoApiKeySetting()}
+          className={cn(
+            "px-4 py-2 rounded-full h-12 mb-4 border-0 justify-start",
+            "cursor-pointer",
+            "transition-colors duration-300",
+            "bg-accent hover:bg-primary hover:text-white dark:text-white"
+          )}
+        >
+          <Key className="mr-2" />
+          Setting API KEY
         </Button>
       </nav>
       <Footer />
