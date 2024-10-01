@@ -1,7 +1,15 @@
 import { Content, GoogleGenerativeAI, Part } from "@google/generative-ai";
+import { Storage } from "@plasmohq/storage";
 import { marked } from "marked";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY!);
+const genAI = async () => {
+  const storage = new Storage();
+  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || (await storage.get("apiKey"));
+  if (!apiKey) {
+    throw new Error("Google Generative AI API key not found in environment variables or storage");
+  }
+  return new GoogleGenerativeAI(apiKey);
+};
 
 const siEnglishTeacher =
   "你是一名资深英语老师有丰富的教学经验，可以深入浅出的用中文讲解英文疑难杂句和单词释义。";
@@ -30,7 +38,7 @@ const genAIFunction = async (
   prompt: string | Array<string | Part>,
   systemInstruction: string | Part | Content
 ) => {
-  const model = genAI.getGenerativeModel({
+  const model = (await genAI()).getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction,
   });
