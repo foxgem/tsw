@@ -32,10 +32,12 @@ export async function deleteTimerForDomain(domain: string) {
 
 export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
   const allItems = await storage.getAll();
-  return Object.entries(allItems).map(([domain, time]) => ({
-    domain,
-    time: Number(time),
-  }));
+  return Object.entries(allItems)
+    .filter(([key]) => key !== "apiKey")
+    .map(([domain, time]) => ({
+      domain,
+      time: Number(time),
+    }));
 }
 
 export const timerSchema = z.object({
