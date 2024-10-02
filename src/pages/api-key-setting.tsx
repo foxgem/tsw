@@ -77,7 +77,7 @@ function SettingApiKey() {
             </div>
           ) : (
             <div className="flex justify-between items-center">
-              <p className="text-sm">API Key: {apiKey || "Not set"}</p>
+              <p className="text-sm">API Key: {apiKey ? "********" : "Not set"}</p>
               <Button onClick={handleEdit} variant="outline" size="sm" className="rounded">
                 Edit
               </Button>
