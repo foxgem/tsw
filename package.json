@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "html-escaper": "^3.0.3",
     "lodash": "^4.17.21",
     "lucide-react": "^0.441.0",
     "marked": "^14.1.2",

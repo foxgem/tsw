@@ -1,5 +1,6 @@
 import { Content, GoogleGenerativeAI, Part } from "@google/generative-ai";
 import { Storage } from "@plasmohq/storage";
+import { escape } from "html-escaper";
 import { marked } from "marked";
 
 const genAI = async () => {
@@ -36,14 +37,15 @@ const ocrExpert = `
 
 const genAIFunction = async (
   prompt: string | Array<string | Part>,
-  systemInstruction: string | Part | Content
+  systemInstruction: string | Part | Content,
+  rawOutput = false
 ) => {
   const model = (await genAI()).getGenerativeModel({
     model: "gemini-1.5-flash",
     systemInstruction,
   });
-  const result = await model.generateContent(prompt);
-  return marked.parse(result.response.text());
+  const result = (await model.generateContent(prompt)).response.text();
+  return rawOutput ? `<pre>${marked.parse(escape(result))}</pre>` : marked.parse(result);
 };
 
 export const explainSentence = (sentences: string) =>
@@ -92,5 +94,6 @@ export const ocr = (imageBuffer: Buffer, imageMimeType: string) =>
         inlineData: { mimeType: imageMimeType, data: imageBuffer.toString("base64") },
       },
     ],
-    ocrExpert
+    ocrExpert,
+    true
   );

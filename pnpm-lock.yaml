@@ -23,6 +23,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      html-escaper:
+        specifier: ^3.0.3
+        version: 3.0.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -3028,6 +3031,9 @@ packages:
 
   html-escaper@2.0.2:
     resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
+
+  html-escaper@3.0.3:
+    resolution: {integrity: sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==}
 
   htmlnano@2.1.1:
     resolution: {integrity: sha512-kAERyg/LuNZYmdqgCdYvugyLWNFAm8MWXpQMz1pLpetmCbFwoMxvkSoaAMlFrOC4OKTWI4KlZGT/RsNxg4ghOw==}
@@ -8461,6 +8467,8 @@ snapshots:
       tslib: 2.7.0
 
   html-escaper@2.0.2: {}
+
+  html-escaper@3.0.3: {}
 
   htmlnano@2.1.1(postcss@8.4.47)(svgo@2.8.0)(terser@5.31.6)(typescript@4.9.4):
     dependencies:
