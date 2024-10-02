@@ -15,7 +15,14 @@ const ImgWrapper: React.FC<ImgWrapperProps> = ({ imgSrc, imgBlock }) => {
   const [isOcring, setIsOcring] = useState(false);
   const [ocrContent, setOcrContent] = useState("");
 
+  const handleImageClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); 
+    event.preventDefault(); 
+  }
+
   const handleOcrClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); 
+    event.preventDefault(); 
     const trigger = event.currentTarget;
     const tabs = trigger.closest(".tsw-code-wrapper");
     if (!tabs) return;
@@ -45,18 +52,18 @@ const ImgWrapper: React.FC<ImgWrapperProps> = ({ imgSrc, imgBlock }) => {
 
   return (
     <div className="tsw-code-wrapper">
-      <Tabs defaultValue="code" className="w-full">
+      <Tabs defaultValue="image" className="w-full">
         <TabsList className="p-0">
-          <TabsTrigger value="code" className={cn("tsw-tab")}>
+          <TabsTrigger value="image" className={cn("tsw-tab")} onClick={(e) => handleImageClick(e)}>
             <SquareCode className="mr-1" />
-            Code
+            Image
           </TabsTrigger>
           <TabsTrigger value="ocr" className={cn("tsw-tab")} onClick={(e) => handleOcrClick(e)}>
             <FileKey className="mr-1" />
             OCR
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="code" className={cn("tsw-tab-content")}>
+        <TabsContent value="image" className={cn("tsw-tab-content")}>
           <div dangerouslySetInnerHTML={{ __html: imgBlock }} />
         </TabsContent>
         <TabsContent value="ocr" className={cn("tsw-tab-content")}>

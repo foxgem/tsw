@@ -61,7 +61,7 @@ function SettingApiKey() {
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="Enter your API Key"
                 className={cn(
-                  "p-2 border w-full box-border bg-white text-black",
+                  "p-2 border-0 border-b w-full box-border bg-white text-black",
                   error ? "border-red-500" : "border-gray-300"
                 )}
               />
@@ -78,7 +78,7 @@ function SettingApiKey() {
           ) : (
             <div className="flex justify-between items-center">
               <p className="text-sm">API Key: {apiKey || "Not set"}</p>
-              <Button onClick={handleEdit} variant="outline" size="sm">
+              <Button onClick={handleEdit} variant="outline" size="sm" className="rounded">
                 Edit
               </Button>
             </div>

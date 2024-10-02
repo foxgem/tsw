@@ -1,5 +1,9 @@
+#tsw-code-explainer h1,#tsw-code-explainer h2,#tsw-code-explainer h3,#tsw-code-explainer ol,#tsw-code-explainer ul,#tsw-code-explainer p{
+    margin:0;
+}
+
 #tsw-code-explainer p{
-    margin:0
+    line-height: 12px;
 }
 
 .tsw-tab {
