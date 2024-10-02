@@ -85,10 +85,10 @@
     position: fixed;
     top: 10px;
     right: 10px;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 14px;
     line-height: 1.25rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0 0.5rem;
     background-color: rgb(229 231 235);
     border-radius: .25rem;
     cursor: pointer;
@@ -142,12 +142,11 @@
     z-index: 1000;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-    background-color: #ffffff;
     width: 36px;
     height: 36px;
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    background-color: rgb(229, 231, 235);
+    background-color: rgb(239, 241, 245);
     background-size: 16px 16px;
     background-repeat: no-repeat;
     background-position: center;
@@ -156,7 +155,7 @@
 }
 
 .tsw-floating-button svg {
-    margin-top: 6px;
+    margin: 6px;
 }
 
 .tsw-code-container {

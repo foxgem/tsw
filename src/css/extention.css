@@ -19,3 +19,14 @@
     --item: 0, 0%, 100%, 0.1
   }
 } 
+
+*:focus,
+*:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.focus-visible\:ring-2:focus-visible {
+    box-shadow: none !important;
+}
+

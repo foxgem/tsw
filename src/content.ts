@@ -17,6 +17,8 @@ function addStyles() {
     style.textContent = `
       .tsw-code-wrapper {
         /* Add your styles for tsw-code-wrapper here */
+        background-color:rgb(250, 250, 250);
+        color:black;
       }
     `;
     document.head.appendChild(style);
