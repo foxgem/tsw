@@ -56,12 +56,12 @@ function SettingApiKey() {
         <CardContent className="p-4">
           {isEditing ? (
             <div className="bg-gray-100 p-4 rounded">
-              <Input
+              <textarea
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="Enter your API Key"
                 className={cn(
-                  "p-2 border-0 border-b w-full box-border bg-white text-black",
+                  "p-2 border-0 border-b w-full box-border bg-white text-black resize-none",
                   error ? "border-red-500" : "border-gray-300"
                 )}
               />
