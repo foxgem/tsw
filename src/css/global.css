@@ -145,17 +145,17 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    background-color: rgb(239, 241, 245);
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+    /* background-color: rgb(239, 241, 245);
     background-size: 16px 16px;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center; */
     text-align: center;
-    color:#5f51ca;
+    /* color:#5f51ca; */
 }
 
 .tsw-floating-button svg {
-    margin: 6px;
+    /* margin: 6px; */
 }
 
 .tsw-code-container {
