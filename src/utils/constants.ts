@@ -21,4 +21,4 @@ export const LANG_LIST = [
 ];
 
 export const LOGO_SVG =
-  '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bot-message-square"><path d="M12 6V2H8"/><path d="m8 18-4 4V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2Z"/><path d="M2 12h2"/><path d="M9 11v2"/><path d="M15 11v2"/><path d="M20 12h2"/></svg>';
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">  <circle cx="50" cy="50" r="45" fill="#4A90E2"/>  <rect x="30" y="25" width="40" height="45" rx="7" fill="white"/>  <line x1="50" y1="12" x2="50" y2="25" stroke="white" stroke-width="4"/>  <circle cx="50" cy="10" r="3" fill="white"/>  <circle cx="40" cy="40" r="4" fill="#4A90E2"/>  <circle cx="60" cy="40" r="4" fill="#4A90E2"/>  <path d="M 38 55 Q 50 65 62 55" stroke="#4A90E2" stroke-width="3" fill="none"/></svg>';
