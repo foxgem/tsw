@@ -18,6 +18,7 @@ export const LANG_LIST = [
   "React",
   "Ionic",
   "Angular",
+  "Soldity",
 ];
 
 export const LOGO_SVG =
