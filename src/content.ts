@@ -7,9 +7,6 @@ import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 import { LOGO_SVG } from "./utils/constants";
 import ImgWrapper from "./components/ImgWrapper";
 
-let rightPart: HTMLElement | null = null;
-let originalContent: string | null = null;
-
 function addStyles() {
   if (!document.querySelector("style[data-tsw-styles]")) {
     const style = document.createElement("style");
@@ -24,6 +21,52 @@ function addStyles() {
     document.head.appendChild(style);
   }
 }
+
+function createFloatingToggleButton() {
+  const floatingButton = document.createElement("button");
+  floatingButton.id = "tsw-floating-toggle";
+  floatingButton.innerHTML = "TSW";
+  floatingButton.style.cssText = `
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 10000;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  `;
+
+  const panel = document.createElement("div");
+  panel.id = "tsw-toggle-panel";
+  panel.style.cssText = `
+    position: fixed;
+    top: 50%;
+    right: 60px;
+    transform: translateY(-50%);
+    width: 40%;
+    height: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 9999;
+    display: none;
+  `;
+  panel.innerHTML = "";
+
+  floatingButton.addEventListener("click", () => {
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+  });
+
+  document.body.appendChild(floatingButton);
+  document.body.appendChild(panel);
+}
+
+createFloatingToggleButton();
 
 const findAllCodeBlocks = () => {
   if (window.location.hostname === "github.com") {
@@ -65,9 +108,6 @@ const wrapTargetTags = () => {
     const floatingButton = document.createElement("div");
     floatingButton.className = "tsw-floating-button";
     floatingButton.innerHTML = LOGO_SVG;
-    floatingButton.style.cssText = `
-
-      `;
     codeBlockContainer.appendChild(floatingButton);
 
     const handleButtonClick = () => {
@@ -189,43 +229,14 @@ const wrapTargetTags = () => {
   }, 5000);
 };
 
-const createOrUpdateSplitView = (rightContent: string, leftWidth = 60, rightWidth = 40) => {
-  if (!originalContent) {
-    originalContent = document.body.innerHTML;
-  }
-
-  if (!rightPart) {
-    const leftPart = createPart("left", leftWidth);
-    leftPart.innerHTML = originalContent;
-
-    rightPart = createPart("right", rightWidth);
-
-    document.body.innerHTML = "";
-    document.body.appendChild(leftPart);
-    document.body.appendChild(rightPart);
-  }
-
-  rightPart.innerHTML = rightContent;
-
-  const closeButton = rightPart.querySelector("#tsw-close-right-part");
-  if (closeButton) {
-    closeButton.addEventListener("click", closeSplitView);
-  }
-};
-
-const closeSplitView = () => {
-  if (rightPart && originalContent) {
-    document.body.removeChild(rightPart);
-    rightPart = null;
-    document.body.innerHTML = originalContent;
-    originalContent = null;
-  }
-};
-
 const summarize = async () => {
-  createOrUpdateSplitView(`
+  const panel = document.getElementById("tsw-toggle-panel");
+  if (!panel) {
+    return;
+  }
+  panel.style.display = "block";
+  panel.innerHTML = `
     <div  class="tsw-panel"">
-      <button id="tsw-close-right-part">Close</button>
       <div id="tsw-summary-content">
         <div style="text-align: center; padding: 20px;">
           <div class="loading-spinner"></div>
@@ -233,7 +244,7 @@ const summarize = async () => {
         </div>
       </div>
     </div>
-  `);
+  `;
 
   const summaryContent = await summariseLink(window.location.href);
   const summaryElement = document.getElementById("tsw-summary-content");
@@ -263,25 +274,16 @@ const handleTimer = (remainingTime: number, domain: string) => {
   }, remainingTime * 1000) as unknown as number;
 };
 
-const createPart = (side: "left" | "right", width: number) => {
-  const part = document.createElement("div");
-  part.style.cssText = `
-    position: fixed;
-    top: 0;
-    ${side}: 0;
-    width: ${width}%;
-    height: 100%;
-    z-index: 9999;
-    overflow: auto;
-    ${side === "right" ? "background-color: white; color: black;" : ""}
-  `;
-  return part;
-};
-
 const explainSelected = async (text: string) => {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
-  createOrUpdateSplitView(`
+  const panel = document.getElementById("tsw-toggle-panel");
+  if (!panel) {
+    return;
+  }
+  panel.style.display = "block";
+
+  panel.innerHTML = `
     <div class="tsw-panel">
       <p class="tsw-panel-title">${title}：${text}</p>
       <hr>
@@ -291,9 +293,8 @@ const explainSelected = async (text: string) => {
           <p>Explaining...</p>
         </div>
       </div>
-      <button id="tsw-close-right-part" style="" >Close</button>
     </div>
-  `);
+  `;
 
   const explanation = isWord ? await explainWord(text) : await explainSentence(text);
 
@@ -303,7 +304,7 @@ const explainSelected = async (text: string) => {
   }
 };
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
     case "explainSelected":
       if (request.text) {
