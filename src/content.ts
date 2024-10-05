@@ -38,7 +38,7 @@ function createFloatingToggleButton() {
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 5px 0 0 5px;
     cursor: pointer;
   `;
 
@@ -60,11 +60,60 @@ function createFloatingToggleButton() {
   `;
   panel.innerHTML = "";
 
+  const iconArray = [
+    {
+      name: "Summary",
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" y1="10" x2="3" y2="10"></line>
+              <line x1="21" y1="6" x2="3" y2="6"></line>
+              <line x1="21" y1="14" x2="3" y2="14"></line>
+              <line x1="21" y1="18" x2="3" y2="18"></line>
+            </svg>`,
+      action: () => {
+        summarize();
+        buttonsContainer.style.display = "none";
+      },
+    },
+  ];
+
+  const buttonsContainer = document.createElement("div");
+  buttonsContainer.style.cssText = `
+    position: fixed;
+    top: 50%;
+    right: 48px;
+    transform: translateY(-50%);
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+  `;
+
+  iconArray.forEach((icon) => {
+    const button = document.createElement("button");
+    button.innerHTML = icon.svg;
+    button.style.cssText = `
+      width: 40px;
+      height: 40px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+    button.title = icon.name;
+    button.addEventListener("click", icon.action);
+    buttonsContainer.appendChild(button);
+  });
+
   floatingButton.addEventListener("click", () => {
-    panel.style.display = panel.style.display === "none" ? "block" : "none";
+    buttonsContainer.style.display = buttonsContainer.style.display === "none" ? "flex" : "none";
   });
 
   document.body.appendChild(floatingButton);
+  document.body.appendChild(buttonsContainer);
   document.body.appendChild(panel);
 }
 
@@ -239,6 +288,7 @@ const summarize = async () => {
   panel.style.display = "block";
   panel.innerHTML = `
     <div  class="tsw-panel"">
+      <button id="tsw-close-right-part">Close</button>
       <div id="tsw-summary-content">
         <div style="text-align: center; padding: 20px;">
           <div class="loading-spinner"></div>
@@ -247,6 +297,13 @@ const summarize = async () => {
       </div>
     </div>
   `;
+
+  const closeButton = document.querySelector("#tsw-close-right-part");
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      panel.style.display = "none";
+    });
+  }
 
   const summaryContent = await summariseLink(window.location.href);
   const summaryElement = document.getElementById("tsw-summary-content");
@@ -295,8 +352,16 @@ const explainSelected = async (text: string) => {
           <p>Explaining...</p>
         </div>
       </div>
+      <button id="tsw-close-right-part">Close</button>
     </div>
   `;
+
+  const closeButton = document.querySelector("#tsw-close-right-part");
+  if (closeButton) {
+    closeButton.addEventListener("click", () => {
+      panel.style.display = "none";
+    });
+  }
 
   const explanation = isWord ? await explainWord(text) : await explainSentence(text);
 
