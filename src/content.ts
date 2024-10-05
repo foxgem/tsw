@@ -25,11 +25,13 @@ function addStyles() {
 function createFloatingToggleButton() {
   const floatingButton = document.createElement("button");
   floatingButton.id = "tsw-floating-toggle";
-  floatingButton.innerHTML = "TSW";
+  floatingButton.innerHTML = LOGO_SVG;
   floatingButton.style.cssText = `
     position: fixed;
     top: 50%;
     right: 0;
+    width: 48px;
+    height: 48px;
     transform: translateY(-50%);
     z-index: 10000;
     padding: 10px;
