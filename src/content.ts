@@ -6,6 +6,7 @@ import CodeWrapper from "./components/CodeWrapper";
 import { explainSentence, explainWord, summariseLink } from "./utils/ai";
 import { LOGO_SVG } from "./utils/constants";
 import ImgWrapper from "./components/ImgWrapper";
+import CircularButtonsContainer from "./components/CircularButtonsContainer";
 
 function addStyles() {
   if (!document.querySelector("style[data-tsw-styles]")) {
@@ -23,31 +24,16 @@ function addStyles() {
 }
 
 function createFloatingToggleButton() {
-  const floatingButton = document.createElement("button");
-  floatingButton.id = "tsw-floating-toggle";
-  floatingButton.innerHTML = LOGO_SVG;
-  floatingButton.style.cssText = `
-    position: fixed;
-    top: 50%;
-    right: 0;
-    width: 48px;
-    height: 48px;
-    transform: translateY(-50%);
-    z-index: 10000;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px 0 0 5px;
-    cursor: pointer;
-  `;
+  const containerDiv = document.createElement("div");
+  containerDiv.id = "tsw-buttons-container";
+  document.body.appendChild(containerDiv);
 
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
   panel.style.cssText = `
     position: fixed;
     top: 50%;
-    right: 60px;
+    right: 50px;
     transform: translateY(-50%);
     width: 40%;
     height: 100%;
@@ -58,7 +44,7 @@ function createFloatingToggleButton() {
     z-index: 9999;
     display: none;
   `;
-  panel.innerHTML = "";
+  document.body.appendChild(panel);
 
   const iconArray = [
     {
@@ -71,49 +57,62 @@ function createFloatingToggleButton() {
             </svg>`,
       action: () => {
         summarize();
-        buttonsContainer.style.display = "none";
+        // buttonsContainer.style.display = "none";
+      },
+    },
+    {
+      name: "Summary",
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" y1="10" x2="3" y2="10"></line>
+              <line x1="21" y1="6" x2="3" y2="6"></line>
+              <line x1="21" y1="14" x2="3" y2="14"></line>
+              <line x1="21" y1="18" x2="3" y2="18"></line>
+            </svg>`,
+      action: () => {
+        summarize();
+        // buttonsContainer.style.display = "none";
+      },
+    },
+    {
+      name: "Summary",
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" y1="10" x2="3" y2="10"></line>
+              <line x1="21" y1="6" x2="3" y2="6"></line>
+              <line x1="21" y1="14" x2="3" y2="14"></line>
+              <line x1="21" y1="18" x2="3" y2="18"></line>
+            </svg>`,
+      action: () => {
+        summarize();
+        // buttonsContainer.style.display = "none";
+      },
+    },
+    {
+      name: "Summary",
+      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="21" y1="10" x2="3" y2="10"></line>
+              <line x1="21" y1="6" x2="3" y2="6"></line>
+              <line x1="21" y1="14" x2="3" y2="14"></line>
+              <line x1="21" y1="18" x2="3" y2="18"></line>
+            </svg>`,
+      action: () => {
+        summarize();
+        // buttonsContainer.style.display = "none";
       },
     },
   ];
 
-  const buttonsContainer = document.createElement("div");
-  buttonsContainer.style.cssText = `
-    position: fixed;
-    top: 50%;
-    right: 48px;
-    transform: translateY(-50%);
-    display: none;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 9999;
-  `;
+  const root = createRoot(containerDiv);
+  root.render(
+    React.createElement(CircularButtonsContainer, {
+      id: "tsw-buttons-container",
+      iconBtns: iconArray,
+    })
+  );
 
-  iconArray.forEach((icon) => {
-    const button = document.createElement("button");
-    button.innerHTML = icon.svg;
-    button.style.cssText = `
-      width: 40px;
-      height: 40px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    `;
-    button.title = icon.name;
-    button.addEventListener("click", icon.action);
-    buttonsContainer.appendChild(button);
-  });
+  // floatingButton.addEventListener("click", () => {
+  //   buttonsContainer.style.display = buttonsContainer.style.display === "none" ? "flex" : "none";
+  // });
 
-  floatingButton.addEventListener("click", () => {
-    buttonsContainer.style.display = buttonsContainer.style.display === "none" ? "flex" : "none";
-  });
-
-  document.body.appendChild(floatingButton);
-  document.body.appendChild(buttonsContainer);
   document.body.appendChild(panel);
 }
 

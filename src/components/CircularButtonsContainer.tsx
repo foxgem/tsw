@@ -1,0 +1,144 @@
+import TSWIcon from "@/components/TSWIcon";
+import { LOGO_SVG } from "@/utils/constants";
+import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
+
+interface IconBtn {
+  name: string;
+  svg: string;
+  action: () => void;
+}
+
+interface CircularButtonsProps {
+  id: string;
+  iconBtns: IconBtn[];
+}
+
+const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns }) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  const toggleOpen = () => setIsOpen(!isOpen);
+
+  const fanRadius = 100;
+  const buttonSize = 48;
+
+  return (
+    <div id={id}>
+      <div
+        style={{
+          position: "fixed",
+          top: "50%",
+          right: 48,
+          transform: "translateY(-50%)",
+          zIndex: 10000,
+        }}
+      >
+        <motion.button
+          onClick={toggleOpen}
+          style={{
+            width: buttonSize,
+            height: buttonSize,
+            backgroundColor: "#007bff",
+            color: "white",
+            border: "none",
+            borderRadius: "50%",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            padding: 0,
+            overflow: "hidden",
+          }}
+          whileHover={{ scale: 1 }}
+          whileTap={{ scale: 1 }}
+        >
+          <TSWIcon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              width="100%"
+              height="100%"
+              fill="currentColor"
+              dangerouslySetInnerHTML={{ __html: LOGO_SVG }}
+            />
+          </TSWIcon>
+        </motion.button>
+      </div>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed",
+              top: "50%",
+              right: buttonSize + 20, // Increased right margin to show the first button fully
+              zIndex: 9999,
+            }}
+          >
+            {iconBtns.map((icon, index) => (
+              <motion.button
+                key={icon.name}
+                onClick={() => {
+                  icon.action();
+                  setIsOpen(false);
+                }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  backgroundColor: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  cursor: "pointer",
+                  position: "absolute",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                initial={{ x: 0, y: 0, opacity: 0 }}
+                animate={{
+                  x: isOpen
+                    ? -fanRadius * Math.cos((index * Math.PI) / (2 * (iconBtns.length - 1)))
+                    : 0,
+                  y: isOpen
+                    ? -fanRadius * Math.sin((index * Math.PI) / (2 * (iconBtns.length - 1)))
+                    : 0,
+                  opacity: 1,
+                }}
+                exit={{
+                  x: 0,
+                  y: 0,
+                  opacity: 0,
+                  transition: { duration: 0.2 },
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                whileHover={{
+                  scale: 1.1,
+                  backgroundColor: "#0056b3",
+                  boxShadow: "0 0 0 2px rgba(0, 123, 255, 0.5)",
+                }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="48"
+                  height="48"
+                  fill="currentColor"
+                  dangerouslySetInnerHTML={{ __html: icon.svg }}
+                />
+              </motion.button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+export default CircularButtonsContainer;
