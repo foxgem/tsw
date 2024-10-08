@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const Header: React.FC = () => {
   const navigate = useNavigate()
   return (
-    <div className="flex justify-between items-center flex-grow text-center py-2 px-5">
+    <div className="flex justify-between items-center flex-grow text-center py-2 px-5 h-[56px]">
       <div className="flex justify-start items-center">
         <img src={logo} className="w-6" />
         <p className="font-bold text-sm ml-1">TSW</p>
