@@ -34,23 +34,9 @@ function MainPage() {
   };
 
   return (
-    <div className="w-[280px] h-auto min-h-[296px] flex flex-col pb-12">
+    <div className="w-[280px] h-auto min-h-[246px] flex flex-col pb-12">
       <Header />
       <nav className="flex flex-col mx-auto px-5 mt-4 flex-1">
-        <Button
-          variant="outline"
-          onClick={() => gotoSummary()}
-          className={cn(
-            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
-            "cursor-pointer",
-            "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white"
-          )}
-        >
-          <ListOrdered size={24} className="mr-2" />
-          Summary
-        </Button>
-
         <Button
           variant="outline"
           onClick={() => gotoTimerSetting()}
