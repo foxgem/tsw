@@ -22,16 +22,29 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
   const fanRadius = 100;
   const buttonSize = 48;
 
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      setIsOpen(false);
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div id={id}>
-      <div
+      <motion.div
         style={{
           position: "fixed",
           top: "50%",
-          right: 48,
+          right: buttonSize / 2,
           transform: "translateY(-50%)",
           zIndex: 10000,
         }}
+        whileHover={{ right: 48 }}
+        onHoverStart={() => setIsOpen(true)}
       >
         <motion.button
           onClick={toggleOpen}
@@ -66,7 +79,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
             />
           </TSWIcon>
         </motion.button>
-      </div>
+      </motion.div>
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -76,7 +89,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
             style={{
               position: "fixed",
               top: "50%",
-              right: buttonSize + 20, // Increased right margin to show the first button fully
+              right: buttonSize + 20,
               zIndex: 9999,
             }}
           >
