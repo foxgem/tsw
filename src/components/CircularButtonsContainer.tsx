@@ -1,7 +1,7 @@
 import TSWIcon from "@/components/TSWIcon";
 import { LOGO_SVG } from "@/utils/constants";
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 interface IconBtn {
   name: string;
@@ -17,14 +17,18 @@ interface CircularButtonsProps {
 const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns }) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const toggleOpen = () => setIsOpen(!isOpen);
 
-  const fanRadius = 100;
+  const calculateFanRadius = (count: number) => Math.max(100, count * 20);
+  const fanRadius = calculateFanRadius(iconBtns.length);
   const buttonSize = 48;
-
   React.useEffect(() => {
-    const handleClickOutside = () => {
-      setIsOpen(false);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -34,7 +38,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
   }, []);
 
   return (
-    <div id={id}>
+    <div id={id} ref={containerRef}>
       <motion.div
         style={{
           position: "fixed",
@@ -47,7 +51,10 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
         onHoverStart={() => setIsOpen(true)}
       >
         <motion.button
-          onClick={toggleOpen}
+          onClick={(e) => {
+            toggleOpen();
+            e.stopPropagation();
+          }}
           style={{
             width: buttonSize,
             height: buttonSize,
