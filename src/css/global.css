@@ -152,3 +152,7 @@
   border: 1px solid transparent;
   transition: all 0.3s ease;
 }
+
+.rotate{
+    transform: rotate(270deg);
+}

@@ -144,12 +144,16 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
                 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="48"
-                  height="48"
-                  fill="currentColor"
+
+                <div
+                  style={{
+                    padding: '8px',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                   dangerouslySetInnerHTML={{ __html: icon.svg }}
                 />
               </motion.button>
