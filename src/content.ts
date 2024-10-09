@@ -8,6 +8,26 @@ import { LOGO_SVG } from "./utils/constants";
 import ImgWrapper from "./components/ImgWrapper";
 import CircularButtonsContainer from "./components/CircularButtonsContainer";
 
+function registerElmPicker(targetElms: string[]) {
+  document.addEventListener("mousemove", function (e) {
+    const elementMouseIsOver = document.elementFromPoint(e.clientX, e.clientY);
+    document.querySelectorAll(".shadow").forEach((el) => {
+      el.classList.remove("shadow");
+    });
+
+    if (
+      elementMouseIsOver &&
+      targetElms.some((e) => {
+        return elementMouseIsOver.tagName.toLowerCase() === e.toLowerCase();
+      })
+    ) {
+      elementMouseIsOver.classList.add("shadow");
+    }
+  });
+}
+
+registerElmPicker(["img", "code", "pre"]);
+
 function addStyles() {
   if (!document.querySelector("style[data-tsw-styles]")) {
     const style = document.createElement("style");

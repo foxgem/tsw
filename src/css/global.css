@@ -1,3 +1,14 @@
+.item {
+  padding: 20px;
+  margin: 10px;
+  background-color: #f0f0f0;
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 .tsw-panel {
   padding: 20px 12px;
   height: 100%;
@@ -153,6 +164,6 @@
   transition: all 0.3s ease;
 }
 
-.rotate{
-    transform: rotate(270deg);
+.rotate {
+  transform: rotate(270deg);
 }
