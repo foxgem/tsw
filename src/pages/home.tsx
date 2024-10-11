@@ -34,9 +34,9 @@ function MainPage() {
   };
 
   return (
-    <div className="w-[280px] h-auto min-h-[246px] flex flex-col pb-12">
+    <div className="w-[350px] h-auto min-h-[246px] flex flex-col pb-12">
       <Header />
-      <nav className="flex flex-col mx-auto px-5 mt-4 flex-1">
+      <nav className="flex flex-col mx-auto px-5 mt-4 flex-1 w-[60%]">
         <Button
           variant="outline"
           onClick={() => gotoTimerSetting()}

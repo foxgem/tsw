@@ -55,7 +55,7 @@ function createFloatingToggleButton() {
     top: 50%;
     right: 50px;
     transform: translateY(-50%);
-    width: 500px;
+    width: 40%;
     height: 100%;
     background-color: white;
     border: 1px solid #ccc;
