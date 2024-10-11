@@ -16,7 +16,8 @@
     font: 700 0.875rem sans-serif;
     transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid white;
-    background-color: white;
+    background-color: rgb(229, 231, 235);
+    color: rgb(88, 110, 117);
     margin-right: 2px;
 }
 
@@ -31,8 +32,7 @@
 
 .tsw-tab[data-state="active"],
 .tsw-tab:hover {
-    background-color: rgb(229, 231, 235);
-    color: rgb(88, 110, 117);
+    background-color: white;
     border-radius: 0.25rem 0.25rem 0 0;
     border: 1px solid rgb(229, 231, 235);
     border-bottom: 0;

@@ -141,7 +141,7 @@ const findAllImages = () => {
 };
 
 const wrapTargetTags = () => {
-  const createFloatingButton = (codeBlock: Element, reactComponent: React.ReactElement) => {
+  const createFloatingButton = (codeBlock: Element, reactComponent: React.ReactElement,  blockWidth?:number, blockHeight?:number) => {
     const codeBlockContainer = document.createElement("div");
     codeBlockContainer.style.position = "relative";
     codeBlock.parentNode?.insertBefore(codeBlockContainer, codeBlock);
@@ -164,6 +164,18 @@ const wrapTargetTags = () => {
       floatingButton?.remove();
       codeBlockContainer.removeEventListener("mouseenter", showFloatingButton);
       codeBlockContainer.removeEventListener("mouseleave", hideFloatingButton);
+
+      if (blockHeight && blockWidth) {
+        setTimeout(() => setTabContentHeight(containerDiv, blockWidth, blockHeight), 0);
+      }
+    };
+
+    const setTabContentHeight = (container: HTMLElement, width: number, height: number) => {
+      const tabContents = container.querySelectorAll('.tsw-tab-content') as NodeListOf<HTMLElement>;
+      tabContents.forEach(tabContent => {
+        tabContent.style.height = `${height}px`;
+        tabContent.style.width = `${width}px`;
+      });
     };
 
     floatingButton.addEventListener("click", handleButtonClick);
@@ -224,13 +236,20 @@ const wrapTargetTags = () => {
       console.log("Img already processed");
       return;
     }
+    const imgElement = imgElm as HTMLImageElement;
+    const imgHeight = imgElement.height;
+    const imgWidth = imgElement.width;
+    
+    console.log("Image size", { widht: imgWidth, height: imgHeight });
 
     createFloatingButton(
       imgElm,
       React.createElement(ImgWrapper, {
         imgSrc: imgElm.getAttribute("src")!,
         imgBlock: imgElm.outerHTML,
-      })
+      }),
+      imgWidth,
+      imgHeight
     );
   };
 
