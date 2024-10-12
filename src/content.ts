@@ -62,6 +62,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
           icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
           onClick: () => {
             ocrHandler("tsw-toggle-panel", elementMouseIsOver.src);
+            elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
           },
           tooltip: "OCR",
         },
@@ -70,25 +71,6 @@ function registerElmPicker(checkers: PickingChecker[]) {
       createSelectionOverlay("tsw-selection-overlay", elementMouseIsOver, imageBlockButtons);
       elementMouseIsOver.addEventListener("mouseleave", createUnmount(elementMouseIsOver));
     } else {
-      const codeBlockButtons = [
-        {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
-          onClick: () => {
-            if (elementMouseIsOver.textContent) {
-              codeHandler("tsw-toggle-panel", elementMouseIsOver.textContent);
-            }
-          },
-          tooltip: "Explain",
-        },
-        {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
-          onClick: () => {
-            // rewriteHandler("tsw-toggle-panel", elementMouseIsOver.textContent, selectedLanguage)
-          },
-          tooltip: "Rewrite",
-        },
-      ];
-
       const targetElm = ((hostname: string) => {
         if (hostname === "github.com") {
           return elementMouseIsOver;
@@ -103,6 +85,27 @@ function registerElmPicker(checkers: PickingChecker[]) {
       if (!targetElm) {
         return;
       }
+
+      const codeBlockButtons = [
+        {
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
+          onClick: () => {
+            if (elementMouseIsOver.textContent) {
+              codeHandler("tsw-toggle-panel", elementMouseIsOver.textContent);
+            }
+            targetElm.dispatchEvent(new Event("mouseleave"));
+          },
+          tooltip: "Explain",
+        },
+        {
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
+          onClick: () => {
+            // rewriteHandler("tsw-toggle-panel", elementMouseIsOver.textContent, selectedLanguage)
+            targetElm.dispatchEvent(new Event("mouseleave"));
+          },
+          tooltip: "Rewrite",
+        },
+      ];
 
       createSelectionOverlay("tsw-selection-overlay", targetElm, codeBlockButtons);
       targetElm.addEventListener("mouseleave", createUnmount(targetElm));
