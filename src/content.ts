@@ -30,15 +30,30 @@ function registerElmPicker(checkers: PickingChecker[]) {
       return;
     }
 
-    const unmount = (e: Event) => {
-      if (selectionReactRoot) {
-        selectionReactRoot.unmount();
-        const overlay = document.getElementById("tsw-selection-overlay");
-        if (overlay) {
-          selectionReactRoot = createRoot(overlay);
+    const createUnmount = (targetElm: HTMLElement) => {
+      const unmount = (e: Event) => {
+        if (e instanceof MouseEvent) {
+          const rect = targetElm.getBoundingClientRect();
+          if (
+            e.clientX >= rect.left &&
+            e.clientX <= rect.right &&
+            e.clientY >= rect.top &&
+            e.clientY <= rect.bottom
+          ) {
+            return;
+          }
         }
-      }
-      e.target?.removeEventListener("mouseleave", unmount);
+
+        if (selectionReactRoot) {
+          selectionReactRoot.unmount();
+          const overlay = document.getElementById("tsw-selection-overlay");
+          if (overlay) {
+            selectionReactRoot = createRoot(overlay);
+          }
+        }
+        e.target?.removeEventListener("mouseleave", unmount);
+      };
+      return unmount;
     };
 
     if (elementMouseIsOver instanceof HTMLImageElement) {
@@ -53,7 +68,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
       ];
 
       createSelectionOverlay("tsw-selection-overlay", elementMouseIsOver, imageBlockButtons);
-      elementMouseIsOver.addEventListener("mouseleave", unmount);
+      elementMouseIsOver.addEventListener("mouseleave", createUnmount(elementMouseIsOver));
     } else {
       const codeBlockButtons = [
         {
@@ -90,7 +105,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
       }
 
       createSelectionOverlay("tsw-selection-overlay", targetElm, codeBlockButtons);
-      targetElm.addEventListener("mouseleave", unmount);
+      targetElm.addEventListener("mouseleave", createUnmount(targetElm));
     }
   });
 }
