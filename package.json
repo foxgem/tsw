@@ -83,7 +83,8 @@
         ],
         "css": [
           "/src/css/global.css"
-        ]
+        ],
+        "run_at": "document_start"
       }
     ]
   },

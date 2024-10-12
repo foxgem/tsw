@@ -24,10 +24,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
       .catch((err) => console.log("Could not send stopTimer message:", err.message));
   }
 
-  if (changeInfo.status === "complete") {
-    chrome.tabs.sendMessage(tabId, { action: "wrapTargetTags" });
-  }
-
   if (changeInfo.status === "complete" && !timerStartedMap.has(tabId)) {
     const domain = new URL(tab.url).hostname;
     const timer = await readTimerForDomain(domain);
