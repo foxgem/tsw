@@ -75,10 +75,12 @@ function registerElmPicker(checkers: PickingChecker[]) {
       ];
 
       const targetElm = ((hostname: string) => {
-        if (["medium.com", "github.com"].includes(hostname)) {
+        if (hostname === "github.com") {
           return elementMouseIsOver;
         } else if (hostname === "gist.github.com") {
           return elementMouseIsOver.closest("table");
+        } else if (hostname === "medium.com") {
+          return elementMouseIsOver.closest("pre") || elementMouseIsOver.parentElement;
         }
         return elementMouseIsOver.parentElement || elementMouseIsOver;
       })(window.location.hostname);
@@ -130,23 +132,25 @@ registerElmPicker([
   },
   (e) => {
     if (window.location.hostname === "github.com" && e.id === "read-only-cursor-text-area") {
-      return true;
+      const codeText = e.textContent;
+      return !!(codeText && codeText.split(/\n/).length >= 5);
     }
 
     if (window.location.hostname === "gist.github.com" && e.closest("table.highlight")) {
       return true;
     }
 
+    if (window.location.hostname === "medium.com") {
+      const codeText = e.closest("pre")?.querySelector("span")?.innerHTML;
+      return !!(codeText && codeText.split(/<br>/).length >= 5);
+    }
+
     if (e.tagName.toLowerCase() !== "pre") {
       return false;
     }
 
-    const codeText =
-      window.location.hostname === "medium.com"
-        ? e.querySelector("span")?.innerHTML
-        : e.querySelector("code")?.textContent;
-
-    return !!(codeText && codeText.split(/\n|<br>/).length >= 5);
+    const codeText = e.querySelector("code")?.textContent;
+    return !!(codeText && codeText.split(/\n/).length >= 5);
   },
 ]);
 
