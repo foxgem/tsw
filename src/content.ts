@@ -5,37 +5,16 @@ import CircularButtonsContainer from "./components/CircularButtonsContainer";
 import SelectionOverlay, { FloatingButton } from "./components/SelectionOverlay";
 import { codeHandler, explainSelected, ocrHandler, summarize } from "./handlers";
 
-const shouldPickCodeBlock = (codeBlock: HTMLElement) => {
-  const codeText = codeBlock.textContent;
-  if (!codeText) {
-    return false;
-  }
+type PickingChecker = (element: HTMLElement) => boolean;
 
-  const longEnough =
-    codeText.split("\n").length >= 5 || codeBlock.querySelectorAll("div, span").length >= 5;
-
-  if (longEnough) {
-    return true;
-  }
-};
-
-const shouldPickImgElm = (imgElm: HTMLImageElement) => {
-  const src = imgElm.getAttribute("src");
-  const classes = imgElm.className.split(" ");
-  return (
-    src &&
-    src.trim() !== "" &&
-    !classes.some((cls) => cls.startsWith("avatar") || cls.startsWith("icon")) &&
-    imgElm.width >= 200 &&
-    imgElm.height >= 200
-  );
-};
-
-function registerElmPicker(targetElms: string[]) {
+function registerElmPicker(checkers: PickingChecker[]) {
   let prevElementMouseIsOver: Element | null = null;
 
   document.addEventListener("mousemove", function (e) {
     const elementMouseIsOver = document.elementFromPoint(e.clientX, e.clientY);
+    if (!(elementMouseIsOver instanceof HTMLElement)) {
+      return;
+    }
 
     if (elementMouseIsOver === prevElementMouseIsOver) {
       return;
@@ -43,27 +22,26 @@ function registerElmPicker(targetElms: string[]) {
 
     prevElementMouseIsOver = elementMouseIsOver;
 
-    if (!(elementMouseIsOver instanceof HTMLElement)) {
-      return;
-    }
-
     if (
-      targetElms.every((e) => {
-        return elementMouseIsOver.tagName.toLowerCase() !== e.toLowerCase();
+      checkers.every((check) => {
+        return !check(elementMouseIsOver);
       })
     ) {
       return;
     }
 
-    if (selectionReactRoot) {
-      selectionReactRoot.unmount();
-      const overlay = document.getElementById("tsw-selection-overlay");
-      if (overlay) {
-        selectionReactRoot = createRoot(overlay);
+    const unmount = (e: Event) => {
+      if (selectionReactRoot) {
+        selectionReactRoot.unmount();
+        const overlay = document.getElementById("tsw-selection-overlay");
+        if (overlay) {
+          selectionReactRoot = createRoot(overlay);
+        }
       }
-    }
+      e.target?.removeEventListener("mouseleave", unmount);
+    };
 
-    if (elementMouseIsOver instanceof HTMLImageElement && shouldPickImgElm(elementMouseIsOver)) {
+    if (elementMouseIsOver instanceof HTMLImageElement) {
       const imageBlockButtons = [
         {
           icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
@@ -75,10 +53,8 @@ function registerElmPicker(targetElms: string[]) {
       ];
 
       createSelectionOverlay("tsw-selection-overlay", elementMouseIsOver, imageBlockButtons);
-    } else if (
-      ["pre", "code"].includes(elementMouseIsOver.tagName.toLowerCase()) &&
-      shouldPickCodeBlock(elementMouseIsOver)
-    ) {
+      elementMouseIsOver.addEventListener("mouseleave", unmount);
+    } else {
       const codeBlockButtons = [
         {
           icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
@@ -97,11 +73,22 @@ function registerElmPicker(targetElms: string[]) {
           tooltip: "Rewrite",
         },
       ];
-      createSelectionOverlay(
-        "tsw-selection-overlay",
-        elementMouseIsOver.parentElement || elementMouseIsOver,
-        codeBlockButtons
-      );
+
+      const targetElm = ((hostname: string) => {
+        if (["medium.com", "github.com"].includes(hostname)) {
+          return elementMouseIsOver;
+        } else if (hostname === "gist.github.com") {
+          return elementMouseIsOver.closest("table");
+        }
+        return elementMouseIsOver.parentElement || elementMouseIsOver;
+      })(window.location.hostname);
+
+      if (!targetElm) {
+        return;
+      }
+
+      createSelectionOverlay("tsw-selection-overlay", targetElm, codeBlockButtons);
+      targetElm.addEventListener("mouseleave", unmount);
     }
   });
 }
@@ -125,7 +112,43 @@ function createSelectionOverlay(id: string, targetElm: HTMLElement, buttons: Flo
   );
 }
 
-registerElmPicker(["img", "code", "pre"]);
+registerElmPicker([
+  (e) => {
+    if (!(e instanceof HTMLImageElement)) {
+      return false;
+    }
+
+    const src = e.getAttribute("src");
+    const classes = e.className.split(" ");
+    return !!(
+      src &&
+      src.trim() !== "" &&
+      !classes.some((cls) => cls.startsWith("avatar") || cls.startsWith("icon")) &&
+      e.width >= 200 &&
+      e.height >= 200
+    );
+  },
+  (e) => {
+    if (window.location.hostname === "github.com" && e.id === "read-only-cursor-text-area") {
+      return true;
+    }
+
+    if (window.location.hostname === "gist.github.com" && e.closest("table.highlight")) {
+      return true;
+    }
+
+    if (e.tagName.toLowerCase() !== "pre") {
+      return false;
+    }
+
+    const codeText =
+      window.location.hostname === "medium.com"
+        ? e.querySelector("span")?.innerHTML
+        : e.querySelector("code")?.textContent;
+
+    return !!(codeText && codeText.split(/\n|<br>/).length >= 5);
+  },
+]);
 
 function createFloatingToggleButton() {
   const containerDiv = document.createElement("div");
@@ -186,21 +209,6 @@ function createFloatingToggleButton() {
 }
 
 createFloatingToggleButton();
-
-const findAllCodeBlocks = () => {
-  if (window.location.hostname === "github.com") {
-    const block = document.getElementById("read-only-cursor-text-area");
-    return block ? [block] : [];
-  } else if (window.location.hostname === "gist.github.com") {
-    const table = document.querySelector("table.highlight");
-    return table ? [table] : [];
-  } else if (window.location.hostname === "medium.com") {
-    const spanTags = document.querySelectorAll("pre > span");
-    return Array.from(spanTags);
-  }
-
-  return document.getElementsByTagName("code");
-};
 
 let warningTimeout: number | undefined;
 let closeTimeout: number | undefined;
