@@ -140,12 +140,21 @@
 }
 
 .iconWrapper {
-    width: 2.25rem; /* 9 * 0.25rem = 2.25rem */
+    width: 2.25rem; 
     height: 2.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
     cursor: pointer;
+  }
+
+  #selection-overlay button div {
+    width: 20px;
+    height:20px;
+  }
+  
+  #selection-overlay button div:hover {
+    background-color: transparent !important;
   }
   
