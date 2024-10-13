@@ -5,12 +5,19 @@ import CircularButtonsContainer from "./components/CircularButtonsContainer";
 import SelectionOverlay, { FloatingButton } from "./components/SelectionOverlay";
 import { codeHandler, explainSelected, ocrHandler, summarize } from "./handlers";
 import "../css/wrapper.css";
+
 type PickingChecker = (element: HTMLElement) => boolean;
+
+let picking = false;
 
 function registerElmPicker(checkers: PickingChecker[]) {
   let prevElementMouseIsOver: Element | null = null;
 
   document.addEventListener("mousemove", function (e) {
+    if (!picking) {
+      return;
+    }
+
     const elementMouseIsOver = document.elementFromPoint(e.clientX, e.clientY);
     if (!(elementMouseIsOver instanceof HTMLElement)) {
       return;
@@ -207,14 +214,7 @@ function createFloatingToggleButton() {
       name: "Wand",
       svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
       action: () => {
-        summarize("tsw-toggle-panel");
-      },
-    },
-    {
-      name: "Chat",
-      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-messages-square"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>`,
-      action: () => {
-        summarize("tsw-toggle-panel");
+        picking = !picking;
       },
     },
   ];
