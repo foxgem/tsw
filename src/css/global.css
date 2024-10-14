@@ -123,7 +123,7 @@
   align-items: center;
   transition: all 0.3s ease;
   transform: translateY(-100%);
-  z-index: 9999;
+  z-index: 10001;
 }
 
 .tsw-warning-container {
@@ -138,30 +138,6 @@
   font-size: 16px;
   cursor: pointer;
   padding: 0 5px;
-}
-
-#tsw-code-explain {
-  line-height: 12px;
-}
-
-.tsw-floating-button {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  cursor: pointer;
-  z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  text-align: center;
-}
-
-.tsw-code-container {
-  position: relative;
-  border: 1px solid transparent;
-  transition: all 0.3s ease;
 }
 
 .rotate {
