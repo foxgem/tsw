@@ -3,9 +3,9 @@ import { createRoot, Root } from "react-dom/client";
 import { createWarningPopup } from "./WarningPopup";
 import CircularButtonsContainer from "./components/CircularButtonsContainer";
 import SelectionOverlay, { FloatingButton } from "./components/SelectionOverlay";
-import { codeHandler, explainSelected, ocrHandler, summarize } from "./handlers";
+import { codeHandler, explainSelected, ocrHandler, rewriteHandler, summarize } from "./handlers";
 import "../css/wrapper.css";
-
+import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
 
 let picking = false;
@@ -66,12 +66,13 @@ function registerElmPicker(checkers: PickingChecker[]) {
     if (elementMouseIsOver instanceof HTMLImageElement) {
       const imageBlockButtons = [
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>`,
           onClick: () => {
             ocrHandler("tsw-toggle-panel", elementMouseIsOver.src);
             elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
           },
           tooltip: "OCR",
+          isMenu:false,
         },
       ];
 
@@ -95,7 +96,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
 
       const codeBlockButtons = [
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-key"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><circle cx="10" cy="16" r="2"/><path d="m16 10-4.5 4.5"/><path d="m15 11 1 1"/></svg>`,
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-more"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>`,
           onClick: () => {
             if (elementMouseIsOver.textContent) {
               codeHandler("tsw-toggle-panel", elementMouseIsOver.textContent);
@@ -103,14 +104,59 @@ function registerElmPicker(checkers: PickingChecker[]) {
             targetElm.dispatchEvent(new Event("mouseleave"));
           },
           tooltip: "Explain",
+          isMenu:false,
         },
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-pen"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></svg>`,
-          onClick: () => {
-            // rewriteHandler("tsw-toggle-panel", elementMouseIsOver.textContent, selectedLanguage)
-            targetElm.dispatchEvent(new Event("mouseleave"));
+          icon:'<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-pen-line"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-.5"/><path d="M16 4h2a2 2 0 0 1 1.73 1"/><path d="M8 18h1"/><path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>',
+          onClick: (event: React.MouseEvent<HTMLElement>) => {
+            const buttonElement = event.currentTarget as HTMLElement;
+            const rect = buttonElement.getBoundingClientRect();
+            
+            const overlay = document.getElementById('selection-overlay');
+            if (!overlay) return;
+          
+            const selectLangElement = document.createElement('div');
+            selectLangElement.id = 'tsw-select-lang-container';
+            overlay.appendChild(selectLangElement);
+          
+            selectLangElement.style.cssText = `
+              position: absolute;
+              margin-top:4px;
+              top: ${rect.bottom - overlay.getBoundingClientRect().top}px;
+              right: 0px;
+              background-color: white;
+              padding: 10px;
+              border-radius: 4px;
+              box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+              pointer-events: auto;
+              z-index: 9999;
+            `;
+          
+            selectLangElement.addEventListener('click', (e) => {
+              e.stopPropagation();
+            });
+          
+            const removeSelectLang = () => {
+              selectLangElement.remove();
+            };
+            selectLangElement.addEventListener('mouseleave', removeSelectLang);
+          
+            const selectLangRoot = createRoot(selectLangElement);
+            selectLangRoot.render(
+              React.createElement(SelectLang, {
+                onLanguageChange: (selectedLanguage) => {
+                  if (elementMouseIsOver && elementMouseIsOver.textContent) {
+                    rewriteHandler("tsw-toggle-panel", elementMouseIsOver.textContent, selectedLanguage);
+                  }
+                  removeSelectLang();
+                  targetElm.dispatchEvent(new Event("mouseleave"));
+                },
+              })
+            );
           },
           tooltip: "Rewrite",
+          isMenu:true,
+
         },
       ];
 
@@ -134,7 +180,10 @@ function createSelectionOverlay(id: string, targetElm: HTMLElement, buttons: Flo
   selectionReactRoot.render(
     React.createElement(SelectionOverlay, {
       targetElm,
-      buttons,
+      buttons: buttons.map(button => ({
+        ...button,
+        onClick: (event: React.MouseEvent<HTMLElement>) => button.onClick(event)
+      })),
     })
   );
 }
@@ -197,7 +246,7 @@ function createFloatingToggleButton() {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    z-index: 9999;
+    z-index: 90;
     display: none;
   `;
   document.body.appendChild(panel);

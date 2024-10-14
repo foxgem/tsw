@@ -97,7 +97,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
               position: "fixed",
               top: "50%",
               right: buttonSize + 20,
-              zIndex: 9999,
+              zIndex: 10,
             }}
           >
             {iconBtns.map((icon, index) => (
