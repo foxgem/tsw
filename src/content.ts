@@ -246,7 +246,7 @@ function createFloatingToggleButton() {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    z-index: 90;
+    z-index: 9999;
     display: none;
   `;
   document.body.appendChild(panel);
