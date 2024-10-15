@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import TSWIcon from "./TSWIcon";
-import { ChevronDown } from "lucide-react";
 
 export interface FloatingButton {
     icon: string;
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
     tooltip?: string;
-    isMenu:boolean;
 }
 
 interface SelectionOverlayProps {
@@ -61,8 +59,13 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({ targetElm, buttons 
                     position: "absolute",
                     top: "10px",
                     right: "10px",
-                    display: "flex",
                     pointerEvents: "auto",
+                    ...(buttons.length > 1 && {
+                        borderRadius: "9999px",
+                        backgroundColor:"rgb(0, 123, 255)",
+                        width: "40px",
+                        padding: "15px 0px",
+                    }),
                 }}
             >
                 {buttons.map((button, index) => (
@@ -93,14 +96,9 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({ targetElm, buttons 
                                 ...(buttons.length > 1 && {
                                     padding: "4px",
                                     fontWeight:"700",
-                                    ...(index === 0 && {
-                                        borderTopLeftRadius: "4px",
-                                        borderBottomLeftRadius: "4px",
-                                    }),
-                                    ...(index === buttons.length - 1 && {
-                                        borderTopRightRadius: "4px",
-                                        borderBottomRightRadius: "4px",
-                                    }),
+                                    margin:"0 auto",
+                                    marginBottom: index < buttons.length - 1 ? "8px" : "0",
+
                                 }),
                             }}
                             title={button.tooltip}
@@ -117,11 +115,6 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({ targetElm, buttons 
                                         dangerouslySetInnerHTML={{ __html: button.icon }}
                                     />
                                 </TSWIcon>
-                                {button.isMenu &&(
-                                     <TSWIcon>
-                                     <ChevronDown />
-                                     </TSWIcon>
-                                )}
                                
                             </>
                         </button>
