@@ -34,4 +34,8 @@
   #selection-overlay button div:hover {
     background-color: transparent !important;
   }
+
+  #selection-overlay button:hover{
+    opacity: 0.5;;
+  }
   
