@@ -35,7 +35,7 @@ export async function summarize(outputElm: string) {
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">summary</p>
+    <p class="tsw-panel-title">Summary</p>
     <hr>
     <div id="tsw-summary-content">
       <div style="text-align: center; padding: 20px;">
