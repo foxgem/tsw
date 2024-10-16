@@ -72,7 +72,7 @@
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "host_permissions": [
       "https://*/*"
     ],
