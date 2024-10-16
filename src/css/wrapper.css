@@ -1,5 +1,5 @@
-#tsw-select-lang-container .lang-container{
-    width:150px;
+#tsw-select-lang-container .lang-container {
+    width: 150px;
 }
 
 .tsw-select-lang-item {
@@ -9,33 +9,39 @@
     font-size: 0.875rem;
     line-height: 1.25rem;
     cursor: pointer;
-    color:black
+    color: black
 }
 
-.tsw-select-lang-item:hover, tsw-select-lang-item:focus {
+.tsw-select-lang-item:hover,
+tsw-select-lang-item:focus {
     background-color: rgb(229, 231, 235);
 }
 
 .iconWrapper {
-    width: 2.25rem; 
+    width: 2.25rem;
     height: 2.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 9999px;
     cursor: pointer;
-  }
+}
 
-  #selection-overlay button div {
+#selection-overlay button div {
     width: 20px;
-    height:20px;
-  }
-  
-  #selection-overlay button div:hover {
-    background-color: transparent !important;
-  }
+    height: 20px;
+}
 
-  #selection-overlay button:hover{
-    opacity: 0.5;;
-  }
-  
+#selection-overlay button div:hover {
+    background-color: transparent !important;
+}
+
+#selection-overlay button:hover {
+    opacity: 0.5;
+    ;
+}
+
+#selection-overlay svg {
+    stroke: #ffffff;
+    fill: none !important;
+}
