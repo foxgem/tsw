@@ -1,6 +1,6 @@
 {
   "name": "tsw",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Your tiny smart worker",
   "scripts": {
     "dev": "plasmo dev",
