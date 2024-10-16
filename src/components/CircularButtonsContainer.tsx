@@ -45,7 +45,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
           top: "50%",
           right: buttonSize / 2,
           transform: "translateY(-50%)",
-          zIndex: 10000,
+          zIndex: 10001,
         }}
         whileHover={{ right: 48 }}
         onHoverStart={() => setIsOpen(true)}
@@ -97,7 +97,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
               position: "fixed",
               top: "50%",
               right: buttonSize + 20,
-              zIndex: 10,
+              zIndex: 10001,
             }}
           >
             {iconBtns.map((icon, index) => (
