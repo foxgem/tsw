@@ -6,8 +6,8 @@
     "dev": "plasmo dev",
     "build": "plasmo build",
     "test": "jest",
-    "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "lint": "biome check",
+    "format": "biome check --write",
     "ai": "tsx scripts/genAi.ts"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@radix-ui/react-menubar": "^1.1.1",
     "@radix-ui/react-scroll-area": "^1.1.0",
@@ -60,30 +61,18 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": [
-      "contextMenus",
-      "tabs",
-      "storage",
-      "alarms",
-      "activeTab"
-    ],
+    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
     "background": {
       "service_worker": "background.ts"
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
     "version": "0.1.0",
-    "host_permissions": [
-      "https://*/*"
-    ],
+    "host_permissions": ["https://*/*"],
     "content_scripts": [
       {
-        "matches": [
-          "<all_urls>"
-        ],
-        "css": [
-          "/src/css/global.css"
-        ],
+        "matches": ["<all_urls>"],
+        "css": ["/src/css/global.css"],
         "run_at": "document_start"
       }
     ]
