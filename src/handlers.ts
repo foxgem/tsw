@@ -80,7 +80,7 @@ export async function explainSelected(outputElm: string, text: string) {
   );
 }
 
-export async function ocrHandler(outputElm: string, imgSrc: string) {
+export async function ocrHandler(outputElm: string, imgSrc: string, postPrompt = "") {
   withOutputPanel(
     outputElm,
     `
@@ -100,7 +100,7 @@ export async function ocrHandler(outputElm: string, imgSrc: string) {
           const response = await fetch(imgSrc);
           const buffer = await response.arrayBuffer();
           const mimeType = response.headers.get("Content-Type") || "image/jpeg";
-          const result = await ocr(Buffer.from(buffer), mimeType);
+          const result = await ocr(Buffer.from(buffer), mimeType, postPrompt);
           imgContentElement.innerHTML = result;
         } catch (e) {
           imgContentElement.innerHTML = e as string;

@@ -66,13 +66,24 @@ function registerElmPicker(checkers: PickingChecker[]) {
     if (elementMouseIsOver instanceof HTMLImageElement) {
       const imageBlockButtons = [
         {
-            
           icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>`,
           onClick: () => {
             ocrHandler("tsw-toggle-panel", elementMouseIsOver.src);
             elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
           },
           tooltip: "OCR",
+        },
+        {
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>`,
+          onClick: () => {
+            ocrHandler(
+              "tsw-toggle-panel",
+              elementMouseIsOver.src,
+              `Translate the text into Chinese`
+            );
+            elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
+          },
+          tooltip: "Translate",
         },
       ];
 
