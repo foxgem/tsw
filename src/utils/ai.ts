@@ -87,13 +87,13 @@ export const rewriteCode = (code: string, targetLang: string) =>
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
-export const ocr = (imageBuffer: Buffer, imageMimeType: string) =>
+export const ocr = (imageBuffer: Buffer, imageMimeType: string, postPrompt = "") =>
   genAIFunction(
     [
       {
         inlineData: { mimeType: imageMimeType, data: imageBuffer.toString("base64") },
       },
     ],
-    ocrExpert,
+    ocrExpert + postPrompt,
     true
   );
