@@ -34,7 +34,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@radix-ui/react-menubar": "^1.1.1",
     "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-select": "^2.1.1",
@@ -46,8 +45,6 @@
     "@types/node": "18.19.50",
     "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
-    "@typescript-eslint/eslint-plugin": "^5.57.1",
-    "@typescript-eslint/parser": "^5.57.1",
     "autoprefixer": "^10.4.20",
     "jest": "^29.5.0",
     "postcss": "^8.4.47",
@@ -57,18 +54,30 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
+    "permissions": [
+      "contextMenus",
+      "tabs",
+      "storage",
+      "alarms",
+      "activeTab"
+    ],
     "background": {
       "service_worker": "background.ts"
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
     "version": "0.1.0",
-    "host_permissions": ["https://*/*"],
+    "host_permissions": [
+      "https://*/*"
+    ],
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
-        "css": ["/src/css/global.css"],
+        "matches": [
+          "<all_urls>"
+        ],
+        "css": [
+          "/src/css/global.css"
+        ],
         "run_at": "document_start"
       }
     ]
