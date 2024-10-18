@@ -30,3 +30,25 @@
     box-shadow: none !important;
 }
 
+.iconWrapper {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    cursor: pointer;
+    margin: 0px auto;
+}
+
+.iconWrapper:hover {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: rgb(229, 231, 235);
+    
+}
+
