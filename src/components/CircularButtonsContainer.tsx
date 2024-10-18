@@ -57,15 +57,13 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
           }}
           style={{
             width: buttonSize,
-            height: buttonSize,
+            height: buttonSize*2,
             backgroundColor: "#007bff",
             color: "white",
             border: "none",
-            borderRadius: "50%",
+            borderTopLeftRadius: "10px",
+            borderBottomLeftRadius: "10px",
             cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             position: "absolute",
             top: 0,
             left: 0,
@@ -75,6 +73,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
           whileHover={{ scale: 1 }}
           whileTap={{ scale: 1 }}
         >
+          TSW
           <TSWIcon>
             <svg
               xmlns="http://www.w3.org/2000/svg"
