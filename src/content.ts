@@ -1,9 +1,17 @@
 import React from "react";
-import { createRoot, Root } from "react-dom/client";
+import { type Root, createRoot } from "react-dom/client";
 import { createWarningPopup } from "./WarningPopup";
 import CircularButtonsContainer from "./components/CircularButtonsContainer";
-import SelectionOverlay, { FloatingButton } from "./components/SelectionOverlay";
-import { codeHandler, explainSelected, ocrHandler, rewriteHandler, summarize } from "./handlers";
+import SelectionOverlay, {
+  type FloatingButton,
+} from "./components/SelectionOverlay";
+import {
+  codeHandler,
+  explainSelected,
+  ocrHandler,
+  rewriteHandler,
+  summarize,
+} from "./handlers";
 import "../css/wrapper.css";
 import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
@@ -13,7 +21,7 @@ let picking = false;
 function registerElmPicker(checkers: PickingChecker[]) {
   let prevElementMouseIsOver: Element | null = null;
 
-  document.addEventListener("mousemove", function (e) {
+  document.addEventListener("mousemove", (e) => {
     if (!picking) {
       return;
     }
@@ -79,7 +87,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
             ocrHandler(
               "tsw-toggle-panel",
               elementMouseIsOver.src,
-              `Translate the text into Chinese`
+              "Translate the text into Chinese",
             );
             elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
           },
@@ -87,16 +95,28 @@ function registerElmPicker(checkers: PickingChecker[]) {
         },
       ];
 
-      createSelectionOverlay("tsw-selection-overlay", elementMouseIsOver, imageBlockButtons);
-      elementMouseIsOver.addEventListener("mouseleave", createUnmount(elementMouseIsOver));
+      createSelectionOverlay(
+        "tsw-selection-overlay",
+        elementMouseIsOver,
+        imageBlockButtons,
+      );
+      elementMouseIsOver.addEventListener(
+        "mouseleave",
+        createUnmount(elementMouseIsOver),
+      );
     } else {
       const targetElm = ((hostname: string) => {
         if (hostname === "github.com") {
           return elementMouseIsOver;
-        } else if (hostname === "gist.github.com") {
+        }
+        if (hostname === "gist.github.com") {
           return elementMouseIsOver.closest("table");
-        } else if (hostname === "medium.com") {
-          return elementMouseIsOver.closest("pre") || elementMouseIsOver.parentElement;
+        }
+        if (hostname === "medium.com") {
+          return (
+            elementMouseIsOver.closest("pre") ||
+            elementMouseIsOver.parentElement
+          );
         }
         return elementMouseIsOver.parentElement || elementMouseIsOver;
       })(window.location.hostname);
@@ -155,24 +175,28 @@ function registerElmPicker(checkers: PickingChecker[]) {
             selectLangRoot.render(
               React.createElement(SelectLang, {
                 onLanguageChange: (selectedLanguage) => {
-                  if (elementMouseIsOver && elementMouseIsOver.textContent) {
+                  if (elementMouseIsOver?.textContent) {
                     rewriteHandler(
                       "tsw-toggle-panel",
                       elementMouseIsOver.textContent,
-                      selectedLanguage
+                      selectedLanguage,
                     );
                   }
                   removeSelectLang();
                   targetElm.dispatchEvent(new Event("mouseleave"));
                 },
-              })
+              }),
             );
           },
           tooltip: "Rewrite",
         },
       ];
 
-      createSelectionOverlay("tsw-selection-overlay", targetElm, codeBlockButtons);
+      createSelectionOverlay(
+        "tsw-selection-overlay",
+        targetElm,
+        codeBlockButtons,
+      );
       targetElm.addEventListener("mouseleave", createUnmount(targetElm));
     }
   });
@@ -180,7 +204,11 @@ function registerElmPicker(checkers: PickingChecker[]) {
 
 let selectionReactRoot: Root;
 
-function createSelectionOverlay(id: string, targetElm: HTMLElement, buttons: FloatingButton[]) {
+function createSelectionOverlay(
+  id: string,
+  targetElm: HTMLElement,
+  buttons: FloatingButton[],
+) {
   let overlay = document.getElementById(id);
   if (!overlay) {
     overlay = document.createElement("div");
@@ -194,9 +222,10 @@ function createSelectionOverlay(id: string, targetElm: HTMLElement, buttons: Flo
       targetElm,
       buttons: buttons.map((button) => ({
         ...button,
-        onClick: (event: React.MouseEvent<HTMLElement>) => button.onClick(event),
+        onClick: (event: React.MouseEvent<HTMLElement>) =>
+          button.onClick(event),
       })),
-    })
+    }),
   );
 }
 
@@ -211,18 +240,26 @@ registerElmPicker([
     return !!(
       src &&
       src.trim() !== "" &&
-      !classes.some((cls) => cls.startsWith("avatar") || cls.startsWith("icon")) &&
+      !classes.some(
+        (cls) => cls.startsWith("avatar") || cls.startsWith("icon"),
+      ) &&
       e.width >= 200 &&
       e.height >= 200
     );
   },
   (e) => {
-    if (window.location.hostname === "github.com" && e.id === "read-only-cursor-text-area") {
+    if (
+      window.location.hostname === "github.com" &&
+      e.id === "read-only-cursor-text-area"
+    ) {
       const codeText = e.textContent;
       return !!(codeText && codeText.split(/\n/).length >= 5);
     }
 
-    if (window.location.hostname === "gist.github.com" && e.closest("table.highlight")) {
+    if (
+      window.location.hostname === "gist.github.com" &&
+      e.closest("table.highlight")
+    ) {
       return true;
     }
 
@@ -231,12 +268,17 @@ registerElmPicker([
       return !!(codeText && codeText.split(/<br>/).length >= 5);
     }
 
-    if (e.tagName.toLowerCase() !== "pre" && e.tagName.toLowerCase() !== "code") {
+    if (
+      e.tagName.toLowerCase() !== "pre" &&
+      e.tagName.toLowerCase() !== "code"
+    ) {
       return false;
     }
 
     const codeText =
-      e.tagName.toLowerCase() === "code" ? e.textContent : e.querySelector("code")?.textContent;
+      e.tagName.toLowerCase() === "code"
+        ? e.textContent
+        : e.querySelector("code")?.textContent;
     return !!(codeText && codeText.split(/\n/).length >= 5);
   },
 ]);
@@ -286,7 +328,7 @@ function createFloatingToggleButton() {
     React.createElement(CircularButtonsContainer, {
       id: "tsw-buttons-container",
       iconBtns: iconArray,
-    })
+    }),
   );
 
   document.body.appendChild(panel);
@@ -304,7 +346,7 @@ const handleTimer = (remainingTime: number, domain: string) => {
   if (remainingTime > 10) {
     warningTimeout = window.setTimeout(
       showWarning,
-      (remainingTime - 10) * 1000
+      (remainingTime - 10) * 1000,
     ) as unknown as number;
   } else {
     showWarning();
@@ -347,8 +389,9 @@ const showWarning = () => {
   }
 
   const handleDismiss = () => {
-    if (popupContainer && popupContainer.firstChild) {
-      (popupContainer.firstChild as HTMLElement).style.transform = "translateY(-100%)";
+    if (popupContainer?.firstChild) {
+      (popupContainer.firstChild as HTMLElement).style.transform =
+        "translateY(-100%)";
       setTimeout(() => {
         popupContainer?.parentNode?.removeChild(popupContainer);
       }, 300);

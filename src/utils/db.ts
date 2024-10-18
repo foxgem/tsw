@@ -21,7 +21,9 @@ export async function upsertTimerForDomain(timerForDomain: TimerForDomain) {
   await storage.set(timerForDomain.domain, timerForDomain.time);
 }
 
-export async function readTimerForDomain(domain: string): Promise<TimerForDomain | null> {
+export async function readTimerForDomain(
+  domain: string,
+): Promise<TimerForDomain | null> {
   const time = await storage.get<number>(domain);
   return time !== undefined ? { domain, time } : null;
 }

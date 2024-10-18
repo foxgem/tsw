@@ -14,7 +14,10 @@ interface CircularButtonsProps {
   iconBtns: IconBtn[];
 }
 
-const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns }) => {
+const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({
+  id,
+  iconBtns,
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +29,10 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
   const buttonSize = 48;
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -57,7 +63,7 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
           }}
           style={{
             width: buttonSize,
-            height: buttonSize*2,
+            height: buttonSize * 2,
             backgroundColor: "#007bff",
             color: "white",
             border: "none",
@@ -122,10 +128,12 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
                 initial={{ x: 0, y: 0, opacity: 0 }}
                 animate={{
                   x: isOpen
-                    ? -fanRadius * Math.cos((index * Math.PI) / (2 * (iconBtns.length - 1)))
+                    ? -fanRadius *
+                      Math.cos((index * Math.PI) / (2 * (iconBtns.length - 1)))
                     : 0,
                   y: isOpen
-                    ? -fanRadius * Math.sin((index * Math.PI) / (2 * (iconBtns.length - 1)))
+                    ? -fanRadius *
+                      Math.sin((index * Math.PI) / (2 * (iconBtns.length - 1)))
                     : 0,
                   opacity: 1,
                 }}
@@ -143,14 +151,13 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({ id, iconBtns
                 }}
                 whileTap={{ scale: 0.9 }}
               >
-
                 <div
                   style={{
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
+                    width: "100%",
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                   dangerouslySetInnerHTML={{ __html: icon.svg }}
                 />

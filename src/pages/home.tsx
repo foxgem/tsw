@@ -14,7 +14,7 @@ function MainPage() {
   const gotoSummary = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
-      if (currentTab && currentTab.id) {
+      if (currentTab?.id) {
         chrome.tabs.sendMessage(currentTab.id, { action: "summarize" });
         setTimeout(() => {
           window.close();
@@ -44,7 +44,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent  hover:bg-primary hover:text-white"
+            "bg-accent  hover:bg-primary hover:text-white",
           )}
         >
           <TimerReset className="mr-2" />
@@ -58,7 +58,7 @@ function MainPage() {
             "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
             "cursor-pointer",
             "transition-colors duration-300",
-            "bg-accent hover:bg-primary hover:text-white dark:text-white"
+            "bg-accent hover:bg-primary hover:text-white dark:text-white",
           )}
         >
           <Key className="mr-2" />

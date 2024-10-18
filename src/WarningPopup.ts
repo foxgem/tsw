@@ -1,9 +1,9 @@
 export function createWarningPopup(onDismiss: () => void): HTMLElement {
   const popup = document.createElement("div");
-  popup.className="tsw-warning"
+  popup.className = "tsw-warning";
 
   const messageContainer = document.createElement("div");
-  messageContainer.className="tsw-warning-container"
+  messageContainer.className = "tsw-warning-container";
 
   const icon = document.createElement("span");
   icon.textContent = "⏳"; // Hourglass emoji
@@ -22,7 +22,7 @@ export function createWarningPopup(onDismiss: () => void): HTMLElement {
 
   const dismissButton = document.createElement("button");
   dismissButton.textContent = "✕"; // Cross mark
-  dismissButton.className="tsw-warning-close"
+  dismissButton.className = "tsw-warning-close";
   dismissButton.addEventListener("click", onDismiss);
   popup.appendChild(dismissButton);
 
