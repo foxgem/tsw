@@ -1,19 +1,19 @@
+import Layout from "@/components/Layout";
+import TSWIcon from "@/components/TSWIcon";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
+import { TIMER_COUNT_LIMIT } from "@/utils/constants";
+import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import {
+  type TimerForDomain,
   deleteTimerForDomain,
   getAllTimersForDomains,
-  TimerForDomain,
   timerSchema,
   upsertTimerForDomain,
 } from "../utils/db";
-import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
-import TSWIcon from "@/components/TSWIcon";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Layout from "@/components/Layout";
-import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 
 function TimerSettingPage() {
   const [TimerForDomains, setTimerForDomains] = useState<TimerForDomain[]>([]);
@@ -48,7 +48,6 @@ function TimerSettingPage() {
       loadTimerForDomains();
       setIsAdding(false);
       reset();
-
     } catch (e: any) {
       e.errors.forEach((err: any) => {
         if (err.path.includes("domain")) {
@@ -80,20 +79,20 @@ function TimerSettingPage() {
 
   const handleCancel = () => {
     setIsAdding(false);
-    reset()
-  }
+    reset();
+  };
 
   const reset = () => {
     setNewDomain("");
     setNewTime(0);
     setEditingTimer(null);
     resetError();
-  }
+  };
 
   const resetError = () => {
     setDomainError(null);
     setTimeError(null);
-  }
+  };
 
   const renderTimerInput = () => (
     <div className="bg-gray-100">
@@ -103,24 +102,46 @@ function TimerSettingPage() {
           value={newDomain}
           onChange={(e) => setNewDomain(e.target.value)}
           placeholder="Enter domain (e.g., example.com)"
-          className={cn("p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100 text-black", domainError ? 'border-red-500' : 'border-gray-300')}
+          className={cn(
+            "p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100 text-black",
+            domainError ? "border-red-500" : "border-gray-300",
+          )}
         />
-        {domainError && <p className="text-red-500 text-xs mt-1">{domainError}</p>}
+        {domainError && (
+          <p className="text-red-500 text-xs mt-1">{domainError}</p>
+        )}
       </div>
       <div className="flex justify-between items-center mt-2">
         <div className="flex-grow">
           <Input
             type="number"
             value={newTime}
-            onChange={(e) => setNewTime(parseInt(e.target.value))}
+            onChange={(e) => setNewTime(Number.parseInt(e.target.value))}
             placeholder="Enter time (seconds)"
-            className={cn("p-0 pl-2 border-0 border-b w-full box-border bg-gray-100  text-black", timeError ? 'border-red-500' : 'border-gray-300')}
+            className={cn(
+              "p-0 pl-2 border-0 border-b w-full box-border bg-gray-100  text-black",
+              timeError ? "border-red-500" : "border-gray-300",
+            )}
           />
-          {timeError && <p className="text-red-500 text-xs mt-1">{timeError}</p>}
+          {timeError && (
+            <p className="text-red-500 text-xs mt-1">{timeError}</p>
+          )}
         </div>
         <div className="flex space-x-1 ml-2">
-          <TSWIcon><Check size={20} onClick={handleUpsertTimer} className="text-green-500" /></TSWIcon>
-          <TSWIcon><X size={20} onClick={() => handleCancel()} className="text-red-500" /></TSWIcon>
+          <TSWIcon>
+            <Check
+              size={20}
+              onClick={handleUpsertTimer}
+              className="text-green-500"
+            />
+          </TSWIcon>
+          <TSWIcon>
+            <X
+              size={20}
+              onClick={() => handleCancel()}
+              className="text-red-500"
+            />
+          </TSWIcon>
         </div>
       </div>
     </div>
@@ -128,31 +149,61 @@ function TimerSettingPage() {
 
   const addElement = () => (
     <div onClick={() => handleAddTimer()}>
-      <TSWIcon><Plus size={20} /></TSWIcon>
+      <TSWIcon>
+        <Plus size={20} />
+      </TSWIcon>
     </div>
-  )
+  );
 
   return (
-    <Layout title="Time Spend Watcher" headerRightElement={TimerForDomains.length < TIMER_COUNT_LIMIT ? addElement() : <div className="font-bold">Limited</div>} footerPosition="fixed">
+    <Layout
+      title="Time Spend Watcher"
+      headerRightElement={
+        TimerForDomains.length < TIMER_COUNT_LIMIT ? (
+          addElement()
+        ) : (
+          <div className="font-bold">Limited</div>
+        )
+      }
+      footerPosition="fixed"
+    >
       <Card className="overflow-y-auto mx-auto border-0 shadow-none">
         <CardContent className="p-0 shadow-none pb-4">
           {isAdding && renderTimerInput()}
           <ScrollArea className="">
             <ul className="">
               {TimerForDomains.map((timer) => (
-                <Card key={timer.domain} className={cn("py-2 shadow-none border-0", editingTimer && editingTimer.domain === timer.domain ? '' : "border-b hover:bg-accent rounded")}>
-                  {editingTimer && editingTimer.domain === timer.domain ? renderTimerInput() : (
+                <Card
+                  key={timer.domain}
+                  className={cn(
+                    "py-2 shadow-none border-0",
+                    editingTimer && editingTimer.domain === timer.domain
+                      ? ""
+                      : "border-b hover:bg-accent rounded",
+                  )}
+                >
+                  {editingTimer && editingTimer.domain === timer.domain ? (
+                    renderTimerInput()
+                  ) : (
                     <div className="flex justify-between items-center px-2">
-
-                      <p className="text-sm w-[40%]">
-                        {timer.domain}
-                      </p>
-                      <p className="text-sm w-[20%]">{timer.time}s
-                      </p>
+                      <p className="text-sm w-[40%]">{timer.domain}</p>
+                      <p className="text-sm w-[20%]">{timer.time}s</p>
 
                       <div className="flex space-x-1">
-                        <TSWIcon><FilePenLine size={20} onClick={() => handleEditTimer(timer)} className="text-primary" /></TSWIcon>
-                        <TSWIcon><Trash2 size={20} onClick={() => handleRemoveTimer(timer.domain)} className="text-red-500" /></TSWIcon>
+                        <TSWIcon>
+                          <FilePenLine
+                            size={20}
+                            onClick={() => handleEditTimer(timer)}
+                            className="text-primary"
+                          />
+                        </TSWIcon>
+                        <TSWIcon>
+                          <Trash2
+                            size={20}
+                            onClick={() => handleRemoveTimer(timer.domain)}
+                            className="text-red-500"
+                          />
+                        </TSWIcon>
                       </div>
                     </div>
                   )}
@@ -160,17 +211,22 @@ function TimerSettingPage() {
               ))}
 
               {TimerForDomains.length === 0 && !isAdding && (
-                <div className="w-full text-center font-bold text-xl mt-8">No timer, please add one.</div>
+                <div className="w-full text-center font-bold text-xl mt-8">
+                  No timer, please add one.
+                </div>
               )}
             </ul>
-            {TimerForDomains.length > 0 && TIMER_COUNT_LIMIT - TimerForDomains.length > 0 && (<div className="text-right w-full font-bold py-2 text-base">Left: {TIMER_COUNT_LIMIT - TimerForDomains.length}</div>)}
-
+            {TimerForDomains.length > 0 &&
+              TIMER_COUNT_LIMIT - TimerForDomains.length > 0 && (
+                <div className="text-right w-full font-bold py-2 text-base">
+                  Left: {TIMER_COUNT_LIMIT - TimerForDomains.length}
+                </div>
+              )}
           </ScrollArea>
         </CardContent>
       </Card>
     </Layout>
-  )
+  );
 }
-
 
 export default TimerSettingPage;

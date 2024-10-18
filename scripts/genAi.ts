@@ -9,5 +9,5 @@ rewriteCode(
     console.log(await storage.getAll());
   }, 3000);
   `,
-  "rust"
+  "rust",
 ).then(console.log);

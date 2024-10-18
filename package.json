@@ -6,8 +6,8 @@
     "dev": "plasmo dev",
     "build": "plasmo build",
     "test": "jest",
-    "lint": "eslint . --ext .ts,.tsx",
-    "format": "prettier --write \"**/*.{ts,tsx,json}\"",
+    "lint": "biome check",
+    "fix": "biome check --write",
     "ai": "tsx scripts/genAi.ts"
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@ianvs/prettier-plugin-sort-imports": "4.1.1",
     "@radix-ui/react-menubar": "^1.1.1",
     "@radix-ui/react-scroll-area": "^1.1.0",
@@ -48,45 +49,29 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.37.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-react": "^7.32.2",
     "jest": "^29.5.0",
     "postcss": "^8.4.47",
-    "prettier": "2.8.8",
     "tailwindcss": "^3.4.11",
     "ts-jest": "^29.1.0",
     "tsx": "^4.19.1",
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": [
-      "contextMenus",
-      "tabs",
-      "storage",
-      "alarms",
-      "activeTab"
-    ],
+    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
     "background": {
       "service_worker": "background.ts"
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
     "version": "0.1.0",
-    "host_permissions": [
-      "https://*/*"
-    ],
+    "host_permissions": ["https://*/*"],
     "content_scripts": [
       {
-        "matches": [
-          "<all_urls>"
-        ],
-        "css": [
-          "/src/css/global.css"
-        ],
+        "matches": ["<all_urls>"],
+        "css": ["/src/css/global.css"],
         "run_at": "document_start"
       }
     ]
   },
-  "packageManager": "pnpm@9.11.0+sha512.0a203ffaed5a3f63242cd064c8fb5892366c103e328079318f78062f24ea8c9d50bc6a47aa3567cabefd824d170e78fa2745ed1f16b132e16436146b7688f19b"
+  "packageManager": "pnpm@9.12.2+sha512.22721b3a11f81661ae1ec68ce1a7b879425a1ca5b991c975b074ac220b187ce56c708fe5db69f4c962c989452eee76c82877f4ee80f474cebd61ee13461b6228"
 }

@@ -1,16 +1,20 @@
 import {
+  explainCode,
   explainSentence,
   explainWord,
   ocr,
-  summariseLink,
-  explainCode,
-  rewriteCode,
   pageRag,
+  rewriteCode,
+  summariseLink,
 } from "./utils/ai";
 
 let pageText: string;
 
-function withOutputPanel(outputElm: string, initInnerHtml: string, handler: () => void) {
+function withOutputPanel(
+  outputElm: string,
+  initInnerHtml: string,
+  handler: () => void,
+) {
   const panel = document.getElementById(outputElm);
   if (!panel) {
     return;
@@ -43,7 +47,14 @@ function extractTextFromNode(node: Node): string {
     const element = node as Element;
 
     // List of tags to exclude
-    const excludeTags = ["SCRIPT", "STYLE", "IFRAME", "NOSCRIPT", "SVG", "PATH"];
+    const excludeTags = [
+      "SCRIPT",
+      "STYLE",
+      "IFRAME",
+      "NOSCRIPT",
+      "SVG",
+      "PATH",
+    ];
 
     if (excludeTags.includes(element.tagName)) {
       return "";
@@ -87,7 +98,7 @@ export async function summarize(outputElm: string) {
       if (summaryElement) {
         summaryElement.innerHTML = summaryContent;
       }
-    }
+    },
   );
 }
 
@@ -108,8 +119,12 @@ export async function explainSelected(outputElm: string, text: string) {
     </div>
     `,
     async () => {
-      const explanation = isWord ? await explainWord(text) : await explainSentence(text);
-      const explanationElement = document.getElementById("tsw-explanation-content");
+      const explanation = isWord
+        ? await explainWord(text)
+        : await explainSentence(text);
+      const explanationElement = document.getElementById(
+        "tsw-explanation-content",
+      );
       if (explanationElement) {
         explanationElement.innerHTML = explanation;
       }
@@ -124,11 +139,15 @@ export async function explainSelected(outputElm: string, text: string) {
       //     pageText
       //   )
       // );
-    }
+    },
   );
 }
 
-export async function ocrHandler(outputElm: string, imgSrc: string, postPrompt = "") {
+export async function ocrHandler(
+  outputElm: string,
+  imgSrc: string,
+  postPrompt = "",
+) {
   withOutputPanel(
     outputElm,
     `
@@ -154,7 +173,7 @@ export async function ocrHandler(outputElm: string, imgSrc: string, postPrompt =
           imgContentElement.innerHTML = e as string;
         }
       }
-    }
+    },
   );
 }
 
@@ -172,16 +191,22 @@ export function codeHandler(outputElm: string, code: string) {
     </div>
     `,
     async () => {
-      const codeContentElement = document.getElementById("tsw-code-explanation");
+      const codeContentElement = document.getElementById(
+        "tsw-code-explanation",
+      );
       if (codeContentElement) {
         const result = await explainCode(code);
         codeContentElement.innerHTML = result;
       }
-    }
+    },
   );
 }
 
-export function rewriteHandler(outputElm: string, code: string, targetLanguage: string) {
+export function rewriteHandler(
+  outputElm: string,
+  code: string,
+  targetLanguage: string,
+) {
   withOutputPanel(
     outputElm,
     `
@@ -200,6 +225,6 @@ export function rewriteHandler(outputElm: string, code: string, targetLanguage: 
         const result = await rewriteCode(code, targetLanguage);
         codeContentElement.innerHTML = result;
       }
-    }
+    },
   );
 }

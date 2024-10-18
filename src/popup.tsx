@@ -1,9 +1,9 @@
 import React from "react";
-import { MemoryRouter as Router, Route, Routes } from "react-router-dom";
-import MainPage from "./pages/home";
-import TimerSettingPage from "./pages/timer-setting";
+import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import AboutPage from "./pages/about";
+import MainPage from "./pages/home";
+import TimerSettingPage from "./pages/timer-setting";
 
 import SettingApiKey from "./pages/api-key-setting";
 
