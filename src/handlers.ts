@@ -5,7 +5,10 @@ import {
   summariseLink,
   explainCode,
   rewriteCode,
+  pageRag,
 } from "./utils/ai";
+
+let pageText: string;
 
 function withOutputPanel(outputElm: string, initInnerHtml: string, handler: () => void) {
   const panel = document.getElementById(outputElm);
@@ -30,6 +33,40 @@ function withOutputPanel(outputElm: string, initInnerHtml: string, handler: () =
 
   handler();
 }
+
+function extractTextFromNode(node: Node): string {
+  if (node.nodeType === Node.TEXT_NODE) {
+    return node.textContent?.trim() || "";
+  }
+
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    const element = node as Element;
+
+    // List of tags to exclude
+    const excludeTags = ["SCRIPT", "STYLE", "IFRAME", "NOSCRIPT", "SVG", "PATH"];
+
+    if (excludeTags.includes(element.tagName)) {
+      return "";
+    }
+
+    // Optional: Check for hidden elements
+    const style = window.getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden") {
+      return "";
+    }
+
+    let text = "";
+    for (const childNode of element.childNodes) {
+      text += `${extractTextFromNode(childNode)} `;
+    }
+    return text.trim();
+  }
+
+  return "";
+}
+
+// Ensure the function is used somewhere to avoid the "never used" warning
+export { extractTextFromNode };
 
 export async function summarize(outputElm: string) {
   withOutputPanel(
@@ -76,6 +113,17 @@ export async function explainSelected(outputElm: string, text: string) {
       if (explanationElement) {
         explanationElement.innerHTML = explanation;
       }
+
+      // if (!pageText) {
+      //   pageText = extractTextFromNode(document.body);
+      // }
+      // console.log(
+      //   "page based rag: ",
+      //   await pageRag(
+      //     "if I want to search similar topic articles with google, what keywords would you like to suggest?",
+      //     pageText
+      //   )
+      // );
     }
   );
 }

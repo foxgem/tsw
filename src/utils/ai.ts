@@ -35,9 +35,22 @@ const ocrExpert = `
   If the text is handwritten or the image has a complex background, consider additional steps like morphological operations or perspective correction.
 `;
 
+const pageRagPrompt = (question: string, context: string) => {
+  return `
+  You are an expert in answering user questions. You always understand user questions well, and then provide high-quality answers based on the information provided in the context.
+
+  If the provided context does not contain relevant information, just respond "I could not find the answer based on the context you provided."
+
+  User question: ${question}
+
+  Context:
+  ${context}
+  `;
+};
+
 const genAIFunction = async (
   prompt: string | Array<string | Part>,
-  systemInstruction: string | Part | Content,
+  systemInstruction: string | Part | Content = "",
   rawOutput = false
 ) => {
   const model = (await genAI()).getGenerativeModel({
@@ -84,6 +97,9 @@ export const explainCode = (message: string) =>
 
 export const rewriteCode = (code: string, targetLang: string) =>
   genAIFunction(`将 ${code} 代码重写为 ${targetLang} 语言的代码。`, siCodeExpert);
+
+export const pageRag = (message: string, context: string) =>
+  genAIFunction(pageRagPrompt(message, context));
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
