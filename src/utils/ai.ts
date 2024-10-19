@@ -4,7 +4,7 @@ import {
   type Part,
 } from "@google/generative-ai";
 import { Storage } from "@plasmohq/storage";
-import { escape } from "html-escaper";
+import { escape as htmlEscape } from "html-escaper";
 import { marked } from "marked";
 
 const genAI = async () => {
@@ -13,7 +13,7 @@ const genAI = async () => {
     process.env.GOOGLE_GENERATIVE_AI_API_KEY || (await storage.get("apiKey"));
   if (!apiKey) {
     throw new Error(
-      "Google Generative AI API key not found in environment variables or storage",
+      "Google Generative AI API key not found in environment variables or storage"
     );
   }
   return new GoogleGenerativeAI(apiKey);
@@ -58,7 +58,7 @@ const pageRagPrompt = (question: string, context: string) => {
 const genAIFunction = async (
   prompt: string | Array<string | Part>,
   systemInstruction: string | Part | Content = "",
-  rawOutput = false,
+  rawOutput = false
 ) => {
   const model = (await genAI()).getGenerativeModel({
     model: "gemini-1.5-flash",
@@ -66,20 +66,20 @@ const genAIFunction = async (
   });
   const result = (await model.generateContent(prompt)).response.text();
   return rawOutput
-    ? `<pre>${marked.parse(escape(result))}</pre>`
+    ? `<pre>${marked.parse(htmlEscape(result))}</pre>`
     : marked.parse(result);
 };
 
 export const explainSentence = (sentences: string) =>
   genAIFunction(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
-    siEnglishTeacher,
+    siEnglishTeacher
   );
 
 export const explainWord = (word: string) =>
   genAIFunction(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
-    siEnglishTeacher,
+    siEnglishTeacher
   );
 
 export const summariseLink = (link: string) =>
@@ -90,7 +90,7 @@ export const summariseLink = (link: string) =>
     概述：200 字以内，需要突出作者想要强调的要旨
     段落大意：将文中每个段落用两三句话总结，并按原文一样的顺序排列输出。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
-    siSummariser,
+    siSummariser
   );
 
 export const explainCode = (message: string) =>
@@ -101,13 +101,13 @@ export const explainCode = (message: string) =>
     3. 如果是错误信息，则解释错误的原因和解决方法。
     4. 如果是命令行输出，则解释命令的功能和输出的含义。
     `,
-    siCodeExpert,
+    siCodeExpert
   );
 
 export const rewriteCode = (code: string, targetLang: string) =>
   genAIFunction(
     `将 ${code} 代码重写为 ${targetLang} 语言的代码。`,
-    siCodeExpert,
+    siCodeExpert
   );
 
 export const pageRag = (message: string, context: string) =>
@@ -118,7 +118,7 @@ export const pageRag = (message: string, context: string) =>
 export const ocr = (
   imageBuffer: Buffer,
   imageMimeType: string,
-  postPrompt = "",
+  postPrompt = ""
 ) =>
   genAIFunction(
     [
@@ -130,5 +130,5 @@ export const ocr = (
       },
     ],
     ocrExpert + postPrompt,
-    true,
+    true
   );
