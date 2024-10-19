@@ -12,13 +12,14 @@ export default function SelectLang({
   return (
     <div className="lang-container">
       {LANG_LIST.map((language) => (
-        <div
+        <button
+          type="button"
           className="tsw-select-lang-item"
           key={language}
           onClick={() => onLanguageChange(language)}
         >
           {language}
-        </div>
+        </button>
       ))}
     </div>
   );

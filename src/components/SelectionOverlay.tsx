@@ -74,7 +74,7 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         }}
       >
         {buttons.map((button, index) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={`button-${button.icon}-${index}`}>
             {index > 0 && (
               <div
                 style={{
@@ -85,6 +85,7 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
             )}
             <button
               onClick={button.onClick}
+              type="button"
               style={{
                 background: "#007bff",
                 color: "white",

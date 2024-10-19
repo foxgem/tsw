@@ -6,7 +6,7 @@ const Header: React.FC = () => {
   return (
     <div className="flex justify-between items-center flex-grow text-center py-2 px-5 h-[56px]">
       <div className="flex justify-start items-center">
-        <img src={logo} className="w-6" />
+        <img src={logo} className="w-6" alt="logo" />
         <p className="font-bold text-sm ml-1">TSW</p>
       </div>
       <div className="flex items-center">
