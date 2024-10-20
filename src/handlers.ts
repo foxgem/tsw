@@ -93,10 +93,11 @@ export async function summarize(outputElm: string) {
     </div>
   `,
     async () => {
-      const summaryContent = await summariseLink(window.location.href);
       const summaryElement = document.getElementById("tsw-summary-content");
       if (summaryElement) {
-        summaryElement.innerHTML = summaryContent;
+        await summariseLink(window.location.href, (text) => {
+          summaryElement.innerHTML = text;
+        });
       }
     },
   );
@@ -119,14 +120,16 @@ export async function explainSelected(outputElm: string, text: string) {
     </div>
     `,
     async () => {
-      const explanation = isWord
-        ? await explainWord(text)
-        : await explainSentence(text);
       const explanationElement = document.getElementById(
         "tsw-explanation-content",
       );
       if (explanationElement) {
-        explanationElement.innerHTML = explanation;
+        const linePrinter = (text: string) => {
+          explanationElement.innerHTML = text;
+        };
+        isWord
+          ? await explainWord(text, linePrinter)
+          : await explainSentence(text, linePrinter);
       }
 
       // if (!pageText) {
@@ -167,8 +170,14 @@ export async function ocrHandler(
           const response = await fetch(imgSrc);
           const buffer = await response.arrayBuffer();
           const mimeType = response.headers.get("Content-Type") || "image/jpeg";
-          const result = await ocr(Buffer.from(buffer), mimeType, postPrompt);
-          imgContentElement.innerHTML = result;
+          await ocr(
+            Buffer.from(buffer),
+            mimeType,
+            (text) => {
+              imgContentElement.innerHTML = text;
+            },
+            postPrompt,
+          );
         } catch (e) {
           imgContentElement.innerHTML = e as string;
         }
@@ -195,8 +204,9 @@ export function codeHandler(outputElm: string, code: string) {
         "tsw-code-explanation",
       );
       if (codeContentElement) {
-        const result = await explainCode(code);
-        codeContentElement.innerHTML = result;
+        await explainCode(code, (text) => {
+          codeContentElement.innerHTML = text;
+        });
       }
     },
   );
@@ -222,8 +232,9 @@ export function rewriteHandler(
     async () => {
       const codeContentElement = document.getElementById("tsw-code-result");
       if (codeContentElement) {
-        const result = await rewriteCode(code, targetLanguage);
-        codeContentElement.innerHTML = result;
+        await rewriteCode(code, targetLanguage, (text) => {
+          codeContentElement.innerHTML = text;
+        });
       }
     },
   );

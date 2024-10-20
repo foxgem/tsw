@@ -1,13 +1,18 @@
 import {
-  type Content,
-  GoogleGenerativeAI,
-  type Part,
-} from "@google/generative-ai";
+  type CoreAssistantMessage,
+  type CoreSystemMessage,
+  type CoreToolMessage,
+  type CoreUserMessage,
+  streamText,
+} from "ai";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { Storage } from "@plasmohq/storage";
 import { escape as htmlEscape } from "html-escaper";
 import { marked } from "marked";
 
-const genAI = async () => {
+type LinePrinter = (text: string) => void;
+
+const loadApiKey = async () => {
   const storage = new Storage();
   const apiKey =
     process.env.PLASMO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY ||
@@ -17,7 +22,7 @@ const genAI = async () => {
       "Google Generative AI API key not found in environment variables or storage",
     );
   }
-  return new GoogleGenerativeAI(apiKey);
+  return apiKey;
 };
 
 const siEnglishTeacher =
@@ -56,35 +61,64 @@ const pageRagPrompt = (question: string, context: string) => {
   `;
 };
 
-const genAIFunction = async (
-  prompt: string | Array<string | Part>,
-  systemInstruction: string | Part | Content = "",
-  rawOutput = false,
+const genTextFunction = async (
+  prompt: string,
+  system: string,
+  linePrinter: LinePrinter,
 ) => {
-  const model = (await genAI()).getGenerativeModel({
-    model: "gemini-1.5-flash",
-    systemInstruction,
+  const apiKey = await loadApiKey();
+  const google = createGoogleGenerativeAI({ apiKey });
+  const { textStream } = await streamText({
+    model: google("gemini-1.5-flash"),
+    system,
+    prompt,
   });
-  const result = (await model.generateContent(prompt)).response.text();
-  return rawOutput
-    ? `<pre>${marked.parse(htmlEscape(result))}</pre>`
-    : marked.parse(result);
+
+  const results: string[] = [];
+
+  for await (const text of textStream) {
+    results.push(text);
+    linePrinter(await marked.parse(results.join("")));
+  }
 };
 
-export const explainSentence = (sentences: string) =>
-  genAIFunction(
+const genChatFunction = async (
+  messages: Array<
+    CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage
+  >,
+  linePrinter: LinePrinter,
+) => {
+  const apiKey = await loadApiKey();
+  const google = createGoogleGenerativeAI({ apiKey });
+  const { textStream } = await streamText({
+    model: google("gemini-1.5-flash"),
+    messages,
+  });
+
+  const results: string[] = [];
+
+  for await (const text of textStream) {
+    results.push(text);
+    linePrinter(await marked.parse(results.join("")));
+  }
+};
+
+export const explainSentence = (sentences: string, linePrinter: LinePrinter) =>
+  genTextFunction(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
     siEnglishTeacher,
+    linePrinter,
   );
 
-export const explainWord = (word: string) =>
-  genAIFunction(
+export const explainWord = (word: string, linePrinter: LinePrinter) =>
+  genTextFunction(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher,
+    linePrinter,
   );
 
-export const summariseLink = (link: string) =>
-  genAIFunction(
+export const summariseLink = (link: string, linePrinter: LinePrinter) =>
+  genTextFunction(
     `分析链接： ${link} ，输出格式要求如下：
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
     关键字： 5 个以内
@@ -95,10 +129,11 @@ export const summariseLink = (link: string) =>
     文章链接：文章的原始链接。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
     siSummariser,
+    linePrinter,
   );
 
-export const explainCode = (message: string) =>
-  genAIFunction(
+export const explainCode = (message: string, linePrinter: LinePrinter) =>
+  genTextFunction(
     `分析： ${message} ，并给出清晰的解释。
     1. 识别类型：代码、错误信息或命令行输出。
     2. 如果是代码，则给出可能的开发语言，解释代码的逻辑和功能，忽略代码中的注释、导入、类型定义、打印输出。
@@ -106,33 +141,49 @@ export const explainCode = (message: string) =>
     4. 如果是命令行输出，则解释命令的功能和输出的含义。
     `,
     siCodeExpert,
+    linePrinter,
   );
 
-export const rewriteCode = (code: string, targetLang: string) =>
-  genAIFunction(
+export const rewriteCode = (
+  code: string,
+  targetLang: string,
+  linePrinter: LinePrinter,
+) =>
+  genTextFunction(
     `将 ${code} 代码重写为 ${targetLang} 语言的代码。`,
     siCodeExpert,
+    linePrinter,
   );
 
-export const pageRag = (message: string, context: string) =>
-  genAIFunction(pageRagPrompt(message, context));
+export const pageRag = (
+  message: string,
+  context: string,
+  linePrinter: LinePrinter,
+) => {
+  // genAIFunction(pageRagPrompt(message, context));
+};
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
 export const ocr = (
   imageBuffer: Buffer,
   imageMimeType: string,
+  linePrinter: LinePrinter,
   postPrompt = "",
 ) =>
-  genAIFunction(
+  genChatFunction(
     [
+      { role: "system", content: ocrExpert + postPrompt },
       {
-        inlineData: {
-          mimeType: imageMimeType,
-          data: imageBuffer.toString("base64"),
-        },
+        role: "user",
+        content: [
+          {
+            type: "image",
+            image: imageBuffer,
+            mimeType: imageMimeType,
+          },
+        ],
       },
     ],
-    ocrExpert + postPrompt,
-    true,
+    linePrinter,
   );
