@@ -22,7 +22,7 @@ const genAI = async () => {
 const siEnglishTeacher =
   "你是一名资深英语老师有丰富的教学经验，可以深入浅出的用中文讲解英文疑难杂句和单词释义。";
 const siSummariser =
-  "You are good at summarising articles. Based on a link passed by user, your task is to highlight the main key points in the article pointed by that link and output them in the format as users expect.";
+  "You are good at summarising articles. Your summary is interesting and informative.  ";
 
 const siCodeExpert = `
   You are a coding expert. You are good at:
@@ -88,7 +88,7 @@ export const summariseLink = (link: string) =>
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
     关键字： 5 个以内
     概述：200 字以内，需要突出作者想要强调的要旨
-    分节阅读：将每个 <h2> 总结成 5 ～ 10 句话，并按原文一样的顺序排列输出。
+    分节阅读：将每个 <h2> 总结成 8 句话，并按原文一样的顺序排列输出。
     相关工具：如果文章中提到了一些工具，在此处列出相关工具的名称和链接。
     参考文献：如果有参考文献，列出参考文献的名称和链接。
     文章链接：文章的原始链接。
