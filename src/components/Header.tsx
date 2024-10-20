@@ -1,4 +1,4 @@
-import logo from "data-base64:~assets/icon.png";
+import logo from "data-base64:/assets/icon.png";
 import type React from "react";
 import { ThemeToggle } from "./ThemeToggle";
 

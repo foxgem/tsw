@@ -10,7 +10,8 @@ import { marked } from "marked";
 const genAI = async () => {
   const storage = new Storage();
   const apiKey =
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY || (await storage.get("apiKey"));
+    process.env.PLASMO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY ||
+    (await storage.get("apiKey"));
   if (!apiKey) {
     throw new Error(
       "Google Generative AI API key not found in environment variables or storage",
