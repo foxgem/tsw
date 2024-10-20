@@ -167,12 +167,8 @@ export async function ocrHandler(
       const imgContentElement = document.getElementById("tsw-image-content");
       if (imgContentElement) {
         try {
-          const response = await fetch(imgSrc);
-          const buffer = await response.arrayBuffer();
-          const mimeType = response.headers.get("Content-Type") || "image/jpeg";
           await ocr(
-            Buffer.from(buffer),
-            mimeType,
+            imgSrc,
             (text) => {
               imgContentElement.innerHTML = text;
             },

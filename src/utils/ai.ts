@@ -36,8 +36,9 @@ const siCodeExpert = `
   2. Rewriting an existing code snippet into a new code snippet with a specified programming language.
   3. Explaining the reason of the given error messages.`;
 
-const ocrExpert = `
-  OCR this image. Extract the text as it is, without analyzing or summarizing.
+const ocrExpert = (postProcessing: string) => {
+  const ocrPrompt = `
+  OCR this image. Extract the text as it is, without analyzing or summarizing. If there is post-processing, apply it after OCR.
 
   Before OCR, consider the following pre-processing steps:
   1. **Noise reduction:** Apply Gaussian blur with a sigma of 1.5 to reduce noise.
@@ -47,6 +48,15 @@ const ocrExpert = `
 
   If the text is handwritten or the image has a complex background, consider additional steps like morphological operations or perspective correction.
 `;
+  if (postProcessing) {
+    const postPrompt = `
+      After OCR, do the following post-processing steps and return the final result, with the text extracted from the image.
+      ${postProcessing}
+    `;
+    return `${ocrPrompt}\n\n${postPrompt}`;
+  }
+  return ocrPrompt;
+};
 
 const pageRagPrompt = (question: string, context: string) => {
   return `
@@ -165,22 +175,16 @@ export const pageRag = (
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
-export const ocr = (
-  imageBuffer: Buffer,
-  imageMimeType: string,
-  linePrinter: LinePrinter,
-  postPrompt = "",
-) =>
+export const ocr = (url: string, linePrinter: LinePrinter, postPrompt = "") =>
   genChatFunction(
     [
-      { role: "system", content: ocrExpert + postPrompt },
       {
         role: "user",
         content: [
+          { type: "text", text: ocrExpert(postPrompt) },
           {
             type: "image",
-            image: imageBuffer,
-            mimeType: imageMimeType,
+            image: new URL(url),
           },
         ],
       },
