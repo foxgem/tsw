@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-import githubDark from "data-base64:~assets/github.svg";
-import githubLight from "data-base64:~assets/github_light.svg";
+import githubDark from "data-base64:/assets/github.svg";
+import githubLight from "data-base64:/assets/github_light.svg";
 import { GITHUB_ROOT } from "@/utils/constants";
 
 interface FooterProps {
@@ -31,10 +31,12 @@ export default function Footer({ className }: FooterProps) {
         <a href={GITHUB_ROOT} target="_blank" rel="noreferrer noopener">
           <img
             src={githubLight}
+            alt="githubLight"
             className="w-5 transition-opacity duration-300 hover:opacity-50 cursor-pointer dark:block hidden"
           />
           <img
             src={githubDark}
+            alt="githubDark"
             className="w-5 transition-opacity duration-300 hover:opacity-50 cursor-pointer block dark:hidden"
           />
         </a>

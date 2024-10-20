@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import { ZodError } from "zod";
 import {
   type TimerForDomain,
   deleteTimerForDomain,
@@ -48,14 +49,18 @@ function TimerSettingPage() {
       loadTimerForDomains();
       setIsAdding(false);
       reset();
-    } catch (e: any) {
-      e.errors.forEach((err: any) => {
-        if (err.path.includes("domain")) {
-          setDomainError(err.message);
-        } else if (err.path.includes("time")) {
-          setTimeError(err.message);
+    } catch (e) {
+      if (e instanceof ZodError) {
+        for (const err of e.errors) {
+          if (err.path.includes("domain")) {
+            setDomainError(err.message);
+          } else if (err.path.includes("time")) {
+            setTimeError(err.message);
+          }
         }
-      });
+      } else {
+        console.error("Unknown Error:", e);
+      }
     }
   };
 
@@ -148,11 +153,11 @@ function TimerSettingPage() {
   );
 
   const addElement = () => (
-    <div onClick={() => handleAddTimer()}>
+    <button type="button" onClick={() => handleAddTimer()}>
       <TSWIcon>
         <Plus size={20} />
       </TSWIcon>
-    </div>
+    </button>
   );
 
   return (

@@ -12,7 +12,10 @@ export function ThemeToggle() {
   if (!mounted) return null;
 
   return (
-    <div onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      type="button"
+    >
       <TSWIcon>
         {theme === "dark" ? (
           <>
@@ -24,6 +27,6 @@ export function ThemeToggle() {
           </>
         )}
       </TSWIcon>
-    </div>
+    </button>
   );
 }

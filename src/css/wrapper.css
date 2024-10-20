@@ -2,6 +2,16 @@
   width: 150px;
 }
 
+#tsw-select-lang-container .lang-container button {
+  border: none;
+  background-color: white;
+  width: 100%;
+}
+
+#tsw-select-lang-container .lang-container button:hover {
+  background-color: rgb(229, 231, 235);
+}
+
 .tsw-select-lang-item {
   display: flex;
   align-items: center;

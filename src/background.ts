@@ -71,7 +71,11 @@ chrome.tabs.onRemoved.addListener((tabId) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "closePage" && request.domain) {
     chrome.tabs.query({ url: `*://${request.domain}/*` }, (tabs) => {
-      tabs.forEach((tab) => tab.id && chrome.tabs.remove(tab.id));
+      for (const tab of tabs) {
+        if (tab.id) {
+          chrome.tabs.remove(tab.id);
+        }
+      }
     });
   }
 });
