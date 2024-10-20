@@ -118,6 +118,9 @@ function registerElmPicker(checkers: PickingChecker[]) {
             elementMouseIsOver.parentElement
           );
         }
+        if (hostname === "sdk.vercel.ai") {
+          return elementMouseIsOver.closest("pre");
+        }
         return elementMouseIsOver.parentElement || elementMouseIsOver;
       })(window.location.hostname);
 
@@ -266,6 +269,16 @@ registerElmPicker([
     if (window.location.hostname === "medium.com") {
       const codeText = e.closest("pre")?.querySelector("span")?.innerHTML;
       return !!(codeText && codeText.split(/<br>/).length >= 5);
+    }
+
+    if (window.location.hostname === "medium.com") {
+      const codeText = e.closest("pre")?.querySelector("span")?.innerHTML;
+      return !!(codeText && codeText.split(/<br>/).length >= 5);
+    }
+
+    if (window.location.hostname === "sdk.vercel.ai") {
+      const codeText = e.closest("pre")?.querySelector("code")?.innerHTML;
+      return !!(codeText && codeText.split(/<div/).length >= 5);
     }
 
     if (

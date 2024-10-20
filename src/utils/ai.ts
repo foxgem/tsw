@@ -86,9 +86,13 @@ const genTextFunction = async (
 
   const results: string[] = [];
 
-  for await (const text of textStream) {
-    results.push(text);
-    linePrinter(await marked.parse(results.join("")));
+  try {
+    for await (const text of textStream) {
+      results.push(text);
+      linePrinter(await marked.parse(results.join()));
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -107,9 +111,13 @@ const genChatFunction = async (
 
   const results: string[] = [];
 
-  for await (const text of textStream) {
-    results.push(text);
-    linePrinter(await marked.parse(results.join("")));
+  try {
+    for await (const text of textStream) {
+      results.push(text);
+      linePrinter(`${await marked.parse(htmlEscape(results.join()))}`);
+    }
+  } catch (e) {
+    console.log(e);
   }
 };
 
