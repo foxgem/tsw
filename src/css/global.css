@@ -15,6 +15,8 @@
   overflow-y: auto;
   border-left: 1px;
   margin-left: 12px;
+  display: flex;
+flex-direction: column;
 }
 
 .tsw-panel-title {
@@ -89,10 +91,6 @@
   }
 }
 
-#tsw-summary-content {
-  margin-top: 30px;
-}
-
 #tsw-close-right-part:hover,
 .tsw-header-btn:hover {
   background-color: rgb(209 213 219);
@@ -102,8 +100,20 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
 }
 
+.tsw-panel-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-bottom:20px;
+  }
+  
 .tsw-panel-menu {
   display: flex;
   align-items: center;
