@@ -15,14 +15,18 @@ import {
 import "@/css/wrapper.css";
 import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
-
-let picking = false;
+declare global {
+  interface Window {
+    picking: boolean;
+  }
+}
+window.picking = false;
 
 function registerElmPicker(checkers: PickingChecker[]) {
   let prevElementMouseIsOver: Element | null = null;
 
   document.addEventListener("mousemove", (e) => {
-    if (!picking) {
+    if (!window.picking) {
       return;
     }
 
@@ -296,6 +300,37 @@ registerElmPicker([
   },
 ]);
 
+export const iconArray = [
+  {
+    name: "Summary",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
+    action: () => {
+      summarize("tsw-toggle-panel");
+    },
+  },
+  {
+    name: "Wand",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
+    action: () => {
+      window.picking = !window.picking;
+    },
+  },
+  {
+    name: "Chat",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>`,
+    action: () => {
+      window.picking = !window.picking;
+    },
+  },
+  {
+    name: "History",
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`,
+    action: () => {
+      window.picking = !window.picking;
+    },
+  },
+];
+
 function createFloatingToggleButton() {
   const containerDiv = document.createElement("div");
   containerDiv.id = "tsw-buttons-container";
@@ -306,7 +341,7 @@ function createFloatingToggleButton() {
   panel.style.cssText = `
     position: fixed;
     top: 50%;
-    right: 50px;
+    right: 0;
     transform: translateY(-50%);
     width: 40%;
     height: 100%;
@@ -318,37 +353,6 @@ function createFloatingToggleButton() {
     display: none;
   `;
   document.body.appendChild(panel);
-
-  const iconArray = [
-    {
-      name: "Summary",
-      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
-      action: () => {
-        summarize("tsw-toggle-panel");
-      },
-    },
-    {
-      name: "Wand",
-      svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
-      action: () => {
-        picking = !picking;
-      },
-    },
-    {
-        name: "Chat",
-        svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>`,
-        action: () => {
-          picking = !picking;
-        },
-      },
-      {
-        name: "History",
-        svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`,
-        action: () => {
-          picking = !picking;
-        },
-      },
-  ];
 
   const root = createRoot(containerDiv);
   root.render(

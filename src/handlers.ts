@@ -1,3 +1,5 @@
+import TSWIcon from "./components/TSWIcon";
+import { iconArray } from "./content";
 import {
   explainCode,
   explainSentence,
@@ -7,12 +9,14 @@ import {
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
+import logo from "data-base64:/assets/icon.png";
 
 let pageText: string;
 
 function withOutputPanel(
   outputElm: string,
   initInnerHtml: string,
+  title: string,
   handler: () => void,
 ) {
   const panel = document.getElementById(outputElm);
@@ -23,8 +27,27 @@ function withOutputPanel(
   panel.style.display = "block";
   panel.innerHTML = `
     <div  class="tsw-panel"">
-      <button id="tsw-close-right-part">Close</button>
-      ${initInnerHtml}
+        <div class="tsw-panel-header">
+            <div class="tsw-panel-header-logo"> <img src=${logo} alt="TSW Icon" class="tsw-icon">
+            <span>${title}</span>
+              </div>
+            <div class="tsw-panel-menu">
+                <div class="tsw-panel-header-action">
+                ${iconArray
+                  .map(
+                    (icon) => `
+                    <button class="tsw-header-btn" id="tsw-${icon.name.toLowerCase()}-btn">
+                    ${icon.svg}
+                    </button>
+                `,
+                  )
+                  .join("")}
+                </div>
+                <div class="tsw-panel-header-separator"></div>
+                <button id="tsw-close-right-part"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
+            </div>
+        </div>
+        ${initInnerHtml}
     </div>
   `;
 
@@ -33,6 +56,20 @@ function withOutputPanel(
     closeButton.addEventListener("click", () => {
       panel.style.display = "none";
     });
+  }
+
+  for (const icon of iconArray) {
+    const button = document.querySelector(
+      `#tsw-${icon.name.toLowerCase()}-btn`,
+    );
+    if (button) {
+      button.addEventListener("click", () => {
+        icon.action();
+        if (icon.name.toLowerCase() === "wand") {
+          panel.style.display = "none";
+        }
+      });
+    }
   }
 
   handler();
@@ -83,7 +120,6 @@ export async function summarize(outputElm: string) {
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">Summary</p>
     <hr>
     <div id="tsw-summary-content">
       <div style="text-align: center; padding: 20px;">
@@ -92,6 +128,7 @@ export async function summarize(outputElm: string) {
       </div>
     </div>
   `,
+    "Summary",
     async () => {
       const summaryElement = document.getElementById("tsw-summary-content");
       if (summaryElement) {
@@ -110,7 +147,6 @@ export async function explainSelected(outputElm: string, text: string) {
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">${title}：${text}</p>
     <hr>
     <div id="tsw-explanation-content">
       <div style="text-align: center; padding: 20px;">
@@ -119,6 +155,7 @@ export async function explainSelected(outputElm: string, text: string) {
       </div>
     </div>
     `,
+    `${title}：${text}`,
     async () => {
       const explanationElement = document.getElementById(
         "tsw-explanation-content",
@@ -154,7 +191,6 @@ export async function ocrHandler(
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">Text in Image</p>
     <hr>
     <div id="tsw-image-content">
       <div style="text-align: center; padding: 20px;">
@@ -163,6 +199,7 @@ export async function ocrHandler(
       </div>
     </div>
     `,
+    "Text in Image",
     async () => {
       const imgContentElement = document.getElementById("tsw-image-content");
       if (imgContentElement) {
@@ -186,7 +223,6 @@ export function codeHandler(outputElm: string, code: string) {
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">Code Block Explanation</p>
     <hr>
     <div id="tsw-code-explanation">
       <div style="text-align: center; padding: 20px;">
@@ -195,6 +231,7 @@ export function codeHandler(outputElm: string, code: string) {
       </div>
     </div>
     `,
+    "Code Block Explanation",
     async () => {
       const codeContentElement = document.getElementById(
         "tsw-code-explanation",
@@ -216,7 +253,6 @@ export function rewriteHandler(
   withOutputPanel(
     outputElm,
     `
-    <p class="tsw-panel-title">Rewrite Code with ${targetLanguage}</p>
     <hr>
     <div id="tsw-code-result">
       <div style="text-align: center; padding: 20px;">
@@ -225,6 +261,7 @@ export function rewriteHandler(
       </div>
     </div>
     `,
+    `Rewrite Code with ${targetLanguage}`,
     async () => {
       const codeContentElement = document.getElementById("tsw-code-result");
       if (codeContentElement) {

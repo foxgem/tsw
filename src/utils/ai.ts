@@ -1,3 +1,5 @@
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { Storage } from "@plasmohq/storage";
 import {
   type CoreAssistantMessage,
   type CoreSystemMessage,
@@ -5,8 +7,6 @@ import {
   type CoreUserMessage,
   streamText,
 } from "ai";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { Storage } from "@plasmohq/storage";
 import { escape as htmlEscape } from "html-escaper";
 import { marked } from "marked";
 
