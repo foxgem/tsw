@@ -47,7 +47,9 @@ function withOutputPanel(
                 <button id="tsw-close-right-part"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
             </div>
         </div>
+        <div class="tsw-panel-content">
         ${initInnerHtml}
+        </div>
     </div>
   `;
 
@@ -120,7 +122,6 @@ export async function summarize(outputElm: string) {
   withOutputPanel(
     outputElm,
     `
-    <hr>
     <div id="tsw-summary-content">
       <div style="text-align: center; padding: 20px;">
         <div class="loading-spinner"></div>
@@ -147,7 +148,6 @@ export async function explainSelected(outputElm: string, text: string) {
   withOutputPanel(
     outputElm,
     `
-    <hr>
     <div id="tsw-explanation-content">
       <div style="text-align: center; padding: 20px;">
         <div class="loading-spinner"></div>
@@ -191,7 +191,6 @@ export async function ocrHandler(
   withOutputPanel(
     outputElm,
     `
-    <hr>
     <div id="tsw-image-content">
       <div style="text-align: center; padding: 20px;">
         <div class="loading-spinner"></div>
@@ -223,7 +222,6 @@ export function codeHandler(outputElm: string, code: string) {
   withOutputPanel(
     outputElm,
     `
-    <hr>
     <div id="tsw-code-explanation">
       <div style="text-align: center; padding: 20px;">
         <div class="loading-spinner"></div>
@@ -253,7 +251,6 @@ export function rewriteHandler(
   withOutputPanel(
     outputElm,
     `
-    <hr>
     <div id="tsw-code-result">
       <div style="text-align: center; padding: 20px;">
         <div class="loading-spinner"></div>
