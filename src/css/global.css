@@ -16,7 +16,7 @@
   border-left: 1px;
   margin-left: 12px;
   display: flex;
-flex-direction: column;
+  flex-direction: column;
 }
 
 .tsw-panel-title {
@@ -109,11 +109,11 @@ flex-direction: column;
 }
 
 .tsw-panel-content {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding-bottom:20px;
-  }
-  
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
 .tsw-panel-menu {
   display: flex;
   align-items: center;
