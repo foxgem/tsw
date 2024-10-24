@@ -6,7 +6,6 @@ import TSWIcon from "./TSWIcon";
 
 interface LayoutProps {
   title: string;
-  footerPosition?: string;
   children: React.ReactNode;
   headerRightElement?: React.ReactNode;
 }
@@ -15,7 +14,6 @@ export default function Layout({
   title,
   children,
   headerRightElement,
-  footerPosition,
 }: LayoutProps) {
   const navigate = useNavigate();
   return (
@@ -31,7 +29,7 @@ export default function Layout({
       </div>
       <div className="px-5"> {children}</div>
 
-      <Footer position={footerPosition} />
+      <Footer />
     </div>
   );
 }

@@ -1,17 +1,13 @@
-import TSWIcon from "./components/TSWIcon";
-import { iconArray } from "./content";
+import logo from "~/assets/imgs/icon.png";
+import { iconArray } from "../entrypoints/content";
 import {
   explainCode,
   explainSentence,
   explainWord,
   ocr,
-  pageRag,
   rewriteCode,
   summariseLink,
-} from "./utils/ai";
-import logo from "data-base64:/assets/icon.png";
-
-let pageText: string;
+} from "../utils/ai";
 
 function withOutputPanel(
   outputElm: string,

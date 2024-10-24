@@ -170,7 +170,6 @@ function TimerSettingPage() {
           <div className="font-bold">Limited</div>
         )
       }
-      footerPosition="fixed"
     >
       <Card className="overflow-y-auto mx-auto border-0 shadow-none">
         <CardContent className="p-0 shadow-none pb-4">

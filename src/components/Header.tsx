@@ -1,7 +1,6 @@
-import logo from "data-base64:/assets/icon.png";
 import type React from "react";
+import logo from "~/assets/imgs/icon.png";
 import { ThemeToggle } from "./ThemeToggle";
-
 const Header: React.FC = () => {
   return (
     <div className="flex justify-between items-center flex-grow text-center py-2 px-5 h-[56px]">
