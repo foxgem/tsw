@@ -13,7 +13,7 @@ export default defineConfig({
     },
     name: "tsw - tiny smart worker",
     description: "Your tiny smart worker",
-    version: "0.1.0",
+    version: "0.2.0",
     host_permissions: ["https://*/*"],
     icons: {
       16: "/icon.png",

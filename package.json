@@ -1,9 +1,8 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+    "name": "tsw",
+    "version": "0.2.0",
+    "description": "Your tiny smart worker",
+    "type": "module",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
