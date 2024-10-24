@@ -101,3 +101,5 @@ typings/
 # Temporary folders
 tmp/
 temp/
+
+.wxt
