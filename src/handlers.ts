@@ -15,7 +15,7 @@ let pageText: string;
 
 function withOutputPanel(
   outputElm: string,
-  initInnerHtml: string,
+  placeHolder: string,
   title: string,
   handler: () => void,
 ) {
@@ -48,7 +48,12 @@ function withOutputPanel(
             </div>
         </div>
         <div class="tsw-panel-content">
-        ${initInnerHtml}
+          <div id="tsw-output-body">
+            <div style="text-align: center; padding: 20px;">
+              <div class="loading-spinner"></div>
+              <p>${placeHolder}...</p>
+            </div>
+          </div>
         </div>
     </div>
   `;
@@ -119,68 +124,42 @@ function extractTextFromNode(node: Node): string {
 export { extractTextFromNode };
 
 export async function summarize(outputElm: string) {
-  withOutputPanel(
-    outputElm,
-    `
-    <div id="tsw-summary-content">
-      <div style="text-align: center; padding: 20px;">
-        <div class="loading-spinner"></div>
-        <p>Summarizing...</p>
-      </div>
-    </div>
-  `,
-    "Summary",
-    async () => {
-      const summaryElement = document.getElementById("tsw-summary-content");
-      if (summaryElement) {
-        await summariseLink(window.location.href, (text) => {
-          summaryElement.innerHTML = text;
-        });
-      }
-    },
-  );
+  withOutputPanel(outputElm, "Summarizing", "Summary", async () => {
+    const summaryElement = document.getElementById("tsw-output-body");
+    if (summaryElement) {
+      await summariseLink(window.location.href, (text) => {
+        summaryElement.innerHTML = text;
+      });
+    }
+  });
 }
 
 export async function explainSelected(outputElm: string, text: string) {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
 
-  withOutputPanel(
-    outputElm,
-    `
-    <div id="tsw-explanation-content">
-      <div style="text-align: center; padding: 20px;">
-        <div class="loading-spinner"></div>
-        <p>Explaining...</p>
-      </div>
-    </div>
-    `,
-    `${title}：${text}`,
-    async () => {
-      const explanationElement = document.getElementById(
-        "tsw-explanation-content",
-      );
-      if (explanationElement) {
-        const linePrinter = (text: string) => {
-          explanationElement.innerHTML = text;
-        };
-        isWord
-          ? await explainWord(text, linePrinter)
-          : await explainSentence(text, linePrinter);
-      }
+  withOutputPanel(outputElm, "Explaining", `${title}：${text}`, async () => {
+    const explanationElement = document.getElementById("tsw-output-body");
+    if (explanationElement) {
+      const linePrinter = (text: string) => {
+        explanationElement.innerHTML = text;
+      };
+      isWord
+        ? await explainWord(text, linePrinter)
+        : await explainSentence(text, linePrinter);
+    }
 
-      // if (!pageText) {
-      //   pageText = extractTextFromNode(document.body);
-      // }
-      // console.log(
-      //   "page based rag: ",
-      //   await pageRag(
-      //     "if I want to search similar topic articles with google, what keywords would you like to suggest?",
-      //     pageText
-      //   )
-      // );
-    },
-  );
+    // if (!pageText) {
+    //   pageText = extractTextFromNode(document.body);
+    // }
+    // console.log(
+    //   "page based rag: ",
+    //   await pageRag(
+    //     "if I want to search similar topic articles with google, what keywords would you like to suggest?",
+    //     pageText
+    //   )
+    // );
+  });
 }
 
 export async function ocrHandler(
@@ -188,52 +167,31 @@ export async function ocrHandler(
   imgSrc: string,
   postPrompt = "",
 ) {
-  withOutputPanel(
-    outputElm,
-    `
-    <div id="tsw-image-content">
-      <div style="text-align: center; padding: 20px;">
-        <div class="loading-spinner"></div>
-        <p>Processing...</p>
-      </div>
-    </div>
-    `,
-    "Text in Image",
-    async () => {
-      const imgContentElement = document.getElementById("tsw-image-content");
-      if (imgContentElement) {
-        try {
-          await ocr(
-            imgSrc,
-            (text) => {
-              imgContentElement.innerHTML = text;
-            },
-            postPrompt,
-          );
-        } catch (e) {
-          imgContentElement.innerHTML = e as string;
-        }
+  withOutputPanel(outputElm, "Processing", "Text in Image", async () => {
+    const imgContentElement = document.getElementById("tsw-output-body");
+    if (imgContentElement) {
+      try {
+        await ocr(
+          imgSrc,
+          (text) => {
+            imgContentElement.innerHTML = text;
+          },
+          postPrompt,
+        );
+      } catch (e) {
+        imgContentElement.innerHTML = e as string;
       }
-    },
-  );
+    }
+  });
 }
 
 export function codeHandler(outputElm: string, code: string) {
   withOutputPanel(
     outputElm,
-    `
-    <div id="tsw-code-explanation">
-      <div style="text-align: center; padding: 20px;">
-        <div class="loading-spinner"></div>
-        <p>Explaining...</p>
-      </div>
-    </div>
-    `,
+    "Explaining",
     "Code Block Explanation",
     async () => {
-      const codeContentElement = document.getElementById(
-        "tsw-code-explanation",
-      );
+      const codeContentElement = document.getElementById("tsw-output-body");
       if (codeContentElement) {
         await explainCode(code, (text) => {
           codeContentElement.innerHTML = text;
@@ -250,17 +208,10 @@ export function rewriteHandler(
 ) {
   withOutputPanel(
     outputElm,
-    `
-    <div id="tsw-code-result">
-      <div style="text-align: center; padding: 20px;">
-        <div class="loading-spinner"></div>
-        <p>Rewriting...</p>
-      </div>
-    </div>
-    `,
+    "Rewriting",
     `Rewrite Code with ${targetLanguage}`,
     async () => {
-      const codeContentElement = document.getElementById("tsw-code-result");
+      const codeContentElement = document.getElementById("tsw-output-body");
       if (codeContentElement) {
         await rewriteCode(code, targetLanguage, (text) => {
           codeContentElement.innerHTML = text;
