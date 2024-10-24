@@ -1,9 +1,6 @@
-.item {
-  padding: 20px;
-  margin: 10px;
-  background-color: #f0f0f0;
-  transition: box-shadow 0.3s ease;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 .shadow {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -157,6 +154,12 @@
 
 .tsw-header-btn span {
   margin-left: 4px;
+}
+
+.tsw-header-btn svg,
+#tsw-close-right-part svg {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .tsw-icon {

@@ -10,4 +10,5 @@ rewriteCode(
   }, 3000);
   `,
   "rust",
+  (text: string) => console.log(text),
 ).then(console.log);
