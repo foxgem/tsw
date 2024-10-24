@@ -1,8 +1,8 @@
 {
-    "name": "tsw",
-    "version": "0.2.0",
-    "description": "Your tiny smart worker",
-    "type": "module",
+  "name": "tsw",
+  "version": "0.2.0",
+  "description": "Your tiny smart worker",
+  "type": "module",
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",

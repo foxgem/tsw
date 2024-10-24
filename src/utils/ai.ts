@@ -15,7 +15,7 @@ type LinePrinter = (text: string) => void;
 const loadApiKey = async () => {
   const storage = new Storage();
   const apiKey =
-  import.meta.env.WXT_GOOGLE_GENERATIVE_AI_API_KEY ||
+    import.meta.env.WXT_GOOGLE_GENERATIVE_AI_API_KEY ||
     (await storage.get("apiKey"));
   if (!apiKey) {
     throw new Error(
