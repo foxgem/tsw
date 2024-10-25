@@ -1,17 +1,15 @@
-import TSWIcon from "./components/TSWIcon";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Panel } from "./components/Panel";
 import { iconArray } from "./content";
 import {
   explainCode,
   explainSentence,
   explainWord,
   ocr,
-  pageRag,
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
-import logo from "data-base64:/assets/icon.png";
-
-let pageText: string;
 
 function withOutputPanel(
   outputElm: string,
@@ -19,67 +17,46 @@ function withOutputPanel(
   title: string,
   handler: () => void,
 ) {
+  console.log(outputElm);
   const panel = document.getElementById(outputElm);
   if (!panel) {
     return;
   }
 
   panel.style.display = "block";
-  panel.innerHTML = `
-    <div  class="tsw-panel"">
-        <div class="tsw-panel-header">
-            <div class="tsw-panel-header-logo"> <img src=${logo} alt="TSW Icon" class="tsw-icon">
-            <span>${title}</span>
-              </div>
-            <div class="tsw-panel-menu">
-                <div class="tsw-panel-header-action">
-                ${iconArray
-                  .map(
-                    (icon) => `
-                    <button class="tsw-header-btn" id="tsw-${icon.name.toLowerCase()}-btn">
-                    ${icon.svg}
-                    </button>
-                `,
-                  )
-                  .join("")}
-                </div>
-                <div class="tsw-panel-header-separator"></div>
-                <button id="tsw-close-right-part"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg></button>
-            </div>
-        </div>
-        <div class="tsw-panel-content">
-          <div id="tsw-output-body">
-            <div style="text-align: center; padding: 20px;">
-              <div class="loading-spinner"></div>
-              <p>${placeHolder}...</p>
-            </div>
-          </div>
-        </div>
-    </div>
-  `;
+  panel.innerHTML = "";
 
-  const closeButton = document.querySelector("#tsw-close-right-part");
-  if (closeButton) {
-    closeButton.addEventListener("click", () => {
-      panel.style.display = "none";
-    });
-  }
-
-  for (const icon of iconArray) {
-    const button = document.querySelector(
-      `#tsw-${icon.name.toLowerCase()}-btn`,
-    );
-    if (button) {
-      button.addEventListener("click", () => {
-        icon.action();
-        if (icon.name.toLowerCase() === "wand") {
-          panel.style.display = "none";
+  const root = createRoot(panel);
+  root.render(
+    React.createElement(Panel, {
+      title: title,
+      placeHolder: placeHolder,
+      onRender: () => {
+        const closeButton = document.querySelector("#tsw-close-right-part");
+        if (closeButton) {
+          closeButton.addEventListener("click", () => {
+            panel.style.display = "none";
+          });
         }
-      });
-    }
-  }
 
-  handler();
+        for (const icon of iconArray) {
+          const button = document.querySelector(
+            `#tsw-${icon.name.toLowerCase()}-btn`,
+          );
+          if (button) {
+            button.addEventListener("click", () => {
+              icon.action();
+              if (icon.name.toLowerCase() === "wand") {
+                panel.style.display = "none";
+              }
+            });
+          }
+        }
+
+        handler();
+      },
+    }),
+  );
 }
 
 function extractTextFromNode(node: Node): string {
