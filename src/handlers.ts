@@ -104,9 +104,7 @@ export async function summarize(outputElm: string) {
   withOutputPanel(outputElm, "Summarizing", "Summary", async () => {
     const summaryElement = document.getElementById("tsw-output-body");
     if (summaryElement) {
-      await summariseLink(window.location.href, (text) => {
-        summaryElement.innerHTML = text;
-      });
+      await summariseLink(window.location.href, summaryElement);
     }
   });
 }
@@ -118,24 +116,10 @@ export async function explainSelected(outputElm: string, text: string) {
   withOutputPanel(outputElm, "Explaining", `${title}：${text}`, async () => {
     const explanationElement = document.getElementById("tsw-output-body");
     if (explanationElement) {
-      const linePrinter = (text: string) => {
-        explanationElement.innerHTML = text;
-      };
       isWord
-        ? await explainWord(text, linePrinter)
-        : await explainSentence(text, linePrinter);
+        ? await explainWord(text, explanationElement)
+        : await explainSentence(text, explanationElement);
     }
-
-    // if (!pageText) {
-    //   pageText = extractTextFromNode(document.body);
-    // }
-    // console.log(
-    //   "page based rag: ",
-    //   await pageRag(
-    //     "if I want to search similar topic articles with google, what keywords would you like to suggest?",
-    //     pageText
-    //   )
-    // );
   });
 }
 
@@ -148,13 +132,7 @@ export async function ocrHandler(
     const imgContentElement = document.getElementById("tsw-output-body");
     if (imgContentElement) {
       try {
-        await ocr(
-          imgSrc,
-          (text) => {
-            imgContentElement.innerHTML = text;
-          },
-          postPrompt,
-        );
+        await ocr(imgSrc, imgContentElement, postPrompt);
       } catch (e) {
         imgContentElement.innerHTML = e as string;
       }
@@ -170,9 +148,7 @@ export function codeHandler(outputElm: string, code: string) {
     async () => {
       const codeContentElement = document.getElementById("tsw-output-body");
       if (codeContentElement) {
-        await explainCode(code, (text) => {
-          codeContentElement.innerHTML = text;
-        });
+        await explainCode(code, codeContentElement);
       }
     },
   );
@@ -190,9 +166,7 @@ export function rewriteHandler(
     async () => {
       const codeContentElement = document.getElementById("tsw-output-body");
       if (codeContentElement) {
-        await rewriteCode(code, targetLanguage, (text) => {
-          codeContentElement.innerHTML = text;
-        });
+        await rewriteCode(code, targetLanguage, codeContentElement);
       }
     },
   );
