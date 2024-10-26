@@ -1,3 +1,4 @@
+import { StreamMessage } from "@/components/stream-message";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { Storage } from "@plasmohq/storage";
 import {
@@ -9,7 +10,8 @@ import {
 } from "ai";
 import { escape as htmlEscape } from "html-escaper";
 import { marked } from "marked";
-
+import React from "react";
+import { createRoot } from "react-dom/client";
 type LinePrinter = (text: string) => void;
 
 const loadApiKey = async () => {
@@ -74,7 +76,7 @@ const pageRagPrompt = (question: string, context: string) => {
 const genTextFunction = async (
   prompt: string,
   system: string,
-  linePrinter: LinePrinter,
+  messageElement: HTMLElement,
 ) => {
   const apiKey = await loadApiKey();
   const google = createGoogleGenerativeAI({ apiKey });
@@ -87,9 +89,12 @@ const genTextFunction = async (
   const results: string[] = [];
 
   try {
+    const root = createRoot(messageElement);
     for await (const text of textStream) {
       results.push(text);
-      linePrinter(await marked.parse(results.join("")));
+      root.render(
+        React.createElement(StreamMessage, { outputString: results.join("") }),
+      );
     }
   } catch (e) {
     console.log(e);
@@ -100,7 +105,7 @@ const genChatFunction = async (
   messages: Array<
     CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage
   >,
-  linePrinter: LinePrinter,
+  messageElement: HTMLElement,
 ) => {
   const apiKey = await loadApiKey();
   const google = createGoogleGenerativeAI({ apiKey });
@@ -112,30 +117,36 @@ const genChatFunction = async (
   const results: string[] = [];
 
   try {
+    const root = createRoot(messageElement);
     for await (const text of textStream) {
       results.push(text);
-      linePrinter(`${await marked.parse(htmlEscape(results.join("")))}`);
+      root.render(
+        React.createElement(StreamMessage, { outputString: results.join("") }),
+      );
     }
   } catch (e) {
     console.log(e);
   }
 };
 
-export const explainSentence = (sentences: string, linePrinter: LinePrinter) =>
+export const explainSentence = (
+  sentences: string,
+  messageElement: HTMLElement,
+) =>
   genTextFunction(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
     siEnglishTeacher,
-    linePrinter,
+    messageElement,
   );
 
-export const explainWord = (word: string, linePrinter: LinePrinter) =>
+export const explainWord = (word: string, messageElement: HTMLElement) =>
   genTextFunction(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher,
-    linePrinter,
+    messageElement,
   );
 
-export const summariseLink = (link: string, linePrinter: LinePrinter) =>
+export const summariseLink = (link: string, messageElement: HTMLElement) =>
   genTextFunction(
     `分析链接： ${link} ，输出格式要求如下：
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
@@ -149,10 +160,10 @@ export const summariseLink = (link: string, linePrinter: LinePrinter) =>
     文章链接：文章的原始链接。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
     siSummariser,
-    linePrinter,
+    messageElement,
   );
 
-export const explainCode = (message: string, linePrinter: LinePrinter) =>
+export const explainCode = (message: string, messageElement: HTMLElement) =>
   genTextFunction(
     `分析： ${message} ，并给出清晰的解释。
     1. 识别类型：代码、错误信息或命令行输出。
@@ -161,18 +172,18 @@ export const explainCode = (message: string, linePrinter: LinePrinter) =>
     4. 如果是命令行输出，则解释命令的功能和输出的含义。
     `,
     siCodeExpert,
-    linePrinter,
+    messageElement,
   );
 
 export const rewriteCode = (
   code: string,
   targetLang: string,
-  linePrinter: LinePrinter,
+  messageElement: HTMLElement,
 ) =>
   genTextFunction(
     `将 ${code} 代码重写为 ${targetLang} 语言的代码。`,
     siCodeExpert,
-    linePrinter,
+    messageElement,
   );
 
 export const pageRag = (
@@ -185,7 +196,11 @@ export const pageRag = (
 
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
-export const ocr = (url: string, linePrinter: LinePrinter, postPrompt = "") =>
+export const ocr = (
+  url: string,
+  messageElement: HTMLElement,
+  postPrompt = "",
+) =>
   genChatFunction(
     [
       {
@@ -199,5 +214,5 @@ export const ocr = (url: string, linePrinter: LinePrinter, postPrompt = "") =>
         ],
       },
     ],
-    linePrinter,
+    messageElement,
   );
