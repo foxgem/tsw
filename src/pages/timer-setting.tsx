@@ -1,13 +1,13 @@
-import Layout from "@/components/Layout";
-import TSWIcon from "@/components/TSWIcon";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ZodError } from "zod";
+import Layout from "~/components/Layout";
+import TSWIcon from "~/components/TSWIcon";
+import { Card, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { cn } from "~/lib/utils";
+import { TIMER_COUNT_LIMIT } from "~/utils/constants";
 import {
   type TimerForDomain,
   deleteTimerForDomain,

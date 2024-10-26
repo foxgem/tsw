@@ -1,9 +1,8 @@
 import logo from "data-base64:/assets/icon.png";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { iconArray } from "@/content";
-import { useEffect, useState } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { iconArray } from "~/content";
 
 export interface PanelProps {
   title: string;

@@ -1,4 +1,4 @@
-import { LANG_LIST } from "@/utils/constants";
+import { LANG_LIST } from "~/utils/constants";
 interface selectLangProps {
   lang?: string;
   onLanguageChange: (language: string) => void;

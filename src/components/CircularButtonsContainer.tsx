@@ -1,5 +1,5 @@
-import TSWIcon from "@/components/TSWIcon";
-import { LOGO_SVG } from "@/utils/constants";
+import TSWIcon from "~/components/TSWIcon";
+import { LOGO_SVG } from "~/utils/constants";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useRef } from "react";
 

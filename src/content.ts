@@ -12,7 +12,7 @@ import {
   rewriteHandler,
   summarize,
 } from "./handlers";
-import "@/css/wrapper.css";
+import "~/css/wrapper.css";
 import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {

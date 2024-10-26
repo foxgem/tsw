@@ -1,11 +1,11 @@
-import Layout from "@/components/Layout";
-import TSWIcon from "@/components/TSWIcon";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { Storage } from "@plasmohq/storage";
 import { Check, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Layout from "~/components/Layout";
+import TSWIcon from "~/components/TSWIcon";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 const storage = new Storage();
 
