@@ -1,12 +1,10 @@
-import { TimerReset } from "lucide-react";
+import { Key, TimerReset } from "lucide-react";
 
-import { Key } from "lucide-react";
-
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import Footer from "~/components/Footer";
+import Header from "~/components/Header";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
 
 function MainPage() {
   const navigate = useNavigate();

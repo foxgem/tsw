@@ -1,13 +1,13 @@
-import IconWrapper from "@/components/IconWrapper";
-import Layout from "@/components/Layout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ZodError } from "zod";
+import IconWrapper from "~/components/IconWrapper";
+import Layout from "~/components/Layout";
+import { Card, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
+import { cn } from "~/lib/utils";
+import { TIMER_COUNT_LIMIT } from "~/utils/constants";
 import {
   type TimerForDomain,
   deleteTimerForDomain,
@@ -109,7 +109,7 @@ function TimerSettingPage() {
           placeholder="Enter domain (e.g., example.com)"
           className={cn(
             "p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100 text-black",
-            domainError ? "border-red-500" : "border-gray-300",
+            domainError ? "border-red-500" : "border-gray-300"
           )}
         />
         {domainError && (
@@ -125,7 +125,7 @@ function TimerSettingPage() {
             placeholder="Enter time (seconds)"
             className={cn(
               "p-0 pl-2 border-0 border-b w-full box-border bg-gray-100  text-black",
-              timeError ? "border-red-500" : "border-gray-300",
+              timeError ? "border-red-500" : "border-gray-300"
             )}
           />
           {timeError && (
@@ -184,7 +184,7 @@ function TimerSettingPage() {
                     "py-2 shadow-none border-0",
                     editingTimer && editingTimer.domain === timer.domain
                       ? ""
-                      : "border-b hover:bg-accent rounded",
+                      : "border-b hover:bg-accent rounded"
                   )}
                 >
                   {editingTimer && editingTimer.domain === timer.domain ? (
