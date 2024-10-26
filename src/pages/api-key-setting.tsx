@@ -2,11 +2,10 @@ import Layout from "@/components/Layout";
 import TSWIcon from "@/components/TSWIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Storage } from "@plasmohq/storage";
 import { Check, X } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const storage = new Storage();
 

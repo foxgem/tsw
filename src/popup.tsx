@@ -1,4 +1,3 @@
-import React from "react";
 import { Route, MemoryRouter as Router, Routes } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
 import AboutPage from "./pages/about";

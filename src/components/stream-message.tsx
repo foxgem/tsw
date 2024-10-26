@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAnimatedText } from "./use-animated-text";
 
 export function StreamMessage({ outputString }: { outputString: string }) {

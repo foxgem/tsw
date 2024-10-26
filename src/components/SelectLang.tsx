@@ -1,5 +1,4 @@
 import { LANG_LIST } from "@/utils/constants";
-import React from "react";
 interface selectLangProps {
   lang?: string;
   onLanguageChange: (language: string) => void;

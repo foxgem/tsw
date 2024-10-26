@@ -8,8 +8,6 @@ import {
   type CoreUserMessage,
   streamText,
 } from "ai";
-import { escape as htmlEscape } from "html-escaper";
-import { marked } from "marked";
 import React from "react";
 import { createRoot } from "react-dom/client";
 type LinePrinter = (text: string) => void;

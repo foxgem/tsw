@@ -1,7 +1,7 @@
 import TSWIcon from "@/components/TSWIcon";
 import { LOGO_SVG } from "@/utils/constants";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 
 interface IconBtn {
   name: string;

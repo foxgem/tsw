@@ -1,5 +1,4 @@
-import { ListOrdered, TimerReset } from "lucide-react";
-import React from "react";
+import { TimerReset } from "lucide-react";
 
 import { Key } from "lucide-react";
 

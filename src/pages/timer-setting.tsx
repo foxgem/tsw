@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ZodError } from "zod";
 import {
   type TimerForDomain,
