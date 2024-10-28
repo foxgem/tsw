@@ -1,7 +1,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
-import TSWIcon from "./TSWIcon";
+import { useEffect, useState } from "react";
+import IconWrapper from "./IconWrapper";
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
@@ -16,7 +16,7 @@ export function ThemeToggle() {
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       type="button"
     >
-      <TSWIcon>
+      <IconWrapper>
         {theme === "dark" ? (
           <>
             <Sun size={24} />
@@ -26,7 +26,7 @@ export function ThemeToggle() {
             <Moon size={24} />
           </>
         )}
-      </TSWIcon>
+      </IconWrapper>
     </button>
   );
 }

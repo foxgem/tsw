@@ -78,7 +78,6 @@ function registerElmPicker(checkers: PickingChecker[]) {
     if (elementMouseIsOver instanceof HTMLImageElement) {
       const imageBlockButtons = [
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>`,
           onClick: () => {
             ocrHandler("tsw-toggle-panel", elementMouseIsOver.src);
             elementMouseIsOver.dispatchEvent(new Event("mouseleave"));
@@ -86,7 +85,6 @@ function registerElmPicker(checkers: PickingChecker[]) {
           tooltip: "OCR",
         },
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-languages"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>`,
           onClick: () => {
             ocrHandler(
               "tsw-toggle-panel",
@@ -134,7 +132,6 @@ function registerElmPicker(checkers: PickingChecker[]) {
 
       const codeBlockButtons = [
         {
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-more"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/></svg>`,
           onClick: () => {
             if (elementMouseIsOver.textContent) {
               codeHandler("tsw-toggle-panel", elementMouseIsOver.textContent);
@@ -144,7 +141,6 @@ function registerElmPicker(checkers: PickingChecker[]) {
           tooltip: "Explain",
         },
         {
-          icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-pen-line"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-.5"/><path d="M16 4h2a2 2 0 0 1 1.73 1"/><path d="M8 18h1"/><path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>',
           onClick: (event: React.MouseEvent<HTMLElement>) => {
             const buttonElement = event.currentTarget as HTMLElement;
             const rect = buttonElement.getBoundingClientRect();
@@ -303,28 +299,18 @@ registerElmPicker([
 export const iconArray = [
   {
     name: "Summary",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>`,
     action: () => {
       summarize("tsw-toggle-panel");
     },
   },
   {
     name: "Wand",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wand rotate"><path d="M15 4V2"/><path d="M15 16v-2"/><path d="M8 9h2"/><path d="M20 9h2"/><path d="M17.8 11.8 19 13"/><path d="M15 9h.01"/><path d="M17.8 6.2 19 5"/><path d="m3 21 9-9"/><path d="M12.2 6.2 11 5"/></svg>`,
     action: () => {
       window.picking = !window.picking;
     },
   },
   {
     name: "Chat",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square-text"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8H7"/><path d="M17 12H7"/></svg>`,
-    action: () => {
-      window.picking = !window.picking;
-    },
-  },
-  {
-    name: "History",
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>`,
     action: () => {
       window.picking = !window.picking;
     },
@@ -349,7 +335,7 @@ function createFloatingToggleButton() {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    z-index: 10000;
+    z-index: 3999999;
     display: none;
   `;
   document.body.appendChild(panel);

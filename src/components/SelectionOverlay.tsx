@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
-import TSWIcon from "./TSWIcon";
+import { ActionIcon } from "./ActionIcon";
+import IconWrapper from "./IconWrapper";
 
 export interface FloatingButton {
-  icon: string;
   onClick: (event: React.MouseEvent<HTMLElement>) => void;
-  tooltip?: string;
+  tooltip: string;
 }
 
 interface SelectionOverlayProps {
@@ -74,7 +74,7 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         }}
       >
         {buttons.map((button, index) => (
-          <React.Fragment key={`button-${button.icon}-${index}`}>
+          <React.Fragment key={`button-${button.tooltip}-${index}`}>
             {index > 0 && (
               <div
                 style={{
@@ -108,16 +108,9 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
               }}
               title={button.tooltip}
             >
-              <TSWIcon>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  width="100%"
-                  height="100%"
-                  fill="currentColor"
-                  dangerouslySetInnerHTML={{ __html: button.icon }}
-                />
-              </TSWIcon>
+              <IconWrapper>
+                <ActionIcon name={button.tooltip} />
+              </IconWrapper>
             </button>
           </React.Fragment>
         ))}

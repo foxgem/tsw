@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Panel } from "./components/Panel";
+import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
   explainCode,
@@ -28,7 +28,7 @@ function withOutputPanel(
 
   const root = createRoot(panel);
   root.render(
-    React.createElement(Panel, {
+    React.createElement(TSWPanel, {
       title: title,
       placeHolder: placeHolder,
       onRender: () => {

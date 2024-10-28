@@ -1,11 +1,10 @@
-import TSWIcon from "@/components/TSWIcon";
-import { LOGO_SVG } from "@/utils/constants";
+import { ActionIcon } from "@/components/ActionIcon";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useRef } from "react";
+import IconWrapper from "./IconWrapper";
 
 interface IconBtn {
   name: string;
-  svg: string;
   action: () => void;
 }
 
@@ -78,16 +77,9 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({
           whileHover={{ scale: 1 }}
           whileTap={{ scale: 1 }}
         >
-          <TSWIcon>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="100%"
-              height="100%"
-              fill="currentColor"
-              dangerouslySetInnerHTML={{ __html: LOGO_SVG }}
-            />
-          </TSWIcon>
+          <IconWrapper>
+            <ActionIcon name="Logo" />
+          </IconWrapper>
         </motion.button>
       </motion.div>
       <AnimatePresence>
@@ -149,16 +141,9 @@ const CircularButtonsContainer: React.FC<CircularButtonsProps> = ({
                 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <div
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                  dangerouslySetInnerHTML={{ __html: icon.svg }}
-                />
+                <div style={{ display: "flex" }}>
+                  <ActionIcon name={icon.name} />
+                </div>
               </motion.button>
             ))}
           </motion.div>

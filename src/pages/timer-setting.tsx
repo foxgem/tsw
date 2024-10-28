@@ -1,12 +1,12 @@
+import IconWrapper from "@/components/IconWrapper";
 import Layout from "@/components/Layout";
-import TSWIcon from "@/components/TSWIcon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { TIMER_COUNT_LIMIT } from "@/utils/constants";
 import { Check, FilePenLine, Plus, Trash2, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ZodError } from "zod";
 import {
   type TimerForDomain,
@@ -133,20 +133,20 @@ function TimerSettingPage() {
           )}
         </div>
         <div className="flex space-x-1 ml-2">
-          <TSWIcon>
+          <IconWrapper>
             <Check
               size={20}
               onClick={handleUpsertTimer}
               className="text-green-500"
             />
-          </TSWIcon>
-          <TSWIcon>
+          </IconWrapper>
+          <IconWrapper>
             <X
               size={20}
               onClick={() => handleCancel()}
               className="text-red-500"
             />
-          </TSWIcon>
+          </IconWrapper>
         </div>
       </div>
     </div>
@@ -154,9 +154,9 @@ function TimerSettingPage() {
 
   const addElement = () => (
     <button type="button" onClick={() => handleAddTimer()}>
-      <TSWIcon>
+      <IconWrapper>
         <Plus size={20} />
-      </TSWIcon>
+      </IconWrapper>
     </button>
   );
 
@@ -195,20 +195,20 @@ function TimerSettingPage() {
                       <p className="text-sm w-[20%]">{timer.time}s</p>
 
                       <div className="flex space-x-1">
-                        <TSWIcon>
+                        <IconWrapper>
                           <FilePenLine
                             size={20}
                             onClick={() => handleEditTimer(timer)}
                             className="text-primary"
                           />
-                        </TSWIcon>
-                        <TSWIcon>
+                        </IconWrapper>
+                        <IconWrapper>
                           <Trash2
                             size={20}
                             onClick={() => handleRemoveTimer(timer.domain)}
                             className="text-red-500"
                           />
-                        </TSWIcon>
+                        </IconWrapper>
                       </div>
                     </div>
                   )}

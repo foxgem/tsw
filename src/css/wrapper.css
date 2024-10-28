@@ -39,8 +39,8 @@ tsw-select-lang-item:focus {
 }
 
 #selection-overlay button div {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 #selection-overlay button div:hover {
