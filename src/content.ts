@@ -325,6 +325,8 @@ function createFloatingToggleButton() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
   panel.style.cssText = `
+    all: initial;
+    color-scheme: light;
     position: fixed;
     top: 50%;
     right: 0;

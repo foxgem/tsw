@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
+
 type LinePrinter = (text: string) => void;
 
 const loadApiKey = async () => {
