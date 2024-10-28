@@ -1,4 +1,4 @@
-import { StreamMessage } from "@/components/stream-message";
+import { StreamMessage } from "@/components/StreamMessage";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { Storage } from "@plasmohq/storage";
 import {

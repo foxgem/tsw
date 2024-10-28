@@ -1,11 +1,11 @@
+import IconWrapper from "@/components/IconWrapper";
 import Layout from "@/components/Layout";
-import TSWIcon from "@/components/TSWIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Storage } from "@plasmohq/storage";
 import { Check, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const storage = new Storage();
 
@@ -66,20 +66,20 @@ function SettingApiKey() {
               />
               {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
               <div className="flex justify-end space-x-2 mt-2">
-                <TSWIcon>
+                <IconWrapper>
                   <Check
                     size={20}
                     onClick={handleSave}
                     className="text-green-500"
                   />
-                </TSWIcon>
-                <TSWIcon>
+                </IconWrapper>
+                <IconWrapper>
                   <X
                     size={20}
                     onClick={handleCancel}
                     className="text-red-500"
                   />
-                </TSWIcon>
+                </IconWrapper>
               </div>
             </div>
           ) : (

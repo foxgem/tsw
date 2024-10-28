@@ -2,8 +2,9 @@ import logo from "data-base64:/assets/icon.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { iconArray } from "@/content";
-import { useEffect, useState } from "react";
 import React from "react";
+import { useEffect, useState } from "react";
+import { ActionIcon } from "./ActionIcon";
 
 export interface PanelProps {
   title: string;
@@ -11,7 +12,7 @@ export interface PanelProps {
   onRender?: () => void;
 }
 
-export function Panel({ title, placeHolder, onRender }: PanelProps) {
+export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
@@ -41,26 +42,13 @@ export function Panel({ title, placeHolder, onRender }: PanelProps) {
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >
-                <span dangerouslySetInnerHTML={{ __html: icon.svg }} />
+                <ActionIcon name={icon.name} />
               </button>
             ))}
           </div>
           <div className="tsw-panel-header-separator" />
           <button id="tsw-close-right-part" type="button">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-chevron-right"
-            >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
+            <ActionIcon name="Close" />
           </button>
         </div>
       </div>
