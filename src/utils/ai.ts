@@ -144,14 +144,16 @@ export const explainWord = (word: string, messageElement: HTMLElement) =>
     messageElement,
   );
 
-export const summariseLink = (link: string, messageElement: HTMLElement) =>
+export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
   genTextFunction(
-    `分析链接： ${link} ，输出格式要求如下：
+    `分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。
+    ${pageText}
+    输出格式要求如下：
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
     关键字： 5 个以内
     概述：200 字以内，需要突出作者想要强调的要旨
     分节阅读：
-      - 如果有 <h2>，那么将每个 <h2> 总结成 5 句话，避免联想，并按原文一样的顺序排列输出。
+      - 如果有 <h2>，那么将每个 <h2> 总结成 3 句话，避免联想，并按原文一样的顺序排列输出。
       - 否则，那么按段落大意的相似性进行归类，总结输出。
     相关工具：如果文章中提到了一些工具，在此处列出相关工具的名称和链接。
     参考文献：如果有参考文献，列出参考文献的名称和链接。
