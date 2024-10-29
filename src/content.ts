@@ -6,6 +6,7 @@ import SelectionOverlay, {
   type FloatingButton,
 } from "./components/SelectionOverlay";
 import {
+  chattingHandler,
   codeHandler,
   explainSelected,
   ocrHandler,
@@ -312,7 +313,7 @@ export const iconArray = [
   {
     name: "Chat",
     action: () => {
-      window.picking = !window.picking;
+      chattingHandler("tsw-toggle-panel");
     },
   },
 ];
@@ -382,9 +383,6 @@ chrome.runtime.onMessage.addListener((request) => {
       if (request.text) {
         explainSelected("tsw-toggle-panel", request.text);
       }
-      break;
-    case "summarize":
-      summarize("tsw-toggle-panel");
       break;
     case "startTimer":
       handleTimer(request.remainingTime, request.domain);

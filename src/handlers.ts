@@ -10,6 +10,7 @@ import {
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
+import { TSWChattingPanel } from "~components/TSWChattingPanel";
 
 function withOutputPanel(
   outputElm: string,
@@ -17,7 +18,6 @@ function withOutputPanel(
   title: string,
   handler: () => void,
 ) {
-  console.log(outputElm);
   const panel = document.getElementById(outputElm);
   if (!panel) {
     return;
@@ -128,5 +128,44 @@ export function rewriteHandler(
         await rewriteCode(code, targetLanguage, codeContentElement);
       }
     },
+  );
+}
+
+export function chattingHandler(outputElm: string) {
+  const panel = document.getElementById(outputElm);
+  if (!panel) {
+    return;
+  }
+
+  panel.style.display = "block";
+  panel.innerHTML = "";
+
+  const root = createRoot(panel);
+  root.render(
+    React.createElement(TSWChattingPanel, {
+      pageText: document.body.innerHTML,
+      onRender: () => {
+        const closeButton = document.querySelector("#tsw-close-right-part");
+        if (closeButton) {
+          closeButton.addEventListener("click", () => {
+            panel.style.display = "none";
+          });
+        }
+
+        for (const icon of iconArray) {
+          const button = document.querySelector(
+            `#tsw-${icon.name.toLowerCase()}-btn`,
+          );
+          if (button) {
+            button.addEventListener("click", () => {
+              icon.action();
+              if (icon.name.toLowerCase() === "wand") {
+                panel.style.display = "none";
+              }
+            });
+          }
+        }
+      },
+    }),
   );
 }

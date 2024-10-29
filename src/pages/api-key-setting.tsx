@@ -61,7 +61,7 @@ function SettingApiKey() {
                 placeholder="Enter your API Key"
                 className={cn(
                   "p-2 border-0 border-b w-full box-border bg-white text-black resize-none",
-                  error ? "border-red-500" : "border-gray-300"
+                  error ? "border-red-500" : "border-gray-300",
                 )}
               />
               {error && <p className="text-red-500 text-xs mt-1">{error}</p>}

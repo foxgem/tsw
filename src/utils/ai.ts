@@ -20,7 +20,7 @@ const loadApiKey = async () => {
     (await storage.get("apiKey"));
   if (!apiKey) {
     throw new Error(
-      "Google Generative AI API key not found in environment variables or storage"
+      "Google Generative AI API key not found in environment variables or storage",
     );
   }
   return apiKey;
@@ -75,7 +75,7 @@ const pageRagPrompt = (question: string, context: string) => {
 const genTextFunction = async (
   prompt: string,
   system: string,
-  messageElement: HTMLElement
+  messageElement: HTMLElement,
 ) => {
   const apiKey = await loadApiKey();
   const google = createGoogleGenerativeAI({ apiKey });
@@ -92,7 +92,7 @@ const genTextFunction = async (
     for await (const text of textStream) {
       results.push(text);
       root.render(
-        React.createElement(StreamMessage, { outputString: results.join("") })
+        React.createElement(StreamMessage, { outputString: results.join("") }),
       );
     }
   } catch (e) {
@@ -104,7 +104,7 @@ const genChatFunction = async (
   messages: Array<
     CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage
   >,
-  messageElement: HTMLElement
+  messageElement: HTMLElement,
 ) => {
   const apiKey = await loadApiKey();
   const google = createGoogleGenerativeAI({ apiKey });
@@ -120,7 +120,7 @@ const genChatFunction = async (
     for await (const text of textStream) {
       results.push(text);
       root.render(
-        React.createElement(StreamMessage, { outputString: results.join("") })
+        React.createElement(StreamMessage, { outputString: results.join("") }),
       );
     }
   } catch (e) {
@@ -130,19 +130,19 @@ const genChatFunction = async (
 
 export const explainSentence = (
   sentences: string,
-  messageElement: HTMLElement
+  messageElement: HTMLElement,
 ) =>
   genTextFunction(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
     siEnglishTeacher,
-    messageElement
+    messageElement,
   );
 
 export const explainWord = (word: string, messageElement: HTMLElement) =>
   genTextFunction(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher,
-    messageElement
+    messageElement,
   );
 
 export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
@@ -161,7 +161,7 @@ export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
     文章链接：文章的原始链接。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
     siSummariser,
-    messageElement
+    messageElement,
   );
 
 export const explainCode = (message: string, messageElement: HTMLElement) =>
@@ -173,24 +173,24 @@ export const explainCode = (message: string, messageElement: HTMLElement) =>
     4. 如果是命令行输出，则解释命令的功能和输出的含义。
     `,
     siCodeExpert,
-    messageElement
+    messageElement,
   );
 
 export const rewriteCode = (
   code: string,
   targetLang: string,
-  messageElement: HTMLElement
+  messageElement: HTMLElement,
 ) =>
   genTextFunction(
     `将 ${code} 代码重写为 ${targetLang} 语言的代码。`,
     siCodeExpert,
-    messageElement
+    messageElement,
   );
 
 export const pageRag = (
   message: string,
   context: string,
-  linePrinter: LinePrinter
+  linePrinter: LinePrinter,
 ) => {
   // genAIFunction(pageRagPrompt(message, context));
 };
@@ -200,7 +200,7 @@ export const pageRag = (
 export const ocr = (
   url: string,
   messageElement: HTMLElement,
-  postPrompt = ""
+  postPrompt = "",
 ) =>
   genChatFunction(
     [
@@ -215,5 +215,5 @@ export const ocr = (
         ],
       },
     ],
-    messageElement
+    messageElement,
   );

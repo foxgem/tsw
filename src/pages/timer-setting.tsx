@@ -109,7 +109,7 @@ function TimerSettingPage() {
           placeholder="Enter domain (e.g., example.com)"
           className={cn(
             "p-0 pl-2 border-0 border-b w-[234px] box-border mr-4 bg-gray-100 text-black",
-            domainError ? "border-red-500" : "border-gray-300"
+            domainError ? "border-red-500" : "border-gray-300",
           )}
         />
         {domainError && (
@@ -125,7 +125,7 @@ function TimerSettingPage() {
             placeholder="Enter time (seconds)"
             className={cn(
               "p-0 pl-2 border-0 border-b w-full box-border bg-gray-100  text-black",
-              timeError ? "border-red-500" : "border-gray-300"
+              timeError ? "border-red-500" : "border-gray-300",
             )}
           />
           {timeError && (
@@ -184,7 +184,7 @@ function TimerSettingPage() {
                     "py-2 shadow-none border-0",
                     editingTimer && editingTimer.domain === timer.domain
                       ? ""
-                      : "border-b hover:bg-accent rounded"
+                      : "border-b hover:bg-accent rounded",
                   )}
                 >
                   {editingTimer && editingTimer.domain === timer.domain ? (

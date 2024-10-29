@@ -8,19 +8,6 @@ import { cn } from "~/lib/utils";
 
 function MainPage() {
   const navigate = useNavigate();
-  const gotoSummary = () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const currentTab = tabs[0];
-      if (currentTab?.id) {
-        chrome.tabs.sendMessage(currentTab.id, { action: "summarize" });
-        setTimeout(() => {
-          window.close();
-        }, 500);
-      } else {
-        console.error("Unable to access current tab");
-      }
-    });
-  };
 
   const gotoTimerSetting = () => {
     navigate("/timer-setting", {});
