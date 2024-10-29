@@ -2,6 +2,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { Storage } from "@plasmohq/storage";
 import {
   type CoreAssistantMessage,
+  type CoreMessage,
   type CoreSystemMessage,
   type CoreToolMessage,
   type CoreUserMessage,
@@ -216,7 +217,7 @@ export const ocr = (
   );
 
 export const chatWithPage = async (
-  messages: Array<CoreSystemMessage | CoreUserMessage | CoreAssistantMessage>,
+  messages: CoreMessage[],
   pageText: string,
 ) => {
   const apiKey = await loadApiKey();

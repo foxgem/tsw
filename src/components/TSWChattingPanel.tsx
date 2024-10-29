@@ -6,11 +6,7 @@ import { Input } from "~/components/ui/input";
 import { iconArray } from "~/content";
 import { ActionIcon } from "./ActionIcon";
 import { chatWithPage } from "~utils/ai";
-import type {
-  CoreAssistantMessage,
-  CoreSystemMessage,
-  CoreUserMessage,
-} from "ai";
+import type { CoreMessage } from "ai";
 import { marked } from "marked";
 
 export interface ChattingPanelProps {
@@ -20,10 +16,7 @@ export interface ChattingPanelProps {
 
 export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
   const [inputValue, setInputValue] = useState("");
-  const messages: Array<
-    CoreSystemMessage | CoreUserMessage | CoreAssistantMessage
-  > = [];
-  const [output, setOutput] = useState("");
+  const [messages, setMessages] = useState<CoreMessage[]>([]);
 
   useEffect(() => {
     if (onRender) {
@@ -32,15 +25,19 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
   }, [onRender]);
 
   const submitClick = async (e: React.FormEvent) => {
-    messages.push({ content: inputValue, role: "user" });
+    e.preventDefault();
+    const newMessages: CoreMessage[] = [
+      ...messages,
+      { content: inputValue, role: "user" },
+    ];
     setInputValue("");
-    const textStream = await chatWithPage(messages, pageText);
+    setMessages(newMessages);
+    const textStream = await chatWithPage(newMessages, pageText);
     let fullText = "";
     for await (const text of textStream) {
       fullText += text;
-      setOutput(await marked(fullText));
+      setMessages([...newMessages, { role: "assistant", content: fullText }]);
     }
-    messages.push({ content: await marked(fullText), role: "assistant" });
   };
 
   return (
@@ -72,7 +69,19 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
       <div className="tsw-panel-content">
         <div id="tsw-output-body">
           <p>assistant: hi, how can I help you?</p>
-          {output && <p dangerouslySetInnerHTML={{ __html: output }} />}
+          {messages.length > 0 &&
+            messages.map((m, i) => {
+              return (
+                <p key="m-{i}">
+                  {m.role}:
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: marked(m.content as string),
+                    }}
+                  />
+                </p>
+              );
+            })}
         </div>
       </div>
       <div className="tsw-panel-footer">
