@@ -12,7 +12,7 @@ import {
   rewriteHandler,
   summarize,
 } from "./handlers";
-import "@/css/wrapper.css";
+import "~/css/wrapper.css";
 import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
@@ -325,6 +325,8 @@ function createFloatingToggleButton() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
   panel.style.cssText = `
+    all: initial;
+    color-scheme: light;
     position: fixed;
     top: 50%;
     right: 0;

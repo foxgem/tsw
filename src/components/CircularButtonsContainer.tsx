@@ -1,6 +1,6 @@
-import { ActionIcon } from "@/components/ActionIcon";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useRef } from "react";
+import { ActionIcon } from "~/components/ActionIcon";
 import IconWrapper from "./IconWrapper";
 
 interface IconBtn {

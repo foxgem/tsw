@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
 import React from "react";
+import { cn } from "~/lib/utils";
 
 import githubDark from "data-base64:/assets/github.svg";
 import githubLight from "data-base64:/assets/github_light.svg";
-import { GITHUB_ROOT } from "@/utils/constants";
+import { GITHUB_ROOT } from "~/utils/constants";
 
 interface FooterProps {
   className?: string;

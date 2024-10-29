@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import Layout from "~/components/Layout";
 
 function AboutPage() {
   return <Layout title="About">this is about page</Layout>;
