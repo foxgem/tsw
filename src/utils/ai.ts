@@ -59,14 +59,11 @@ const ocrExpert = (postProcessing: string) => {
   return ocrPrompt;
 };
 
-const pageRagPrompt = (question: string, context: string) => {
+const pageRagPrompt = (context: string) => {
   return `
   You are an expert in answering user questions. You always understand user questions well, and then provide high-quality answers based on the information provided in the context.
-
+  Try to keep the answer concise and relevant to the context without providing unnecessary information and explanations.
   If the provided context does not contain relevant information, just respond "I could not find the answer based on the context you provided."
-
-  User question: ${question}
-
   Context:
   ${context}
   `;
@@ -217,3 +214,17 @@ export const ocr = (
     ],
     messageElement,
   );
+
+export const chatWithPage = async (
+  messages: Array<CoreSystemMessage | CoreUserMessage | CoreAssistantMessage>,
+  pageText: string,
+) => {
+  const apiKey = await loadApiKey();
+  const google = createGoogleGenerativeAI({ apiKey });
+  const { textStream } = await streamText({
+    model: google("gemini-1.5-flash"),
+    system: pageRagPrompt(pageText),
+    messages,
+  });
+  return textStream;
+};

@@ -5,6 +5,13 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { iconArray } from "~/content";
 import { ActionIcon } from "./ActionIcon";
+import { chatWithPage } from "~utils/ai";
+import type {
+  CoreAssistantMessage,
+  CoreSystemMessage,
+  CoreUserMessage,
+} from "ai";
+import { marked } from "marked";
 
 export interface ChattingPanelProps {
   pageText: string;
@@ -13,6 +20,10 @@ export interface ChattingPanelProps {
 
 export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
   const [inputValue, setInputValue] = useState("");
+  const messages: Array<
+    CoreSystemMessage | CoreUserMessage | CoreAssistantMessage
+  > = [];
+  const [output, setOutput] = useState("");
 
   useEffect(() => {
     if (onRender) {
@@ -20,9 +31,16 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
     }
   }, [onRender]);
 
-  const submitClick = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(inputValue);
+  const submitClick = async (e: React.FormEvent) => {
+    messages.push({ content: inputValue, role: "user" });
+    setInputValue("");
+    const textStream = await chatWithPage(messages, pageText);
+    let fullText = "";
+    for await (const text of textStream) {
+      fullText += text;
+      setOutput(await marked(fullText));
+    }
+    messages.push({ content: await marked(fullText), role: "assistant" });
   };
 
   return (
@@ -52,7 +70,10 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
         </div>
       </div>
       <div className="tsw-panel-content">
-        <div id="tsw-output-body">xx</div>
+        <div id="tsw-output-body">
+          <p>assistant: hi, how can I help you?</p>
+          {output && <p dangerouslySetInnerHTML={{ __html: output }} />}
+        </div>
       </div>
       <div className="tsw-panel-footer">
         <Input
