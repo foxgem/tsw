@@ -1,5 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { TSWChattingPanel } from "~components/TSWChattingPanel";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
@@ -10,7 +11,6 @@ import {
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
-import { TSWChattingPanel } from "~components/TSWChattingPanel";
 
 function withOutputPanel(
   outputElm: string,
