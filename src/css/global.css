@@ -207,7 +207,6 @@
 
 .tsw-panel-footer {
   padding: 1rem 0;
-  border-top: 1px solid #e0e0e0;
   display: flex;
   gap: 1rem;
 }
@@ -234,8 +233,7 @@
 .tsw-chat-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  /* border-top: 1px solid rgb(224, 224, 224); */
+  gap: 12px;
   margin: 0;
   padding: 12px 0 0 0;
   max-width: 80%;
@@ -254,6 +252,13 @@
 .tsw-chat-item code,
 .tsw-chat-item pre {
   margin: 0;
+  width: 100%;
+}
+
+.tsw-chat-item code {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 .tsw-small-icon {
@@ -272,4 +277,19 @@
 }
 .tsw-chat-item-single {
   align-items: center !important;
+}
+
+.tsw-chat-item-user p {
+  text-align: right;
+}
+.tsw-write {
+  margin-top: 6px;
+  margin-left: 10px;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.tsw-chat-body {
+  overflow-y: auto;
 }

@@ -249,6 +249,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeLinejoin="round"
           className="lucide lucide-user-round tsw-small-icon"
         >
+          <title>{name} icon</title>
           <circle cx="12" cy="8" r="5" />
           <path d="M20 21a8 8 0 0 0-16 0" />
         </svg>
