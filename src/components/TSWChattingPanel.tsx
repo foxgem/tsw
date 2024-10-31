@@ -5,6 +5,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { Input } from "~/components/ui/input";
 import { iconArray } from "~/content";
+import { upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 
@@ -75,12 +76,24 @@ export function TSWChattingPanel({ pageText, onRender }: ChattingPanelProps) {
       </div>
       <div className="tsw-panel-content">
         <div id="tsw-output-body">
-          <p>assistant: hi, how can I help you?</p>
+          <p className="tsw-chat-item tsw-chat-item-single">
+            <ActionIcon name="Assistant" />
+            <p>hi, how can I help you?</p>
+          </p>
           {messages.length > 0 &&
             messages.map((m, i) => {
               return (
-                <p key="m-{i}">
-                  {m.role}:
+                <p
+                  key={`m-${i}`}
+                  className={`tsw-chat-item ${
+                    String(m.content).split("\n").length === 1
+                      ? "tsw-chat-item-single"
+                      : ""
+                  } ${m.role === "user" ? "tsw-chat-item-user" : "tsw-chat-item-assistant"}`}
+                >
+                  <div className={m.role === "user" ? "tsw-user" : ""}>
+                    <ActionIcon name={upperCaseFirstLetter(m.role)} />
+                  </div>
                   <p
                     dangerouslySetInnerHTML={{
                       __html: marked(m.content as string),

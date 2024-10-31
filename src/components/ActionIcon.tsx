@@ -235,6 +235,54 @@ export function ActionIcon({ name }: ActionIconProps) {
           <path d="M14 18h6" />
         </svg>
       )}
+
+      {name === "User" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-user-round tsw-small-icon"
+        >
+          <circle cx="12" cy="8" r="5" />
+          <path d="M20 21a8 8 0 0 0-16 0" />
+        </svg>
+      )}
+      {name === "Assistant" && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="36"
+          height="36"
+          viewBox="0 0 100 100"
+          aria-label={name}
+        >
+          <title>{name} icon</title>
+          <circle cx="50" cy="50" r="45" fill="#4A90E2" />
+          <rect x="30" y="25" width="40" height="45" rx="7" fill="white" />
+          <line
+            x1="50"
+            y1="12"
+            x2="50"
+            y2="25"
+            stroke="white"
+            strokeWidth="4"
+          />
+          <circle cx="50" cy="10" r="3" fill="white" />
+          <circle cx="40" cy="40" r="4" fill="#4A90E2" />
+          <circle cx="60" cy="40" r="4" fill="#4A90E2" />
+          <path
+            d="M 38 55 Q 50 65 62 55"
+            stroke="#4A90E2"
+            strokeWidth="3"
+            fill="none"
+          />
+        </svg>
+      )}
     </>
   );
 }
