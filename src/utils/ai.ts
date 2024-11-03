@@ -219,6 +219,7 @@ export const ocr = (
 export const chatWithPage = async (
   messages: CoreMessage[],
   pageText: string,
+  signal?: AbortSignal,
 ) => {
   const apiKey = await loadApiKey();
   const google = createGoogleGenerativeAI({ apiKey });
@@ -226,6 +227,7 @@ export const chatWithPage = async (
     model: google("gemini-1.5-flash"),
     system: pageRagPrompt(pageText),
     messages,
+    abortSignal: signal,
   });
   return textStream;
 };

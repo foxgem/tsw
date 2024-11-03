@@ -28,7 +28,7 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
             {iconArray.map((icon) => (
               <button
                 type="button"
-                className="tsw-header-btn"
+                className="tsw-action-btn"
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >
