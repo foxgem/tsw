@@ -43,7 +43,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
       const viewport = document.querySelector(
         "[data-radix-scroll-area-viewport]",
       );
-      console.log(viewport.scrollHeight);
       if (viewport) {
         requestAnimationFrame(() => {
           setTimeout(() => {
@@ -61,11 +60,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
     const header = document.getElementById("tsw-panel-header");
     const footer = document.getElementById("tsw-panel-footer");
 
-    console.log(header, footer);
     if (header && footer) {
-      console.log(header.getBoundingClientRect().height);
-
-      console.log(footer.getBoundingClientRect().height);
       document.documentElement.style.setProperty(
         "--header-height",
         `${header.getBoundingClientRect().height}px`,
@@ -273,16 +268,16 @@ export function ChatUI({ pageText }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
-          {/* {isStreaming && ( */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleStopChat}
-            className={chatStyles.tswActionBtn}
-          >
-            <CircleStop className={chatStyles.stopIcon} />
-          </Button>
-          {/* )} */}
+          {isStreaming && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleStopChat}
+              className={chatStyles.tswActionBtn}
+            >
+              <CircleStop className={chatStyles.stopIcon} />
+            </Button>
+          )}
         </div>
       </div>
     </>

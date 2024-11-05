@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 .scrollRoot {
   @apply relative overflow-hidden;
 }
@@ -26,11 +22,11 @@
   @apply relative flex-1 rounded-full bg-border;
 }
 
-.textarea {
-  @apply flex min-h-[80px] rounded-md border px-3 py-2 text-base;
+.textareaComponent {
+  @apply flex rounded-md border px-3 py-2 text-base;
 }
 
-.textarea::placeholder {
+.textareaComponent::placeholder {
   @apply text-[#aaa];
 }
 
