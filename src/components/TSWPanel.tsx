@@ -1,4 +1,3 @@
-import logo from "data-base64:/assets/icon.png";
 import { useEffect } from "react";
 import { iconArray } from "~/content";
 import { ActionIcon } from "./ActionIcon";
@@ -20,7 +19,7 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
     <div className="tsw-panel">
       <div className="tsw-panel-header">
         <div className="tsw-panel-header-logo">
-          <img src={logo} alt="TSW Icon" className="tsw-icon" />
+          <ActionIcon name="Logo" />
           <span>{title}</span>
         </div>
         <div className="tsw-panel-menu">
@@ -28,7 +27,7 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
             {iconArray.map((icon) => (
               <button
                 type="button"
-                className="tsw-header-btn"
+                className="tsw-action-btn"
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >
