@@ -1,6 +1,6 @@
 {
   "name": "tsw",
-  "version": "0.2.0",
+  "version": "0.1.5",
   "description": "Your tiny smart worker",
   "scripts": {
     "dev": "plasmo dev",
@@ -60,18 +60,30 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
+    "permissions": [
+      "contextMenus",
+      "tabs",
+      "storage",
+      "alarms",
+      "activeTab"
+    ],
     "background": {
       "service_worker": "background.ts"
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
-    "version": "0.2.0",
-    "host_permissions": ["https://*/*"],
+    "version": "0.1.5",
+    "host_permissions": [
+      "https://*/*"
+    ],
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
-        "css": ["/src/css/global.css"],
+        "matches": [
+          "<all_urls>"
+        ],
+        "css": [
+          "/src/css/global.css"
+        ],
         "run_at": "document_start"
       }
     ]
