@@ -1,0 +1,39 @@
+.scrollRoot {
+  @apply relative overflow-hidden;
+}
+
+.viewport {
+  @apply h-full rounded-[inherit];
+}
+
+.scrollbar {
+  @apply flex touch-none select-none transition-colors;
+}
+
+.scrollbarVertical {
+  @apply h-full w-2.5 border-l border-l-transparent p-[1px];
+}
+
+.scrollbarHorizontal {
+  @apply h-2.5 flex-col border-t border-t-transparent p-[1px];
+}
+
+.thumb {
+  @apply relative flex-1 rounded-full bg-border;
+}
+
+.textareaComponent {
+  @apply flex rounded-md border px-3 py-2 text-base;
+}
+
+.textareaComponent::placeholder {
+  @apply text-[#aaa];
+}
+
+.copyButton {
+  @apply ml-2 px-3 py-1 text-sm rounded bg-blue-500 text-white;
+}
+
+.copyButton:hover {
+  @apply bg-blue-600;
+}

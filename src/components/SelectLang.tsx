@@ -1,4 +1,6 @@
+import styles from "~/css/wrapper.module.css";
 import { LANG_LIST } from "~/utils/constants";
+
 interface selectLangProps {
   lang?: string;
   onLanguageChange: (language: string) => void;
@@ -9,11 +11,11 @@ export default function SelectLang({
   onLanguageChange,
 }: selectLangProps) {
   return (
-    <div className="lang-container">
+    <div className={styles.langContainer}>
       {LANG_LIST.map((language) => (
         <button
           type="button"
-          className="tsw-select-lang-item"
+          className={styles.tswSelectLangItem}
           key={language}
           onClick={() => onLanguageChange(language)}
         >

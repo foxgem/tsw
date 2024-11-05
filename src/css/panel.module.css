@@ -1,0 +1,112 @@
+.tswPanel {
+  padding: 0px 12px;
+  height: 100%;
+  overflow-y: auto;
+  border-left: 1px;
+  display: flex;
+  flex-direction: column;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.tswActionBtn:hover {
+  background-color: rgb(209 213 219) !important;
+}
+
+.tswPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 10px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.tswPanelContent {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 18px 0;
+}
+
+.tswPanelMenu {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.tswPanelHeaderAction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tswPanelHeaderAction > * + * {
+  margin-left: 0.25rem;
+}
+
+.tswActionBtn {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.25rem;
+  cursor: pointer;
+  height: 28px;
+  color: black;
+  display: flex;
+  justify-content: center;
+  border: 0;
+  align-items: center;
+  border-radius: 100%;
+  height: 36px !important;
+  width: 36px !important;
+  background-color: unset;
+}
+
+.tswActionBtn span {
+  width: 24px;
+  height: 24px;
+}
+
+.tswPanelHeaderSeparator {
+  margin-left: 8px;
+  margin-right: 8px;
+  height: 20px;
+  width: 1px;
+  background-color: rgb(209 213 219);
+}
+
+.tswPanelHeaderLogo {
+  display: flex;
+  align-items: center;
+}
+
+.tswPanelHeaderLogo span {
+  margin-left: 8px;
+  font-size: 18px;
+  font-weight: 7000;
+}
+
+.tswLoadingContainer {
+  text-align: center;
+  padding: 1.25rem;
+}
