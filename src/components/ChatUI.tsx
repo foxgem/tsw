@@ -5,7 +5,8 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { upperCaseFirstLetter } from "~lib/utils";
+import chatStyles from "~/css/chatui.module.css";
+import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
@@ -34,7 +35,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
-  const observerRef = useRef<MutationObserver | null>(null);
 
   const { toast } = useToast();
 
@@ -58,8 +58,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
   }, [messages]);
 
   useEffect(() => {
-    const header = document.querySelector(".tsw-panel-header");
-    const footer = document.querySelector(".tsw-panel-footer");
+    const header = document.getElementById("tsw-panel-header");
+    const footer = document.getElementById("tsw-panel-footer");
 
     console.log(header, footer);
     if (header && footer) {
@@ -92,7 +92,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
     setIsStreaming(true);
 
     if (inputValue.trim()) {
-      console.log("inputValue", inputValue);
       try {
         abortController.current = new AbortController();
         const newMessages: Message[] = [
@@ -152,11 +151,11 @@ export function ChatUI({ pageText }: ChatUIProps) {
 
   return (
     <>
-      <div className="flex flex-col tsw-chat-body h-[calc(100vh-var(--header-height)-var(--footer-height)-36px)]">
-        <div className="flex-grow">
-          <ScrollArea className="h-[calc(100vh-var(--header-height)-var(--footer-height)-36px)] pr-4 pb-4 overflow-y-auto">
+      <div className={chatStyles.chatContainer}>
+        <div className={chatStyles.chatContent}>
+          <ScrollArea className={chatStyles.scrollArea}>
             {messages.length === 0 && (
-              <div className="h-[calc(100vh-var(--header-height)-var(--footer-height)-36px)] flex items-center justify-center font-semibold text-[32px] bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+              <div className={chatStyles.welcomeMessage}>
                 Hi, how can I help you?
               </div>
             )}
@@ -164,19 +163,27 @@ export function ChatUI({ pageText }: ChatUIProps) {
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`mb-1 ${m.role === "user" ? "ml-auto" : "mr-auto"}`}
+                className={cn(
+                  chatStyles.messageContainer,
+                  m.role === "user"
+                    ? chatStyles.userMessage
+                    : chatStyles.assistantMessage,
+                )}
               >
                 <div
-                  className={`flex items-start ${m.role === "user" ? "justify-end" : ""} tsw-chat-item group ${
+                  className={cn(
+                    chatStyles.chatItemContainer,
+                    m.role === "user" ? chatStyles.userChatItem : "",
+                    chatStyles.tswChatItem,
                     String(m.content).split("\n").length === 1
-                      ? "tsw-chat-item-single"
-                      : ""
-                  } `}
+                      ? chatStyles.tswChatItemSingle
+                      : "",
+                  )}
                 >
                   {m.role === "assistant" && (
                     <ActionIcon name={upperCaseFirstLetter(m.role)} />
                   )}
-                  <div className="rounded-lg max-w-[80%]">
+                  <div className={chatStyles.messageContent}>
                     {m.role === "user" || m.id === 0 ? (
                       <p
                         dangerouslySetInnerHTML={{
@@ -184,10 +191,10 @@ export function ChatUI({ pageText }: ChatUIProps) {
                         }}
                       />
                     ) : m.content === "TSW" ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="relative">
-                          <div className="w-3 h-3 bg-blue-500 rounded-full" />
-                          <div className="absolute top-0 left-0 w-3 h-3 bg-blue-500 rounded-full animate-ping" />
+                      <div className={chatStyles.loadingContainer}>
+                        <div className={chatStyles.loadingDot}>
+                          <div className={chatStyles.dotBase} />
+                          <div className={chatStyles.dotPing} />
                         </div>
                       </div>
                     ) : (
@@ -204,19 +211,24 @@ export function ChatUI({ pageText }: ChatUIProps) {
                     )}
                   </div>
                   {m.role === "user" && (
-                    <div className="tsw-user">
+                    <div className={chatStyles.tswUser}>
                       <ActionIcon name={upperCaseFirstLetter(m.role)} />
                     </div>
                   )}
                 </div>
                 <div
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"} mx-[36px]`}
+                  className={cn(
+                    chatStyles.actionContainer,
+                    m.role === "user"
+                      ? chatStyles.userActionContainer
+                      : chatStyles.assistantActionContainer,
+                  )}
                 >
                   {(m.role === "user" || m.isComplete) && m.content && (
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="tsw-action-btn"
+                      className={chatStyles.tswActionBtn}
                       onClick={() => copyToClipboard(m.content)}
                     >
                       <Copy size={16} />
@@ -228,8 +240,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
           </ScrollArea>
         </div>
       </div>
-      <div className="tsw-panel-footer">
-        <div className="flex items-center border border-[#E0E0E0] justify-between w-full rounded-[8px] bg-[#efefef]">
+      <div className={chatStyles.tswPanelFooter} id="tsw-panel-footer">
+        <div className={chatStyles.inputContainer}>
           <Textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -244,7 +256,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
                 handleSend(e);
               }
             }}
-            className="flex-grow min-h-[40px] max-h-[120px] resize-none border-0 rounded-[8px] bg-[#efefef]"
+            className={chatStyles.textarea}
             rows={1}
             style={{
               height: "auto",
@@ -261,16 +273,16 @@ export function ChatUI({ pageText }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
-          {isStreaming && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleStopChat}
-              className="tsw-action-btn"
-            >
-              <CircleStop className="h-4 w-4" />
-            </Button>
-          )}
+          {/* {isStreaming && ( */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleStopChat}
+            className={chatStyles.tswActionBtn}
+          >
+            <CircleStop className={chatStyles.stopIcon} />
+          </Button>
+          {/* )} */}
         </div>
       </div>
     </>

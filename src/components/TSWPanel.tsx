@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { iconArray } from "~/content";
+import panelStyles from "../css/panel.module.css";
 import { ActionIcon } from "./ActionIcon";
 
 export interface PanelProps {
@@ -16,18 +17,18 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
   }, [onRender]);
 
   return (
-    <div className="tsw-panel">
-      <div className="tsw-panel-header">
-        <div className="tsw-panel-header-logo">
+    <div className={panelStyles.tswPanel}>
+      <div className={panelStyles.tswPanelHeader}>
+        <div className={panelStyles.tswPanelHeaderLogo}>
           <ActionIcon name="Logo" />
           <span>{title}</span>
         </div>
-        <div className="tsw-panel-menu">
-          <div className="tsw-panel-header-action">
+        <div className={panelStyles.tswPanelMenu}>
+          <div className={panelStyles.tswPanelHeaderAction}>
             {iconArray.map((icon) => (
               <button
                 type="button"
-                className="tsw-action-btn"
+                className={panelStyles.tswActionBtn}
                 id={`tsw-${icon.name.toLowerCase()}-btn`}
                 key={icon.name}
               >
@@ -35,16 +36,16 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
               </button>
             ))}
           </div>
-          <div className="tsw-panel-header-separator" />
+          <div className={panelStyles.tswPanelHeaderSeparator} />
           <button id="tsw-close-right-part" type="button">
             <ActionIcon name="Close" />
           </button>
         </div>
       </div>
-      <div className="tsw-panel-content">
+      <div className={panelStyles.tswPanelContent}>
         <div id="tsw-output-body">
-          <div className="tsw-loading-container">
-            <div className="loading-spinner" />
+          <div className={panelStyles.tswLoadingContainer}>
+            <div className={panelStyles.loadingSpinner} />
             <p>{placeHolder}...</p>
           </div>
         </div>

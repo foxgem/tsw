@@ -2,6 +2,7 @@ import React from "react";
 import { type Root, createRoot } from "react-dom/client";
 import { createWarningPopup } from "./WarningPopup";
 import CircularButtonsContainer from "./components/CircularButtonsContainer";
+import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {
   type FloatingButton,
 } from "./components/SelectionOverlay";
@@ -13,8 +14,6 @@ import {
   rewriteHandler,
   summarize,
 } from "./handlers";
-import "~/css/wrapper.css";
-import SelectLang from "./components/SelectLang";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
   interface Window {
