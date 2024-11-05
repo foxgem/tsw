@@ -2,7 +2,15 @@ import { marked } from "marked";
 import { useEffect, useState } from "react";
 import { useAnimatedText } from "./use-animated-text";
 
-export function StreamMessage({ outputString }: { outputString: string }) {
+interface StreamMessageProps {
+  outputString: string;
+  onStreamComplete?: (isComplete: boolean) => void;
+}
+
+export function StreamMessage({
+  outputString,
+  onStreamComplete,
+}: StreamMessageProps) {
   const animatedText = useAnimatedText(outputString);
   const [parsedText, setParsedText] = useState("");
 
@@ -12,6 +20,10 @@ export function StreamMessage({ outputString }: { outputString: string }) {
       setParsedText(result);
     } else {
       result.then(setParsedText);
+    }
+
+    if (onStreamComplete) {
+      onStreamComplete(animatedText === outputString);
     }
   }, [animatedText]);
   return (
