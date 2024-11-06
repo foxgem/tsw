@@ -173,3 +173,20 @@
   height: 16px;
   width: 16px;
 }
+
+.actionContainer {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.messageContainer:hover .actionContainer {
+  opacity: 1;
+}
+
+.actionContainer .tswActionBtn {
+  visibility: hidden;
+}
+
+.messageContainer:hover .actionContainer .tswActionBtn {
+  visibility: visible;
+}
