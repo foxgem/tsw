@@ -1,5 +1,5 @@
 "use client";
-import { CircleStop, Copy } from "lucide-react";
+import { CircleStop, Copy, Pencil } from "lucide-react";
 import { marked } from "marked";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -35,6 +35,8 @@ export function ChatUI({ pageText }: ChatUIProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const [originalMessage, setOriginalMessage] = useState<string>("");
 
   const { toast } = useToast();
 
@@ -80,7 +82,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
     }
   };
 
-  const handleSend = async (e: React.FormEvent) => {
+  const handleSend = async (e: React.FormEvent, customMessages?: Message[]) => {
     e.preventDefault();
     if (isSubmitting || !inputValue.trim()) return;
     setIsSubmitting(true);
@@ -89,10 +91,18 @@ export function ChatUI({ pageText }: ChatUIProps) {
     if (inputValue.trim()) {
       try {
         abortController.current = new AbortController();
-        const newMessages: Message[] = [
-          ...messages,
-          { content: inputValue, role: "user", id: messages.length },
-        ];
+        const baseMessages = customMessages || messages;
+
+        // Only add a new user message if we're not editing
+        const newMessages = (
+          customMessages
+            ? baseMessages
+            : [
+                ...baseMessages,
+                { content: inputValue, role: "user", id: baseMessages.length },
+              ]
+        ) as Message[];
+
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
         if (textarea) {
@@ -105,7 +115,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
           {
             role: "assistant",
             content: "TSW",
-            id: messages.length + 1,
+            id: newMessages.length,
             isThinking: true,
           },
         ]);
@@ -121,7 +131,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
           fullText += text;
           setMessages([
             ...newMessages,
-            { role: "assistant", content: fullText, id: messages.length + 1 },
+            { role: "assistant", content: fullText, id: newMessages.length },
           ]);
         }
       } catch (error) {
@@ -142,6 +152,40 @@ export function ChatUI({ pageText }: ChatUIProps) {
         description: "Copied.",
       });
     });
+  };
+
+  const handleEdit = (message: Message) => {
+    setEditingMessageId(message.id);
+    setOriginalMessage(message.content);
+    setInputValue(message.content);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setOriginalMessage("");
+    setInputValue("");
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting || !inputValue.trim() || editingMessageId === null) return;
+
+    // Update the edited message
+    const updatedMessages = messages.map((msg) =>
+      msg.id === editingMessageId ? { ...msg, content: inputValue } : msg,
+    );
+
+    // Remove all messages after the edited message
+    const messagesBeforeEdit = updatedMessages.filter(
+      (msg) => msg.id <= editingMessageId,
+    );
+
+    setMessages(messagesBeforeEdit);
+    setEditingMessageId(null);
+    setOriginalMessage("");
+
+    // Continue the chat with the edited message
+    await handleSend(e, messagesBeforeEdit);
   };
 
   return (
@@ -220,14 +264,27 @@ export function ChatUI({ pageText }: ChatUIProps) {
                   )}
                 >
                   {(m.role === "user" || m.isComplete) && m.content && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className={chatStyles.tswActionBtn}
-                      onClick={() => copyToClipboard(m.content)}
-                    >
-                      <Copy size={16} />
-                    </Button>
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className={chatStyles.tswActionBtn}
+                        onClick={() => copyToClipboard(m.content)}
+                      >
+                        <Copy size={16} />
+                      </Button>
+                      {m.role === "user" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className={chatStyles.tswActionBtn}
+                          onClick={() => handleEdit(m)}
+                          disabled={isStreaming || editingMessageId !== null}
+                        >
+                          <Pencil size={16} />
+                        </Button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -240,7 +297,11 @@ export function ChatUI({ pageText }: ChatUIProps) {
           <Textarea
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Type your message..."
+            placeholder={
+              editingMessageId !== null
+                ? "Edit your message..."
+                : "Type your message..."
+            }
             onKeyDown={(e) => {
               if (
                 e.key === "Enter" &&
@@ -248,7 +309,11 @@ export function ChatUI({ pageText }: ChatUIProps) {
                 !e.nativeEvent.isComposing
               ) {
                 e.preventDefault();
-                handleSend(e);
+                if (editingMessageId !== null) {
+                  handleEditSubmit(e);
+                } else {
+                  handleSend(e);
+                }
               }
             }}
             className={chatStyles.textarea}
@@ -268,7 +333,21 @@ export function ChatUI({ pageText }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
-          {isStreaming && (
+          {editingMessageId !== null && (
+            <div className={chatStyles.editActions}>
+              <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={(e) => handleEditSubmit(e)}
+              >
+                Update
+              </Button>
+            </div>
+          )}
+          {isStreaming && !editingMessageId && (
             <Button
               variant="ghost"
               size="icon"
