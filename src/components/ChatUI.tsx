@@ -1,5 +1,5 @@
 "use client";
-import { CircleStop, Copy, Pencil } from "lucide-react";
+import { CircleStop, Copy, Pencil, RefreshCw } from "lucide-react";
 import { marked } from "marked";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -36,7 +36,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [originalMessage, setOriginalMessage] = useState<string>("");
 
   const { toast } = useToast();
 
@@ -82,13 +81,18 @@ export function ChatUI({ pageText }: ChatUIProps) {
     }
   };
 
-  const handleSend = async (e: React.FormEvent, customMessages?: Message[]) => {
+  const handleSend = async (
+    e: React.FormEvent,
+    customMessages?: Message[],
+    lastUserMessage?: string,
+  ) => {
+    const currentMessage = inputValue.trim() || lastUserMessage.trim();
     e.preventDefault();
-    if (isSubmitting || !inputValue.trim()) return;
+    if (isSubmitting || !currentMessage) return;
     setIsSubmitting(true);
     setIsStreaming(true);
 
-    if (inputValue.trim()) {
+    if (currentMessage.trim()) {
       try {
         abortController.current = new AbortController();
         const baseMessages = customMessages || messages;
@@ -99,7 +103,11 @@ export function ChatUI({ pageText }: ChatUIProps) {
             ? baseMessages
             : [
                 ...baseMessages,
-                { content: inputValue, role: "user", id: baseMessages.length },
+                {
+                  content: currentMessage,
+                  role: "user",
+                  id: baseMessages.length,
+                },
               ]
         ) as Message[];
 
@@ -156,7 +164,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
 
   const handleEdit = (message: Message) => {
     setEditingMessageId(message.id);
-    setOriginalMessage(message.content);
     setInputValue(message.content);
 
     requestAnimationFrame(() => {
@@ -172,7 +179,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
 
   const handleCancelEdit = () => {
     setEditingMessageId(null);
-    setOriginalMessage("");
     setInputValue("");
   };
 
@@ -180,22 +186,31 @@ export function ChatUI({ pageText }: ChatUIProps) {
     e.preventDefault();
     if (isSubmitting || !inputValue.trim() || editingMessageId === null) return;
 
-    // Update the edited message
     const updatedMessages = messages.map((msg) =>
       msg.id === editingMessageId ? { ...msg, content: inputValue } : msg,
     );
 
-    // Remove all messages after the edited message
     const messagesBeforeEdit = updatedMessages.filter(
       (msg) => msg.id <= editingMessageId,
     );
 
     setMessages(messagesBeforeEdit);
     setEditingMessageId(null);
-    setOriginalMessage("");
-
-    // Continue the chat with the edited message
     await handleSend(e, messagesBeforeEdit);
+  };
+
+  const handleRefresh = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting || messages.length < 2) return;
+
+    const lastUserMessageIndex = messages.length - 2;
+    const messagesUpToLastUser = messages.slice(0, lastUserMessageIndex + 1);
+    setMessages(messagesUpToLastUser);
+    await handleSend(
+      e,
+      messagesUpToLastUser,
+      messages[lastUserMessageIndex].content,
+    );
   };
 
   return (
@@ -209,7 +224,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
               </div>
             )}
 
-            {messages.map((m) => (
+            {messages.map((m, index) => (
               <div
                 key={m.id}
                 className={cn(
@@ -294,6 +309,18 @@ export function ChatUI({ pageText }: ChatUIProps) {
                           <Pencil size={16} />
                         </Button>
                       )}
+                      {m.role === "assistant" &&
+                        index === messages.length - 1 && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className={chatStyles.tswActionBtn}
+                            onClick={(e) => handleRefresh(e)}
+                            disabled={isStreaming || editingMessageId !== null}
+                          >
+                            <RefreshCw size={16} />
+                          </Button>
+                        )}
                     </>
                   )}
                 </div>

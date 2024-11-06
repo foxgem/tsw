@@ -20,6 +20,14 @@
   height: 24px;
 }
 
+.tswActionBtn:active svg {
+  transform: rotate(180deg);
+}
+
+.tswActionBtn svg {
+  transition: transform 0.2s ease-in-out;
+}
+
 .tswPanelFooter {
   position: sticky;
   bottom: 0;
