@@ -1,11 +1,11 @@
 :root {
-  --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
-  --background: white;
-  --foreground: black;
-  --border: #efefef;
-  --destructive: #efefef;
-  --destructive-foreground: black;
-  --secondary: blue;
+  --tsw-shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  --tsw-background: white;
+  --tsw-foreground: black;
+  --tsw-border: #efefef;
+  --tsw-destructive: #efefef;
+  --tsw-destructive-foreground: black;
+  --tsw-secondary: blue;
 }
 
 #tsw-image-content {
