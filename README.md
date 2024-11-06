@@ -11,6 +11,7 @@ A simple web extension for daily surfing internet. The features:
 - english explanation for single word and sentences
 - a timer for a site to avoid wasting too much time on it to do real work
 - gemini key management
+- chat with page
 - more ...
 
 ## How we built it
@@ -35,3 +36,4 @@ Screenshots:
 ![image](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/095/821/datas/gallery.jpg)
 ![image](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/095/822/datas/gallery.jpg)
 ![image](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/095/817/datas/gallery.jpg)
+![image](./doc/chat.png)
