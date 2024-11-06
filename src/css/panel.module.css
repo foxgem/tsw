@@ -65,6 +65,10 @@
   margin-left: 0.25rem;
 }
 
+.tswPanelMenu svg path {
+  fill: unset !important;
+}
+
 .tswActionBtn {
   font-weight: 700;
   font-size: 14px;

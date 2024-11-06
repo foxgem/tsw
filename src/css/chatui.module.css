@@ -90,6 +90,10 @@
   @apply mb-1;
 }
 
+.messageContainer svg path {
+  fill: unset !important;
+}
+
 .userMessage {
   @apply ml-auto;
 }

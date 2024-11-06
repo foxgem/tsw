@@ -1,11 +1,11 @@
 :root {
-  --shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
-  --background: white;
-  --foreground: black;
-  --border: #efefef;
-  --destructive: #efefef;
-  --destructive-foreground: black;
-  --secondary: blue;
+  --tsw-shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+  --tsw-background: white;
+  --tsw-foreground: black;
+  --tsw-border: #efefef;
+  --tsw-destructive: #efefef;
+  --tsw-destructive-foreground: black;
+  --tsw-secondary: blue;
 }
 
 #tsw-image-content {
@@ -70,6 +70,24 @@
   background-color: unset;
 }
 
+.tsw-warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(44, 62, 80, 0.9);
+  color: white;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+  transform: translateY(-100%);
+  z-index: 10001;
+}
+
 .tsw-warning-container {
   display: flex;
   align-items: center;
@@ -97,4 +115,27 @@
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+#selection-overlay button div {
+  width: 24px;
+  height: 24px;
+}
+
+#selection-overlay button div:hover {
+  background-color: transparent !important;
+}
+
+#selection-overlay button:hover {
+  opacity: 0.5;
+}
+
+#selection-overlay svg {
+  stroke: #ffffff;
+  fill: none !important;
+}
+
+#selection-overlay svg path,
+#tsw-buttons-container svg path {
+  fill: unset !important;
 }

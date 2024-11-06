@@ -30,10 +30,10 @@
   gap: 1rem;
   overflow: hidden;
   border-radius: 0.375rem;
-  border: 1px solid var(--background);
+  border: 1px solid var(--tsw-background);
   padding: 0.5rem;
   padding-right: 2rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--tsw-shadow-lg);
   transition: all;
 }
 
@@ -47,14 +47,14 @@
   gap: 1rem;
   overflow: hidden;
   border-radius: 0.375rem;
-  border: 1px solid var(--background);
+  border: 1px solid var(--tsw-background);
   padding: 0.5rem;
   padding-right: 2rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--tsw-shadow-lg);
   transition: all;
-  border-color: var(--destructive);
-  background-color: var(--destructive);
-  color: var(--destructive-foreground);
+  border-color: var(--tsw-destructive);
+  background-color: var(--tsw-destructive);
+  color: var(--tsw-destructive-foreground);
 }
 
 .action {
@@ -72,7 +72,7 @@
 }
 
 .action:hover {
-  background-color: var(--secondary);
+  background-color: var(--tsw-secondary);
 }
 
 .action:focus {
@@ -85,13 +85,13 @@
   top: 0.5rem;
   border-radius: 0.375rem;
   padding: 0.25rem;
-  color: rgba(var(--foreground), 0.5);
+  color: rgba(var(--tsw-foreground), 0.5);
   opacity: 0;
   transition: opacity 150ms;
 }
 
 .close:hover {
-  color: var(--foreground);
+  color: var(--tsw-foreground);
   opacity: 1;
 }
 
@@ -131,10 +131,10 @@
   gap: 1rem;
   overflow: hidden;
   border-radius: 0.375rem;
-  border: 1px solid var(--background);
+  border: 1px solid var(--tsw-background);
   padding: 0.5rem;
   padding-right: 2rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--tsw-shadow-lg);
   transition: all;
   pointer-events: auto;
 }
@@ -173,15 +173,15 @@
   gap: 1rem;
   overflow: hidden;
   border-radius: 0.375rem;
-  border: 1px solid var(--background);
+  border: 1px solid var(--tsw-background);
   padding: 0.5rem;
   padding-right: 2rem;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--tsw-shadow-lg);
   transition: all;
   pointer-events: auto;
   background-color: white;
-  border-color: var(--border);
-  color: var(--foreground);
+  border-color: var(--tsw-border);
+  color: var(--tsw-foreground);
 }
 
 @keyframes slideInFromTop {
