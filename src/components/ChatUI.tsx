@@ -158,6 +158,16 @@ export function ChatUI({ pageText }: ChatUIProps) {
     setEditingMessageId(message.id);
     setOriginalMessage(message.content);
     setInputValue(message.content);
+
+    requestAnimationFrame(() => {
+      const textarea = document.getElementById(
+        "tsw-chat-textarea",
+      ) as HTMLTextAreaElement;
+      if (textarea) {
+        textarea.style.height = "auto";
+        textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
+      }
+    });
   };
 
   const handleCancelEdit = () => {
@@ -296,7 +306,13 @@ export function ChatUI({ pageText }: ChatUIProps) {
         <div className={chatStyles.inputContainer}>
           <Textarea
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              // Auto-resize the textarea
+              const textarea = e.target as HTMLTextAreaElement;
+              textarea.style.height = "auto";
+              textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`; // Set maximum height to 200px
+            }}
             placeholder={
               editingMessageId !== null
                 ? "Edit your message..."
@@ -319,17 +335,10 @@ export function ChatUI({ pageText }: ChatUIProps) {
             className={chatStyles.textarea}
             rows={1}
             style={{
-              height: "auto",
-              overflow: "hidden",
-            }}
-            onInput={(e) => {
-              const target = e.target as HTMLTextAreaElement;
-              if (target.value.trim() === "") {
-                target.style.height = "40px";
-              } else {
-                target.style.height = "auto";
-                target.style.height = `${Math.min(target.scrollHeight, 80)}px`;
-              }
+              minHeight: "40px",
+              maxHeight: "200px",
+              overflow: "auto",
+              resize: "none",
             }}
             id="tsw-chat-textarea"
           />
