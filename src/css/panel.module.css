@@ -27,10 +27,6 @@
   }
 }
 
-.tswActionBtn:hover {
-  background-color: rgb(209 213 219) !important;
-}
-
 .tswPanelHeader {
   display: flex;
   align-items: center;
@@ -84,11 +80,20 @@
   height: 36px !important;
   width: 36px !important;
   background-color: unset;
+  border: 0;
+  padding: 0;
 }
 
 .tswActionBtn span {
   width: 24px;
   height: 24px;
+}
+
+.tswActionBtn:hover {
+  background-color: rgb(209 213 219) !important;
+  border: 0;
+  color: unset;
+  padding: 0;
 }
 
 .tswPanelHeaderSeparator {

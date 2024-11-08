@@ -194,12 +194,12 @@ function TimerSettingPage() {
                       <p className="text-sm w-[40%]">{timer.domain}</p>
                       <p className="text-sm w-[20%]">{timer.time}s</p>
 
-                      <div className="flex space-x-1">
+                      <div className="flex space-x-2">
                         <IconWrapper>
                           <FilePenLine
                             size={20}
                             onClick={() => handleEditTimer(timer)}
-                            className="text-primary"
+                            className="text-primary mr-2"
                           />
                         </IconWrapper>
                         <IconWrapper>

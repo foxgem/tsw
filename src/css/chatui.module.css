@@ -13,11 +13,20 @@
   height: 36px !important;
   width: 36px !important;
   background-color: unset;
+  border: 0;
+  padding: 0;
 }
 
 .tswActionBtn span {
   width: 24px;
   height: 24px;
+}
+
+.tswActionBtn:hover {
+  background-color: rgb(209 213 219) !important;
+  border: 0;
+  color: unset;
+  padding: 0;
 }
 
 .tswActionBtn:active svg {
@@ -90,7 +99,7 @@
 
 .welcomeMessage {
   @apply flex items-center justify-center font-semibold text-[32px];
-  @apply bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent;
+  @apply bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-black opacity-50;
   height: calc(100vh - var(--header-height) - var(--footer-height) - 36px);
 }
 

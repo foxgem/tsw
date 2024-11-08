@@ -1,5 +1,12 @@
 "use client";
-import { CircleStop, Copy, Pencil, RefreshCw } from "lucide-react";
+import {
+  CircleStop,
+  Copy,
+  IterationCcw,
+  Pencil,
+  RefreshCw,
+  SquareX,
+} from "lucide-react";
 import { marked } from "marked";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
@@ -60,7 +67,6 @@ export function ChatUI({ pageText }: ChatUIProps) {
   useEffect(() => {
     const header = document.getElementById("tsw-panel-header");
     const footer = document.getElementById("tsw-panel-footer");
-
     if (header && footer) {
       document.documentElement.style.setProperty(
         "--header-height",
@@ -366,20 +372,27 @@ export function ChatUI({ pageText }: ChatUIProps) {
               maxHeight: "200px",
               overflow: "auto",
               resize: "none",
+              height: "unset",
             }}
             id="tsw-chat-textarea"
           />
           {editingMessageId !== null && (
             <div className={chatStyles.editActions}>
-              <Button variant="ghost" size="sm" onClick={handleCancelEdit}>
-                Cancel
+              <Button
+                variant="ghost"
+                size="icon"
+                className={chatStyles.tswActionBtn}
+                onClick={handleCancelEdit}
+              >
+                <SquareX />
               </Button>
               <Button
-                variant="default"
-                size="sm"
+                variant="ghost"
+                size="icon"
+                className={chatStyles.tswActionBtn}
                 onClick={(e) => handleEditSubmit(e)}
               >
-                Update
+                <IterationCcw />
               </Button>
             </div>
           )}

@@ -6,6 +6,8 @@
   --tsw-destructive: #efefef;
   --tsw-destructive-foreground: black;
   --tsw-secondary: blue;
+  --header-height: 57px;
+  --footer-height: 58px;
 }
 
 #tsw-image-content {
@@ -51,6 +53,9 @@
 
 #tsw-close-right-part:hover {
   background-color: rgb(209 213 219) !important;
+  border: 0;
+  color: unset;
+  padding: 0;
 }
 
 #tsw-close-right-part {
@@ -68,6 +73,8 @@
   height: 36px !important;
   width: 36px !important;
   background-color: unset;
+  border: 0;
+  padding: 0;
 }
 
 .tsw-warning {
@@ -138,4 +145,8 @@
 #selection-overlay svg path,
 #tsw-buttons-container svg path {
   fill: unset !important;
+}
+
+#tsw-buttons-container button {
+  padding: 0;
 }
