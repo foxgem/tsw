@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
+    "build:firefox": "plasmo build --target=firefox-mv3 --zip",
     "test": "jest",
     "lint": "biome check",
     "fix": "biome check --write",
