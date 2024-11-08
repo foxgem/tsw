@@ -93,6 +93,10 @@
 .close:hover {
   color: var(--tsw-foreground);
   opacity: 1;
+  border: 0;
+  top: 0;
+  background: unset;
+  right: 22px;
 }
 
 .close:focus {

@@ -23,11 +23,15 @@
 }
 
 .textareaComponent {
-  @apply flex rounded-md border px-3 py-2 text-base;
+  @apply flex rounded-md border px-3 py-2 text-[16px];
 }
 
 .textareaComponent::placeholder {
-  @apply text-[#aaa];
+  @apply text-[#aaa] text-[16px];
+}
+
+.textareaComponent:focus {
+  @apply ring-2 ring-blue-500 outline-none;
 }
 
 .copyButton {
