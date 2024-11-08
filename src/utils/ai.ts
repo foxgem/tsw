@@ -75,18 +75,18 @@ const genTextFunction = async (
   system: string,
   messageElement: HTMLElement,
 ) => {
-  const apiKey = await loadApiKey();
-  const google = createGoogleGenerativeAI({ apiKey });
-  const { textStream } = await streamText({
-    model: google("gemini-1.5-flash"),
-    system,
-    prompt,
-  });
-
-  const results: string[] = [];
+  const root = createRoot(messageElement);
 
   try {
-    const root = createRoot(messageElement);
+    const apiKey = await loadApiKey();
+    const google = createGoogleGenerativeAI({ apiKey });
+    const { textStream } = await streamText({
+      model: google("gemini-1.5-flash"),
+      system,
+      prompt,
+    });
+
+    const results: string[] = [];
     for await (const text of textStream) {
       results.push(text);
       root.render(
@@ -94,7 +94,9 @@ const genTextFunction = async (
       );
     }
   } catch (e) {
-    console.log(e);
+    root.render(
+      React.createElement(StreamMessage, { outputString: e.message }),
+    );
   }
 };
 
@@ -104,17 +106,17 @@ const genChatFunction = async (
   >,
   messageElement: HTMLElement,
 ) => {
-  const apiKey = await loadApiKey();
-  const google = createGoogleGenerativeAI({ apiKey });
-  const { textStream } = await streamText({
-    model: google("gemini-1.5-flash"),
-    messages,
-  });
-
-  const results: string[] = [];
+  const root = createRoot(messageElement);
 
   try {
-    const root = createRoot(messageElement);
+    const apiKey = await loadApiKey();
+    const google = createGoogleGenerativeAI({ apiKey });
+    const { textStream } = await streamText({
+      model: google("gemini-1.5-flash"),
+      messages,
+    });
+
+    const results: string[] = [];
     for await (const text of textStream) {
       results.push(text);
       root.render(
@@ -122,7 +124,9 @@ const genChatFunction = async (
       );
     }
   } catch (e) {
-    console.log(e);
+    root.render(
+      React.createElement(StreamMessage, { outputString: e.message }),
+    );
   }
 };
 
@@ -221,13 +225,17 @@ export const chatWithPage = async (
   pageText: string,
   signal?: AbortSignal,
 ) => {
-  const apiKey = await loadApiKey();
-  const google = createGoogleGenerativeAI({ apiKey });
-  const { textStream } = await streamText({
-    model: google("gemini-1.5-flash"),
-    system: pageRagPrompt(pageText),
-    messages,
-    abortSignal: signal,
-  });
-  return textStream;
+  try {
+    const apiKey = await loadApiKey();
+    const google = createGoogleGenerativeAI({ apiKey });
+    const { textStream } = await streamText({
+      model: google("gemini-1.5-flash"),
+      system: pageRagPrompt(pageText),
+      messages,
+      abortSignal: signal,
+    });
+    return textStream;
+  } catch (e) {
+    return e.message;
+  }
 };
