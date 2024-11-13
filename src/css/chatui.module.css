@@ -10,11 +10,12 @@
   border: 0;
   align-items: center;
   border-radius: 100%;
-  height: 36px !important;
-  width: 36px !important;
+  height: 24px !important;
+  width: 24px !important;
   background-color: unset;
   border: 0;
   padding: 0;
+  @apply hover:bg-zinc-200 rounded;
 }
 
 .tswActionBtn span {
