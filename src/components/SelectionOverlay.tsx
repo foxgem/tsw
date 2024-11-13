@@ -2,6 +2,10 @@ import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { ActionIcon } from "./ActionIcon";
 import IconWrapper from "./IconWrapper";
+import { MessageCircleMoreIcon } from "~/components/ui/icons/message-circle-more";
+import { FilePenLineIcon } from "~/components/ui/icons/file-pen-line";
+import { LanguagesIcon } from "~/components/ui/icons/languages";
+import iconsStyles from "~/css/icons.module.css";
 
 export interface FloatingButton {
   onClick: (event: React.MouseEvent<HTMLElement>) => void;
@@ -109,7 +113,24 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
               title={button.tooltip}
             >
               <IconWrapper>
-                <ActionIcon name={button.tooltip} />
+                {button.tooltip === "Explain" ? (
+                  <MessageCircleMoreIcon
+                    size={24}
+                    className={iconsStyles.dynamicIcon}
+                  />
+                ) : button.tooltip === "Rewrite" ? (
+                  <FilePenLineIcon
+                    size={24}
+                    className={iconsStyles.dynamicIcon}
+                  />
+                ) : button.tooltip === "Translate" ? (
+                  <LanguagesIcon
+                    size={24}
+                    className={iconsStyles.dynamicIcon}
+                  />
+                ) : (
+                  <ActionIcon name={button.tooltip} />
+                )}
               </IconWrapper>
             </button>
           </React.Fragment>
