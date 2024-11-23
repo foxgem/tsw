@@ -69,6 +69,11 @@
     "description": "Your tiny smart worker",
     "version": "0.1.5",
     "host_permissions": ["https://*/*"],
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "{cdcc0160-f0ca-4350-91a5-bf7c06b8f12e}"
+      }
+    },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
