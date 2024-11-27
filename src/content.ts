@@ -1,7 +1,6 @@
 import React from "react";
 import { type Root, createRoot } from "react-dom/client";
 import { createWarningPopup } from "./WarningPopup";
-import CircularButtonsContainer from "./components/CircularButtonsContainer";
 import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {
   type FloatingButton,
@@ -317,44 +316,6 @@ export const iconArray = [
   },
 ];
 
-function createFloatingToggleButton() {
-  const containerDiv = document.createElement("div");
-  containerDiv.id = "tsw-buttons-container";
-  document.body.appendChild(containerDiv);
-
-  const panel = document.createElement("div");
-  panel.id = "tsw-toggle-panel";
-  panel.style.cssText = `
-    color-scheme: light;
-    width: 38vw;
-    height: 97vh;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 10px;
-    position: fixed;
-    right: 10px;
-    top: 0px; 
-    margin-top: 10px;
-    border-radius: 10px;
-    z-index:10000;
-    display:none;
-  `;
-  document.body.appendChild(panel);
-
-  const root = createRoot(containerDiv);
-  root.render(
-    React.createElement(CircularButtonsContainer, {
-      id: "tsw-buttons-container",
-      iconBtns: iconArray,
-    }),
-  );
-
-  document.body.appendChild(panel);
-}
-
-createFloatingToggleButton();
-
 let warningTimeout: number | undefined;
 let closeTimeout: number | undefined;
 
@@ -417,3 +378,20 @@ const showWarning = () => {
   const warningElement = createWarningPopup(handleDismiss);
   popupContainer.appendChild(warningElement);
 };
+
+chrome.runtime.onMessage.addListener((request) => {
+  console.log(request.action);
+  switch (request.action) {
+    case "openChat":
+      chattingHandler("tsw-toggle-panel");
+      break;
+  }
+});
+
+document.addEventListener("keydown", (e: KeyboardEvent) => {
+  // cmd + @
+  if (e.metaKey && e.shiftKey && e.key === "2") {
+    e.preventDefault();
+    chattingHandler("tsw-toggle-panel");
+  }
+});
