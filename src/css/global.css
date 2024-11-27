@@ -124,6 +124,46 @@
   overflow-wrap: break-word;
 }
 
+#tsw-output-body {
+  ol,
+  ul {
+    list-style-position: inside;
+    margin: 1em 0;
+    padding-left: 1em;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  li {
+    margin: 0.5em 0;
+  }
+
+  blockquote {
+    font-size: 1rem;
+    color: #999;
+    border-left: .2rem solid #dfe2e5;
+    margin: 0.5rem 0;
+    padding: .25rem 0 .25rem 1rem;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
+    unicode-bidi: isolate;
+  }
+
+  a {
+    color: #3b82f6;
+    text-decoration: underline;
+  }
+}
+
 #selection-overlay button div {
   width: 24px;
   height: 24px;

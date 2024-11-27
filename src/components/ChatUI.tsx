@@ -4,6 +4,9 @@ import { marked } from "marked";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
+import { CopyIcon } from "~/components/ui/icons/copy";
+import { RefreshIcon } from "~/components/ui/icons/refresh";
+import { SquarePenIcon } from "~/components/ui/icons/square-pen";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
@@ -13,9 +16,6 @@ import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import { CopyIcon } from "~/components/ui/icons/copy";
-import { RefreshIcon } from "~/components/ui/icons/refresh";
-import { SquarePenIcon } from "~/components/ui/icons/square-pen";
 marked.setOptions({
   breaks: true,
 });

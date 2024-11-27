@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from "react";
 import ReactDOM from "react-dom";
-import { ActionIcon } from "./ActionIcon";
-import IconWrapper from "./IconWrapper";
-import { MessageCircleMoreIcon } from "~/components/ui/icons/message-circle-more";
 import { FilePenLineIcon } from "~/components/ui/icons/file-pen-line";
 import { LanguagesIcon } from "~/components/ui/icons/languages";
+import { MessageCircleMoreIcon } from "~/components/ui/icons/message-circle-more";
 import iconsStyles from "~/css/icons.module.css";
+import { ActionIcon } from "./ActionIcon";
+import IconWrapper from "./IconWrapper";
 
 export interface FloatingButton {
   onClick: (event: React.MouseEvent<HTMLElement>) => void;

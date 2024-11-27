@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { TSWChattingPanel } from "~components/TSWChattingPanel";
+import { ChatUI } from "~components/ChatUI";
+import { Loading } from "~components/Loading";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
@@ -14,28 +15,33 @@ import {
 
 function withOutputPanel(
   outputElm: string,
-  placeHolder: string,
   title: string,
   handler: () => void,
+  children: React.ReactNode,
 ) {
-  const panel = document.getElementById(outputElm);
+  const { wrapper, innerWrapper, header } = setupWrapperAndBody();
+
+  let panel = document.getElementById(outputElm);
   if (!panel) {
-    return;
+    panel = document.createElement("div");
+    panel.id = outputElm;
   }
 
+  document.body.appendChild(panel);
+
+  panel.style.boxShadow = "-2px 0 5px rgba(0,0,0,0.1)";
   panel.style.display = "block";
   panel.innerHTML = "";
-
   const root = createRoot(panel);
   root.render(
     React.createElement(TSWPanel, {
       title: title,
-      placeHolder: placeHolder,
+      children,
       onRender: () => {
         const closeButton = document.querySelector("#tsw-close-right-part");
         if (closeButton) {
           closeButton.addEventListener("click", () => {
-            panel.style.display = "none";
+            resetWrapperCss(wrapper, innerWrapper, header, panel);
           });
         }
 
@@ -47,7 +53,7 @@ function withOutputPanel(
             button.addEventListener("click", () => {
               icon.action();
               if (icon.name.toLowerCase() === "wand") {
-                panel.style.display = "none";
+                resetWrapperCss(wrapper, innerWrapper, header, panel);
               }
             });
           }
@@ -59,27 +65,119 @@ function withOutputPanel(
   );
 }
 
-export async function summarize(outputElm: string) {
-  withOutputPanel(outputElm, "Summarizing", "Summary", async () => {
-    const summaryElement = document.getElementById("tsw-output-body");
-    if (summaryElement) {
-      await summariseLink(document.body.innerHTML, summaryElement);
+function setupWrapperAndBody(): {
+  wrapper: HTMLElement;
+  innerWrapper: HTMLElement;
+  header: HTMLElement;
+} {
+  let wrapper = document.getElementById("tsw-outer-wrapper");
+  const innerWrapper = document.createElement("div");
+
+  if (!wrapper) {
+    wrapper = document.createElement("div");
+    wrapper.id = "tsw-outer-wrapper";
+    wrapper.style.cssText = `
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        transition: all 0.3s ease;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        overflow: scroll;
+        margin-right:10px;
+      `;
+
+    innerWrapper.id = "tsw-inner-wrapper";
+
+    const bodyClasses = document.body.className;
+    const bodyAttributes = Array.from(document.body.attributes);
+
+    const newBody = document.createElement("body");
+    newBody.className = bodyClasses;
+    bodyAttributes.forEach((attr) => {
+      newBody.setAttribute(attr.name, attr.value);
+    });
+
+    while (document.body.firstChild) {
+      newBody.appendChild(document.body.firstChild);
     }
-  });
+
+    innerWrapper.appendChild(newBody);
+    wrapper.appendChild(innerWrapper);
+    document.body.appendChild(wrapper);
+  }
+
+  const newWidth = "60vw";
+  wrapper.style.width = newWidth;
+  innerWrapper.style.cssText = `
+          width: 80vw;
+          height: 100vh;
+      `;
+  const header = document.querySelector("header");
+  if (header && header instanceof HTMLElement) {
+    const headerStyle = window.getComputedStyle(header);
+    if (headerStyle.position === "fixed") {
+      header.style.width = "60vw";
+    }
+  }
+
+  window.dispatchEvent(new Event("resize"));
+
+  return { wrapper, innerWrapper, header };
+}
+
+function resetWrapperCss(
+  wrapper: HTMLElement,
+  innerWrapper: HTMLElement,
+  header: HTMLElement,
+  panel: HTMLElement,
+) {
+  panel.style.display = "none";
+  wrapper.style.width = "100vw";
+  innerWrapper.style.cssText = `
+                            width: 100vw;
+                            overflow:scroll;
+                            box-shadow: none;
+                        `;
+  header.style.width = "100vw";
+}
+
+export async function summarize(outputElm: string) {
+  withOutputPanel(
+    outputElm,
+    "Summary",
+    async () => {
+      const summaryElement = document.getElementById("tsw-output-body");
+      if (summaryElement) {
+        await summariseLink(document.body.innerHTML, summaryElement);
+      }
+    },
+    React.createElement(Loading, {
+      message: "Summarizing",
+    }),
+  );
 }
 
 export async function explainSelected(outputElm: string, text: string) {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
 
-  withOutputPanel(outputElm, "Explaining", `${title}：${text}`, async () => {
-    const explanationElement = document.getElementById("tsw-output-body");
-    if (explanationElement) {
-      isWord
-        ? await explainWord(text, explanationElement)
-        : await explainSentence(text, explanationElement);
-    }
-  });
+  withOutputPanel(
+    outputElm,
+    `${title}：${text}`,
+    async () => {
+      const explanationElement = document.getElementById("tsw-output-body");
+      if (explanationElement) {
+        isWord
+          ? await explainWord(text, explanationElement)
+          : await explainSentence(text, explanationElement);
+      }
+    },
+    React.createElement(Loading, {
+      message: "Explaining",
+    }),
+  );
 }
 
 export async function ocrHandler(
@@ -87,22 +185,28 @@ export async function ocrHandler(
   imgSrc: string,
   postPrompt = "",
 ) {
-  withOutputPanel(outputElm, "Processing", "Text in Image", async () => {
-    const imgContentElement = document.getElementById("tsw-output-body");
-    if (imgContentElement) {
-      try {
-        await ocr(imgSrc, imgContentElement, postPrompt);
-      } catch (e) {
-        imgContentElement.innerHTML = e as string;
+  withOutputPanel(
+    outputElm,
+    "Text in Image",
+    async () => {
+      const imgContentElement = document.getElementById("tsw-output-body");
+      if (imgContentElement) {
+        try {
+          await ocr(imgSrc, imgContentElement, postPrompt);
+        } catch (e) {
+          imgContentElement.innerHTML = e as string;
+        }
       }
-    }
-  });
+    },
+    React.createElement(Loading, {
+      message: "Processing",
+    }),
+  );
 }
 
 export function codeHandler(outputElm: string, code: string) {
   withOutputPanel(
     outputElm,
-    "Explaining",
     "Code Block Explanation",
     async () => {
       const codeContentElement = document.getElementById("tsw-output-body");
@@ -110,6 +214,9 @@ export function codeHandler(outputElm: string, code: string) {
         await explainCode(code, codeContentElement);
       }
     },
+    React.createElement(Loading, {
+      message: "Explaining",
+    }),
   );
 }
 
@@ -120,7 +227,6 @@ export function rewriteHandler(
 ) {
   withOutputPanel(
     outputElm,
-    "Rewriting",
     `Rewrite Code with ${targetLanguage}`,
     async () => {
       const codeContentElement = document.getElementById("tsw-output-body");
@@ -128,44 +234,19 @@ export function rewriteHandler(
         await rewriteCode(code, targetLanguage, codeContentElement);
       }
     },
+    React.createElement(Loading, {
+      message: "Rewriting",
+    }),
   );
 }
 
 export function chattingHandler(outputElm: string) {
-  const panel = document.getElementById(outputElm);
-  if (!panel) {
-    return;
-  }
-
-  panel.style.display = "block";
-  panel.innerHTML = "";
-
-  const root = createRoot(panel);
-  root.render(
-    React.createElement(TSWChattingPanel, {
+  withOutputPanel(
+    outputElm,
+    "Chatting With Page",
+    async () => {},
+    React.createElement(ChatUI, {
       pageText: document.body.innerHTML,
-      onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
-        if (closeButton) {
-          closeButton.addEventListener("click", () => {
-            panel.style.display = "none";
-          });
-        }
-
-        for (const icon of iconArray) {
-          const button = document.querySelector(
-            `#tsw-${icon.name.toLowerCase()}-btn`,
-          );
-          if (button) {
-            button.addEventListener("click", () => {
-              icon.action();
-              if (icon.name.toLowerCase() === "wand") {
-                panel.style.display = "none";
-              }
-            });
-          }
-        }
-      },
     }),
   );
 }

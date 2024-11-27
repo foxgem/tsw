@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { iconArray } from "~/content";
 import panelStyles from "../css/panel.module.css";
 import { ActionIcon } from "./ActionIcon";
+import { Toaster } from "./ui/toaster";
 
 export interface PanelProps {
   title: string;
-  placeHolder: string;
   onRender?: () => void;
+  children?: React.ReactNode;
 }
 
-export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
+export function TSWPanel({ title, onRender, children }: PanelProps) {
   useEffect(() => {
     if (onRender) {
       onRender();
@@ -43,13 +44,9 @@ export function TSWPanel({ title, placeHolder, onRender }: PanelProps) {
         </div>
       </div>
       <div className={panelStyles.tswPanelContent}>
-        <div id="tsw-output-body">
-          <div className={panelStyles.tswLoadingContainer}>
-            <div className={panelStyles.loadingSpinner} />
-            <p>{placeHolder}...</p>
-          </div>
-        </div>
+        <div id="tsw-output-body">{children}</div>
       </div>
+      <Toaster />
     </div>
   );
 }
