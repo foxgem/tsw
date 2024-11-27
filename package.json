@@ -61,14 +61,13 @@
     "typescript": "5.5.4"
   },
   "manifest": {
-    "permissions": ["contextMenus", "tabs", "storage", "alarms", "activeTab"],
+    "permissions": ["contextMenus", "tabs", "storage", "activeTab"],
     "background": {
       "service_worker": "background.ts"
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
     "version": "0.1.5",
-    "host_permissions": ["https://*/*"],
     "browser_specific_settings": {
       "gecko": {
         "id": "{cdcc0160-f0ca-4350-91a5-bf7c06b8f12e}"
