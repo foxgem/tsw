@@ -70,6 +70,18 @@ const pageRagPrompt = (context: string) => {
   `;
 };
 
+const prepareSystemPrompt = async (
+  pageText: string,
+  pageURL: string,
+  customPrompt?: string,
+) => {
+  if (customPrompt) {
+    return `${customPrompt}\n\nThis page URL: ${pageURL}\n\nThis page content:\n\n${pageText}`;
+  }
+
+  return `This page URL: ${pageURL}\n\n${pageRagPrompt(pageText)}`;
+};
+
 const genTextFunction = async (
   prompt: string,
   system: string,
@@ -223,6 +235,7 @@ export const ocr = (
 export const chatWithPage = async (
   messages: CoreMessage[],
   pageText: string,
+  pageURL: string,
   signal?: AbortSignal,
 ) => {
   try {

@@ -112,9 +112,9 @@ function setupWrapperAndBody(): {
 
     const newBody = document.createElement("body");
     newBody.className = bodyClasses;
-    bodyAttributes.forEach((attr) => {
+    for (const attr of bodyAttributes) {
       newBody.setAttribute(attr.name, attr.value);
-    });
+    }
 
     while (document.body.firstChild) {
       newBody.appendChild(document.body.firstChild);
@@ -264,6 +264,7 @@ export function chattingHandler(outputElm: string) {
     async () => {},
     React.createElement(ChatUI, {
       pageText: document.body.innerHTML,
+      pageURL: window.location.href,
     }),
   );
 }

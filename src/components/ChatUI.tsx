@@ -29,10 +29,11 @@ type Message = {
 };
 
 export interface ChatUIProps {
-  pageText: string;
+  readonly pageText: string;
+  readonly pageURL: string;
 }
 
-export function ChatUI({ pageText }: ChatUIProps) {
+export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,6 +134,7 @@ export function ChatUI({ pageText }: ChatUIProps) {
         const textStream = await chatWithPage(
           newMessages,
           pageText,
+          pageURL,
           abortController.current.signal,
         );
         let fullText = "";
