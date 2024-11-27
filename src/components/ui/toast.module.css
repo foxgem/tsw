@@ -3,7 +3,7 @@
   top: 0;
   z-index: 100;
   display: flex;
-  max-height: 100vh;
+  max-height: 97vh;
   flex-direction: column-reverse;
   padding: 1rem;
   width: 150px;

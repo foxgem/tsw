@@ -22,9 +22,26 @@ function withOutputPanel(
   const { wrapper, innerWrapper, header } = setupWrapperAndBody();
 
   let panel = document.getElementById(outputElm);
+
   if (!panel) {
     panel = document.createElement("div");
     panel.id = outputElm;
+    panel.style.cssText = `
+    color-scheme: light;
+    width: 38vw;
+    height: 97vh;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    position: fixed;
+    right: 10px;
+    top: 0px; 
+    margin-top: 10px;
+    border-radius: 10px;
+    z-index:10000;
+    display:none;
+  `;
   }
 
   document.body.appendChild(panel);

@@ -19,7 +19,7 @@ export default function Layout({
 }: LayoutProps) {
   const navigate = useNavigate();
   return (
-    <div className="w-[350px] min-h-[296px] max-h-[600px]">
+    <div className="w-[350px] min-h-[300px] max-h-[600px]">
       <div className="flex items-center justify-between px-5 py-2 border">
         <IconWrapper>
           <ChevronLeft size={20} onClick={() => navigate("/")} />
@@ -31,7 +31,7 @@ export default function Layout({
       </div>
       <div className="px-5"> {children}</div>
 
-      <Footer position={footerPosition} />
+      <Footer />
     </div>
   );
 }

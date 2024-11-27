@@ -86,7 +86,7 @@
 
 .chatContainer {
   @apply flex flex-col overflow-y-auto;
-  height: calc(100vh - var(--header-height) - var(--footer-height) - 86px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
 }
 
 .chatContent {
@@ -94,14 +94,14 @@
 }
 
 .scrollArea {
-  @apply pr-4 pb-4 overflow-y-auto;
-  height: calc(100vh - var(--header-height) - var(--footer-height) - 36px);
+  @apply overflow-y-auto;
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
 }
 
 .welcomeMessage {
   @apply flex items-center justify-center font-semibold text-[32px];
   @apply bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-black opacity-50;
-  height: calc(100vh - var(--header-height) - var(--footer-height) - 36px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
 }
 
 .messageContainer {

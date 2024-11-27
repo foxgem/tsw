@@ -20,7 +20,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <line x1="8" x2="21" y1="6" y2="6" />
           <line x1="8" x2="21" y1="12" y2="12" />
           <line x1="8" x2="21" y1="18" y2="18" />
@@ -44,7 +44,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           <path d="M13 8H7" />
           <path d="M17 12H7" />
@@ -65,7 +65,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
           <path d="M3 3v5h5" />
           <path d="M12 7v5l4 2" />
@@ -86,7 +86,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="M15 4V2" />
           <path d="M15 16v-2" />
           <path d="M8 9h2" />
@@ -114,7 +114,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="m9 18 6-6-6-6" />
         </svg>
       )}
@@ -133,7 +133,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           className="lucide lucide-message-square-more"
           aria-label={name}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           <path d="M8 10h.01" />
           <path d="M12 10h.01" />
@@ -154,7 +154,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           className="lucide lucide-clipboard-pen-line"
           aria-label={name}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <rect width="8" height="4" x="8" y="2" rx="1" />
           <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-.5" />
           <path d="M16 4h2a2 2 0 0 1 1.73 1" />
@@ -171,7 +171,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           viewBox="0 0 100 100"
           aria-label={name}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <circle cx="50" cy="50" r="45" fill="#4A90E2" />
           <rect x="30" y="25" width="40" height="45" rx="7" fill="white" />
           <line
@@ -207,7 +207,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeLinejoin="round"
           className="lucide lucide-eye"
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
           <circle cx="12" cy="12" r="3" />
         </svg>
@@ -226,7 +226,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeLinejoin="round"
           className="lucide lucide-languages"
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <path d="m5 8 6 6" />
           <path d="m4 14 6-6 2-3" />
           <path d="M2 5h12" />
@@ -249,7 +249,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeLinejoin="round"
           className="lucide lucide-user-round tsw-small-icon"
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <circle cx="12" cy="8" r="5" />
           <path d="M20 21a8 8 0 0 0-16 0" />
         </svg>
@@ -262,7 +262,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           viewBox="0 0 100 100"
           aria-label={name}
         >
-          <title>{name} icon</title>
+          <title>{name}</title>
           <circle cx="50" cy="50" r="45" fill="#4A90E2" />
           <rect x="30" y="25" width="40" height="45" rx="7" fill="white" />
           <line
