@@ -325,20 +325,20 @@ function createFloatingToggleButton() {
   const panel = document.createElement("div");
   panel.id = "tsw-toggle-panel";
   panel.style.cssText = `
-    all: initial;
     color-scheme: light;
-    position: fixed;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    width: 40%;
-    height: 100%;
+    width: 38vw;
+    height: 97vh;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 10px;
-    z-index: 3999999;
-    display: none;
+    position: fixed;
+    right: 10px;
+    top: 0px; 
+    margin-top: 10px;
+    border-radius: 10px;
+    z-index:10000;
+    display:none;
   `;
   document.body.appendChild(panel);
 

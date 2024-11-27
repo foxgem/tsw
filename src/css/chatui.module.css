@@ -86,7 +86,7 @@
 
 .chatContainer {
   @apply flex flex-col overflow-y-auto;
-  height: calc(100vh - var(--header-height) - var(--footer-height) - 36px);
+  height: calc(100vh - var(--header-height) - var(--footer-height) - 86px);
 }
 
 .chatContent {
