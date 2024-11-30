@@ -1,11 +1,14 @@
 import React from "react";
 import { type Root, createRoot } from "react-dom/client";
+import TextSelectionMenu from "~components/TextSelectMenu";
+import type { Command } from "~lib/types";
 import { createWarningPopup } from "./WarningPopup";
 import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {
   type FloatingButton,
 } from "./components/SelectionOverlay";
 import {
+  callNanoWithSelected,
   chattingHandler,
   codeHandler,
   explainSelected,
@@ -339,11 +342,6 @@ const handleTimer = (remainingTime: number, domain: string) => {
 
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
-    case "explainSelected":
-      if (request.text) {
-        explainSelected("tsw-toggle-panel", request.text);
-      }
-      break;
     case "startTimer":
       handleTimer(request.remainingTime, request.domain);
       break;
@@ -395,3 +393,57 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
     chattingHandler("tsw-toggle-panel");
   }
 });
+
+function createSelectMenu() {
+  const container = document.createElement("div");
+  container.id = "tsw-select-root";
+  document.body.appendChild(container);
+  const root = createRoot(container);
+
+  const onSelect = async (command: Command) => {
+    const selectedText = window.getSelection()?.toString().trim();
+    await callNanoWithSelected(command, "tsw-toggle-panel", selectedText);
+    window.getSelection()?.removeAllRanges();
+  };
+
+  const onTranslate = async () => {
+    const selectedText = window.getSelection()?.toString().trim();
+    await explainSelected("tsw-toggle-panel", selectedText);
+    window.getSelection()?.removeAllRanges();
+  };
+
+  let hasSelection = false;
+
+  document.addEventListener("selectionchange", () => {
+    const newSelection = window.getSelection();
+    hasSelection = !!(newSelection && newSelection.toString().trim() !== "");
+    if (!hasSelection) {
+      container.style.display = "none";
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!hasSelection) return;
+    const selection = window.getSelection();
+    if (selection && selection.toString().trim() !== "") {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const position = {
+        x: rect.left + window.scrollX + rect.width / 2,
+        y: rect.bottom + window.scrollY,
+      };
+
+      root.render(
+        React.createElement(TextSelectionMenu, {
+          selectedText: selection.toString().trim(),
+          position,
+          onSelect,
+          onTranslate,
+        }),
+      );
+      container.style.display = "block";
+    }
+  });
+}
+
+createSelectMenu();

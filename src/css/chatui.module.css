@@ -100,7 +100,11 @@
 
 .welcomeMessage {
   @apply flex items-center justify-center font-semibold text-[32px];
-  @apply bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-black opacity-50;
+  background: linear-gradient(to right, #3b82f6, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0.5;
   height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
 }
 
@@ -164,6 +168,7 @@
   display: flex;
   gap: 0.5rem;
   margin-left: 0.5rem;
+  margin-right: 0.75rem;
 }
 
 .inputContainer {
@@ -181,9 +186,13 @@
   min-height: 40px;
   max-height: 120px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 8px !important;
   background-color: #efefef;
   box-sizing: border-box;
+}
+.inputContainer:focus-within {
+  border: 1px solid #2563eb;
+  border-radius: 8px;
 }
 
 .stopIcon {

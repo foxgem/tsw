@@ -404,14 +404,16 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             </div>
           )}
           {isStreaming && !editingMessageId && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleStopChat}
-              className={chatStyles.tswActionBtn}
-            >
-              <CircleStop className={chatStyles.stopIcon} />
-            </Button>
+            <div className={chatStyles.editActions}>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleStopChat}
+                className={chatStyles.tswActionBtn}
+              >
+                <CircleStop className={chatStyles.stopIcon} />
+              </Button>
+            </div>
           )}
         </div>
       </div>
