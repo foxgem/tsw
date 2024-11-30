@@ -342,11 +342,6 @@ const handleTimer = (remainingTime: number, domain: string) => {
 
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
-    case "explainSelected":
-      if (request.text) {
-        explainSelected("tsw-toggle-panel", request.text);
-      }
-      break;
     case "startTimer":
       handleTimer(request.remainingTime, request.domain);
       break;
