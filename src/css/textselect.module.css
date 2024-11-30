@@ -1,0 +1,83 @@
+.tswMenuContainer {
+  position: absolute;
+  transform: translate(-50%, 8px);
+  z-index: 9999;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 6px 20px rgba(100, 116, 139, 0.2), 0 4px 10px
+    rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  height: 50px;
+}
+
+.tswTriggerButton {
+  border: none !important;
+  background-color: #ffffff !important;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.menuWrapper {
+  position: relative;
+}
+
+.tswActionList {
+  width: 200px;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+  max-width: 300px;
+  max-height: 300px;
+  overflow-y: auto !important;
+}
+
+.tswActionItem {
+  padding: 8px 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #ffffff;
+  color: #1e293b;
+  width: 100%;
+  font-size: 14px;
+  border: 0;
+  border-radius: 0;
+  margin-inline-start: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.tswActionItem:hover {
+  background-color: #f1f5f9;
+  color: #3b82f6 !important;
+  border: 0;
+  border-radius: 0;
+}
+
+.tswActionItem button {
+  color: black !important;
+  padding: 0 !important;
+  height: unset !important;
+  justify-content: start !important;
+  text-align: left !important;
+  background-color: unset !important;
+  border: 0 !important;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+  overflow: hidden;
+  width: 150px;
+  display: block !important;
+  margin: 0;
+}
+
+.tswActionItem button:hover {
+  color: #3b82f6 !important;
+}

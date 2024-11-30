@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { ChatUI } from "~components/ChatUI";
 import { Loading } from "~components/Loading";
+import type { Command } from "~lib/types";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
@@ -157,7 +158,9 @@ function resetWrapperCss(
                             overflow:scroll;
                             box-shadow: none;
                         `;
-  header.style.width = "100vw";
+  if (header.style.position === "fixed" && header.style.width === "60vw") {
+    header.style.width = "100vw";
+  }
 }
 
 export async function summarize(outputElm: string) {
@@ -182,7 +185,7 @@ export async function explainSelected(outputElm: string, text: string) {
 
   withOutputPanel(
     outputElm,
-    `${title}：${text}`,
+    `${title}`,
     async () => {
       const explanationElement = document.getElementById("tsw-output-body");
       if (explanationElement) {
@@ -267,4 +270,18 @@ export function chattingHandler(outputElm: string) {
       pageURL: window.location.href,
     }),
   );
+}
+
+export async function callNanoWithSelected(
+  command: Command,
+  outputElm: string,
+  textSelected: string,
+) {
+  //todo
+  // withOutputPanel(outputElm, "Thinking", "Nano", async () => {
+  //   const element = document.getElementById("tsw-output-body");
+  //   if (textSelected) {
+  //     //await callNanoModel(command, textSelected, element);
+  //   }
+  // });
 }

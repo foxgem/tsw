@@ -1,22 +1,5 @@
 import { readTimerForDomain, timerStartedMap } from "./utils/db";
 
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: "explainSelected",
-    title: "Explain Selected Text",
-    contexts: ["selection"],
-  });
-});
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === "explainSelected" && tab?.id) {
-    chrome.tabs.sendMessage(tab.id, {
-      action: "explainSelected",
-      text: info.selectionText,
-    });
-  }
-});
-
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (!tab.url) return;
 
