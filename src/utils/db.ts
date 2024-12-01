@@ -7,15 +7,44 @@ export const timerStartedMap = new Map<number, boolean>();
 
 // For debugging
 setInterval(async () => {
-  console.log(await chrome.storage.local.get());
   console.log(timerStartedMap);
   console.log(await storage.getAll());
 }, 3000);
+
+export async function initDb() {
+  const gemini = await storage.get("apiKey");
+  const apiKyes = await storage.get<ApiKeyEntry[]>("apiKeys");
+
+  if (!apiKyes || (apiKyes && apiKyes.length === 0)) {
+    const defaultKeys = [
+      { name: "Gemini API", setting: gemini || "" },
+      { name: "Neon DB URL", setting: "" },
+    ];
+    await storage.set("apiKeys", defaultKeys);
+  }
+
+  if (gemini) {
+    await storage.remove("apiKey");
+  }
+}
 
 export type TimerForDomain = {
   domain: string;
   time: number;
 };
+
+export type ApiKeyEntry = {
+  name: string;
+  key: string;
+};
+
+export async function readApiKeys() {
+  return await storage.get<ApiKeyEntry[]>("apiKeys");
+}
+
+export async function upsertApiKeys(apiKeyEntrys: ApiKeyEntry[]) {
+  await storage.set("apiKeys", apiKeyEntrys);
+}
 
 export async function upsertTimerForDomain(timerForDomain: TimerForDomain) {
   await storage.set(timerForDomain.domain, timerForDomain.time);
@@ -35,7 +64,7 @@ export async function deleteTimerForDomain(domain: string) {
 export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
   const allItems = await storage.getAll();
   return Object.entries(allItems)
-    .filter(([key]) => key !== "apiKey")
+    .filter(([key]) => key !== "apiKeys")
     .map(([domain, time]) => ({
       domain,
       time: Number(time),

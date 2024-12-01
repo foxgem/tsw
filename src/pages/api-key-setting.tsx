@@ -1,102 +1,161 @@
-import { Storage } from "@plasmohq/storage";
-import { Check, X } from "lucide-react";
+import { Check, FilePenLine, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import IconWrapper from "~/components/IconWrapper";
 import Layout from "~/components/Layout";
-import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { ScrollArea } from "~/components/ui/scroll-area";
 import { cn } from "~/lib/utils";
-
-const storage = new Storage();
+import { readApiKeys, upsertApiKeys, type ApiKeyEntry } from "~utils/db";
 
 function SettingApiKey() {
-  const [apiKey, setApiKey] = useState("");
+  const [apiKeys, setApiKeys] = useState<ApiKeyEntry[]>([]);
   const [message, setMessage] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [editingKey, setEditingKey] = useState<ApiKeyEntry | null>(null);
+  const [newName, setNewName] = useState("");
+  const [newKey, setNewKey] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    loadApiKey();
+    loadApiKeys();
   }, []);
 
-  const loadApiKey = async () => {
-    const savedApiKey = await storage.get("apiKey");
-    if (savedApiKey) {
-      setApiKey(savedApiKey);
+  const loadApiKeys = async () => {
+    const savedApiKeys = await readApiKeys();
+    if (savedApiKeys) {
+      setApiKeys(savedApiKeys);
     }
   };
 
   const handleSave = async () => {
-    if (!apiKey.trim()) {
-      setError("API Key cannot be empty");
+    if (!newName.trim() || !newKey.trim()) {
+      setError("Name and API Key cannot be empty");
       return;
     }
-    await storage.set("apiKey", apiKey);
+
+    const updatedKeys = editingKey
+      ? apiKeys.map((key) =>
+          key.name === editingKey.name ? { name: newName, key: newKey } : key,
+        )
+      : [...apiKeys, { name: newName, key: newKey }];
+
+    await upsertApiKeys(updatedKeys);
+    setApiKeys(updatedKeys);
+    reset();
     setMessage("API Key saved successfully!");
-    setIsEditing(false);
-    setError(null);
     setTimeout(() => setMessage(""), 3000);
   };
 
-  const handleEdit = () => {
-    setIsEditing(true);
-    setError(null);
+  const handleEditKey = (entry: ApiKeyEntry) => {
+    setEditingKey(entry);
+    setNewName(entry.name);
+    setNewKey(entry.key);
+    setIsAdding(false);
+  };
+
+  const handleAddKey = () => {
+    setIsAdding(true);
+    reset();
   };
 
   const handleCancel = () => {
-    setIsEditing(false);
-    loadApiKey();
+    setIsAdding(false);
+    reset();
+  };
+
+  const reset = () => {
+    setNewName("");
+    setNewKey("");
+    setEditingKey(null);
     setError(null);
   };
 
-  return (
-    <Layout title="Setting API KEY">
-      <Card className="overflow-y-auto mx-auto border-0 shadow-none">
-        <CardContent className="p-4">
-          {isEditing ? (
-            <div className="bg-gray-100 p-4 rounded">
-              <textarea
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="Enter your API Key"
-                className={cn(
-                  "p-2 border-0 border-b w-full box-border bg-white text-black resize-none",
-                  error ? "border-red-500" : "border-gray-300",
-                )}
-              />
-              {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-              <div className="flex justify-end space-x-2 mt-2">
-                <IconWrapper>
-                  <Check
-                    size={20}
-                    onClick={handleSave}
-                    className="text-green-500"
-                  />
-                </IconWrapper>
-                <IconWrapper>
-                  <X
-                    size={20}
-                    onClick={handleCancel}
-                    className="text-red-500"
-                  />
-                </IconWrapper>
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-between items-center">
-              <p className="text-sm">
-                API Key: {apiKey ? "********" : "Not set"}
-              </p>
-              <Button
-                onClick={handleEdit}
-                variant="outline"
-                size="sm"
-                className="rounded"
-              >
-                Edit
-              </Button>
-            </div>
+  const renderKeyInput = () => (
+    <div className="bg-gray-100 p-2">
+      <div>
+        <Input
+          type="text"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          placeholder="Enter key name"
+          className={cn(
+            "p-0 pl-2 border-0 border-b w-full box-border bg-gray-100 text-black",
+            error ? "border-red-500" : "border-gray-300",
           )}
+        />
+      </div>
+      <div className="flex justify-between items-center mt-2">
+        <div className="flex-grow">
+          <Input
+            type="text"
+            value={newKey}
+            onChange={(e) => setNewKey(e.target.value)}
+            placeholder="Enter API Key"
+            className={cn(
+              "p-0 pl-2 border-0 border-b w-full box-border bg-gray-100 text-black",
+              error ? "border-red-500" : "border-gray-300",
+            )}
+          />
+          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        </div>
+        <div className="flex space-x-1 ml-2">
+          <IconWrapper>
+            <Check size={20} onClick={handleSave} className="text-green-500" />
+          </IconWrapper>
+          <IconWrapper>
+            <X size={20} onClick={handleCancel} className="text-red-500" />
+          </IconWrapper>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Layout title="Setting API KEYS" footerPosition="fixed">
+      <Card className="overflow-y-auto mx-auto border-0 shadow-none">
+        <CardContent className="p-0 shadow-none pb-4">
+          {isAdding && renderKeyInput()}
+          <ScrollArea>
+            <ul>
+              {apiKeys.map((entry) => (
+                <Card
+                  key={entry.name}
+                  className={cn(
+                    "py-2 shadow-none border-0",
+                    editingKey && editingKey.name === entry.name
+                      ? ""
+                      : "border-b hover:bg-accent rounded",
+                  )}
+                >
+                  {editingKey && editingKey.name === entry.name ? (
+                    renderKeyInput()
+                  ) : (
+                    <div className="flex justify-between items-center px-2">
+                      <p className="text-sm w-[40%]">{entry.name}</p>
+                      <p className="text-sm w-[40%]">
+                        {entry.key ? "********" : "Not set"}
+                      </p>
+                      <div className="flex space-x-2">
+                        <IconWrapper>
+                          <FilePenLine
+                            size={20}
+                            onClick={() => handleEditKey(entry)}
+                            className="text-primary mr-2"
+                          />
+                        </IconWrapper>
+                      </div>
+                    </div>
+                  )}
+                </Card>
+              ))}
+              {apiKeys.length === 0 && !isAdding && (
+                <div className="w-full text-center font-bold text-xl mt-8">
+                  No API keys, please add one.
+                </div>
+              )}
+            </ul>
+          </ScrollArea>
           {message && (
             <p className="text-green-500 text-center mt-2">{message}</p>
           )}

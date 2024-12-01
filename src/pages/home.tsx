@@ -54,7 +54,7 @@ function MainPage() {
           )}
         >
           <TimerReset className="mr-2" />
-          Timer Setting
+          Site Timers
         </Button>
 
         <Button
@@ -68,7 +68,7 @@ function MainPage() {
           )}
         >
           <Key className="mr-2" />
-          Setting API KEY
+          Service Settings
         </Button>
       </nav>
       <Footer className="mt-auto" />

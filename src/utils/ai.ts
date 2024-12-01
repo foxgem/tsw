@@ -1,5 +1,4 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { Storage } from "@plasmohq/storage";
 import {
   type CoreAssistantMessage,
   type CoreMessage,
@@ -11,14 +10,12 @@ import {
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
-
-type LinePrinter = (text: string) => void;
+import { readApiKeys } from "./db";
 
 const loadApiKey = async () => {
-  const storage = new Storage();
   const apiKey =
     process.env.PLASMO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY ||
-    (await storage.get("apiKey"));
+    (await readApiKeys()).find((k) => k.name === "Gemini API")?.key;
   if (!apiKey) {
     throw new Error(
       "Google Generative AI API key not found in environment variables or storage",

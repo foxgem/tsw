@@ -16,6 +16,7 @@ import {
   rewriteHandler,
   summarize,
 } from "./handlers";
+import { initDb } from "~utils/db";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
   interface Window {
@@ -447,3 +448,4 @@ function createSelectMenu() {
 }
 
 createSelectMenu();
+initDb();
