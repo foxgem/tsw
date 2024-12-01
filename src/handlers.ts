@@ -94,18 +94,6 @@ function setupWrapperAndBody(): {
   if (!wrapper) {
     wrapper = document.createElement("div");
     wrapper.id = "tsw-outer-wrapper";
-    wrapper.style.cssText = `
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        transition: all 0.3s ease;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        overflow: scroll;
-        margin-right:10px;
-      `;
-
     innerWrapper.id = "tsw-inner-wrapper";
 
     const bodyClasses = document.body.className;
@@ -125,6 +113,18 @@ function setupWrapperAndBody(): {
     wrapper.appendChild(innerWrapper);
     document.body.appendChild(wrapper);
   }
+
+  wrapper.style.cssText = `
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    overflow: scroll;
+    margin-right:10px;
+  `;
 
   const newWidth = "60vw";
   wrapper.style.width = newWidth;
@@ -152,15 +152,25 @@ function resetWrapperCss(
   panel: HTMLElement,
 ) {
   panel.style.display = "none";
-  wrapper.style.width = "100vw";
+  wrapper.style.cssText = `
+    width: 100%;
+    height: 100%;
+    position: static;
+    transition: all 0.3s ease;
+    box-shadow: none;
+    overflow: visible;
+    margin-right: 0;
+  `;
   innerWrapper.style.cssText = `
-                            width: 100vw;
-                            overflow:scroll;
-                            box-shadow: none;
-                        `;
+    width: 100vw;
+    height: 100vh;
+    overflow: visible;
+    box-shadow: none;
+  `;
   if (header.style.position === "fixed" && header.style.width === "60vw") {
     header.style.width = "100vw";
   }
+  window.dispatchEvent(new Event("resize"));
 }
 
 export async function summarize(outputElm: string) {
