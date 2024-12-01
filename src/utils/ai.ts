@@ -70,7 +70,7 @@ const pageRagPrompt = (context: string) => {
   `;
 };
 
-const prepareSystemPrompt = async (
+const prepareSystemPrompt = (
   pageText: string,
   pageURL: string,
   customPrompt?: string,
@@ -201,14 +201,6 @@ export const rewriteCode = (
     messageElement,
   );
 
-export const pageRag = (
-  message: string,
-  context: string,
-  linePrinter: LinePrinter,
-) => {
-  // genAIFunction(pageRagPrompt(message, context));
-};
-
 // TODO: Use some external image APIs for image preprocessing
 // (noise reduction, binarization, deskewing, sharpening, and so on)
 export const ocr = (
@@ -236,14 +228,15 @@ export const chatWithPage = async (
   messages: CoreMessage[],
   pageText: string,
   pageURL: string,
-  signal?: AbortSignal,
+  signal: AbortSignal,
+  customPrompt?: string,
 ) => {
   try {
     const apiKey = await loadApiKey();
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = await streamText({
       model: google("gemini-1.5-flash"),
-      system: pageRagPrompt(pageText),
+      system: prepareSystemPrompt(pageText, pageURL, customPrompt),
       messages,
       abortSignal: signal,
     });
