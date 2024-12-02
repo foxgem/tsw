@@ -14,6 +14,7 @@ import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
+import { DownloadIcon } from "./ui/icons/download";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
 marked.setOptions({
@@ -117,7 +118,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
         if (textarea) {
-          textarea.style.height = "40px";
+          textarea.style.height = "80px";
         }
         setMessages(newMessages);
 
@@ -216,6 +217,27 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       messages[lastUserMessageIndex].content,
     );
   };
+  const handleDownload = () => {
+    if (messages.length === 0) return;
+
+    const content = messages
+      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+      .join("\n\n");
+
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `chat-history-${new Date().toISOString().split("T")[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      description: "Downloaded.",
+    });
+  };
 
   return (
     <>
@@ -227,7 +249,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                 Hi, how can I help you?
               </div>
             )}
-
             {messages.map((m, index) => (
               <div
                 key={m.id}
@@ -375,7 +396,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             className={chatStyles.textarea}
             rows={1}
             style={{
-              minHeight: "40px",
+              minHeight: "80px",
               maxHeight: "200px",
               overflow: "auto",
               resize: "none",
@@ -416,6 +437,18 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             </div>
           )}
         </div>
+        {messages.length > 0 && (
+          <div className={chatStyles.downloadButtonContainer}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={chatStyles.tswActionBtn}
+              onClick={handleDownload}
+            >
+              <DownloadIcon size={16} className={iconsStyles.dynamicIcon} />
+            </Button>
+          </div>
+        )}
       </div>
     </>
   );

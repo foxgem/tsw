@@ -29,7 +29,7 @@ function withOutputPanel(
     panel.id = outputElm;
     panel.style.cssText = `
     color-scheme: light;
-    width: 38vw;
+    width: 37vw;
     height: 97vh;
     background-color: white;
     border: 1px solid #ccc;

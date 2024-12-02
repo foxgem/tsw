@@ -2,7 +2,6 @@
 
 import type { Transition } from "framer-motion";
 import { motion, useAnimation } from "framer-motion";
-import type { IconProps } from "../../../types/icon";
 
 const defaultTransition: Transition = {
   type: "spring",
