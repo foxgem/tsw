@@ -2,6 +2,7 @@ import React from "react";
 import { type Root, createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
 import type { Command } from "~lib/types";
+import { initDb } from "~utils/db";
 import { createWarningPopup } from "./WarningPopup";
 import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {
@@ -16,7 +17,6 @@ import {
   rewriteHandler,
   summarize,
 } from "./handlers";
-import { initDb } from "~utils/db";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
   interface Window {

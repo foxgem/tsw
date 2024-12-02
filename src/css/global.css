@@ -162,6 +162,33 @@
     color: #3b82f6;
     text-decoration: underline;
   }
+
+  table {
+    @apply rounded-lg w-full border-collapse;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  table th,
+  table td {
+    border: 1px solid #e5e7eb !important;
+    @apply p-2;
+  }
+
+  table tr {
+    @apply hover:bg-gray-50;
+  }
+
+  table tbody tr:nth-child(odd) {
+    @apply bg-white;
+  }
+
+  table tbody tr:nth-child(even) {
+    @apply bg-gray-50;
+  }
+
+  table thead {
+    @apply bg-gray-100;
+  }
 }
 
 #selection-overlay button div {

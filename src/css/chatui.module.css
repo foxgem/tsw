@@ -45,6 +45,7 @@
   display: flex;
   gap: 1rem;
   max-height: 200px;
+  align-items: center;
 }
 
 .tswChatItem {
@@ -215,4 +216,9 @@
 
 .messageContainer:hover .actionContainer .tswActionBtn {
   visibility: visible;
+}
+
+.downloadButtonContainer {
+  background-color: var(--background);
+  border-radius: 999;
 }
