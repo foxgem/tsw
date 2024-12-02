@@ -17,8 +17,8 @@ export async function initDb() {
 
   if (!apiKyes || (apiKyes && apiKyes.length === 0)) {
     const defaultKeys = [
-      { name: "Gemini API", setting: gemini || "" },
-      { name: "Neon DB URL", setting: "" },
+      { name: "Gemini API", key: gemini || "" },
+      { name: "Neon DB URL", key: "" },
     ];
     await storage.set("apiKeys", defaultKeys);
   }
