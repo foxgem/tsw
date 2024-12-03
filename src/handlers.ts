@@ -2,10 +2,10 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { ChatUI } from "~components/ChatUI";
 import { Loading } from "~components/Loading";
-import type { Command } from "~lib/types";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
+  callPrompt,
   explainCode,
   explainSentence,
   explainWord,
@@ -13,6 +13,7 @@ import {
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
+import type { QuickPrompt } from "~utils/storage";
 
 function withOutputPanel(
   outputElm: string,
@@ -37,7 +38,7 @@ function withOutputPanel(
     padding: 10px;
     position: fixed;
     right: 10px;
-    top: 0px; 
+    top: 0px;
     margin-top: 10px;
     border-radius: 10px;
     z-index:10000;
@@ -282,16 +283,26 @@ export function chattingHandler(outputElm: string) {
   );
 }
 
-export async function callNanoWithSelected(
-  command: Command,
+export async function callQuickPromptWithSelected(
+  command: QuickPrompt,
   outputElm: string,
   textSelected: string,
 ) {
-  //todo
-  // withOutputPanel(outputElm, "Thinking", "Nano", async () => {
-  //   const element = document.getElementById("tsw-output-body");
-  //   if (textSelected) {
-  //     //await callNanoModel(command, textSelected, element);
-  //   }
-  // });
+  withOutputPanel(
+    outputElm,
+    `Quick Prompt: ${command.name}`,
+    async () => {
+      const element = document.getElementById("tsw-output-body");
+      if (textSelected) {
+        await callPrompt(
+          command.prompt.replace("#input#", textSelected),
+          command.system,
+          element,
+        );
+      }
+    },
+    React.createElement(Loading, {
+      message: "Rewriting",
+    }),
+  );
 }

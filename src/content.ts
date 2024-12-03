@@ -1,15 +1,14 @@
 import React from "react";
 import { type Root, createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
-import type { Command } from "~lib/types";
-import { initDb } from "~utils/storage";
+import { initDb, type QuickPrompt } from "~utils/storage";
 import { createWarningPopup } from "./WarningPopup";
 import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {
   type FloatingButton,
 } from "./components/SelectionOverlay";
 import {
-  callNanoWithSelected,
+  callQuickPromptWithSelected,
   chattingHandler,
   codeHandler,
   explainSelected,
@@ -401,9 +400,13 @@ function createSelectMenu() {
   document.body.appendChild(container);
   const root = createRoot(container);
 
-  const onSelect = async (command: Command) => {
+  const onSelect = async (command: QuickPrompt) => {
     const selectedText = window.getSelection()?.toString().trim();
-    await callNanoWithSelected(command, "tsw-toggle-panel", selectedText);
+    await callQuickPromptWithSelected(
+      command,
+      "tsw-toggle-panel",
+      selectedText,
+    );
     window.getSelection()?.removeAllRanges();
   };
 

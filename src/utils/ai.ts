@@ -79,7 +79,7 @@ const prepareSystemPrompt = (
   return `This page URL: ${pageURL}\n\n${pageRagPrompt(pageText)}`;
 };
 
-const genTextFunction = async (
+export const callPrompt = async (
   prompt: string,
   system: string,
   messageElement: HTMLElement,
@@ -143,21 +143,21 @@ export const explainSentence = (
   sentences: string,
   messageElement: HTMLElement,
 ) =>
-  genTextFunction(
+  callPrompt(
     `解释该英文的语法结构："${sentences}"，拆解句型、关键短语和习惯用语，深入浅出以便学生可以理解。最后翻译全句。`,
     siEnglishTeacher,
     messageElement,
   );
 
 export const explainWord = (word: string, messageElement: HTMLElement) =>
-  genTextFunction(
+  callPrompt(
     `解释该英语单词："${word}"，翻译并介绍其发音、词源、词根、典型例句，以及同义词和反义词。`,
     siEnglishTeacher,
     messageElement,
   );
 
 export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
-  genTextFunction(
+  callPrompt(
     `分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。
     ${pageText}
     输出格式要求如下：
@@ -176,7 +176,7 @@ export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
   );
 
 export const explainCode = (message: string, messageElement: HTMLElement) =>
-  genTextFunction(
+  callPrompt(
     `分析： ${message} ，并给出清晰的解释。
     1. 识别类型：代码、错误信息或命令行输出。
     2. 如果是代码，则给出可能的开发语言，解释代码的逻辑和功能，忽略代码中的注释、导入、类型定义、打印输出。
@@ -192,7 +192,7 @@ export const rewriteCode = (
   targetLang: string,
   messageElement: HTMLElement,
 ) =>
-  genTextFunction(
+  callPrompt(
     `将 ${code} 代码重写为 ${targetLang} 语言的代码。`,
     siCodeExpert,
     messageElement,

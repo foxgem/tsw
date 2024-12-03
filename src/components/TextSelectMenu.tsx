@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { ActionIcon } from "~/components/ActionIcon";
 import { Button } from "~/components/ui/button";
 import commontyles from "~/css/common.module.css";
-import type { Command } from "~lib/types";
-import { cn, loadCommandsFromStorage } from "~lib/utils";
+import { cn } from "~lib/utils";
 import styles from "../css/textselect.module.css";
 import {
   DropdownMenu,
@@ -13,11 +12,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { readQuickPrompts, type QuickPrompt } from "~utils/storage";
 
 interface Props {
   selectedText: string;
   position: { x: number; y: number };
-  onSelect: (action: Command) => void;
+  onSelect: (action: QuickPrompt) => void;
   onTranslate: () => void;
 }
 export default function TextSelectionMenu({
@@ -26,18 +26,17 @@ export default function TextSelectionMenu({
   position,
   onTranslate,
 }: Readonly<Props>) {
-  const [commands, setCommands] = useState<Command[]>([]);
+  const [commands, setCommands] = useState<QuickPrompt[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const loadCommands = async () => {
     if (isLoading) return;
     setIsLoading(true);
-    const loadedCommands = await loadCommandsFromStorage("quick-actions");
-    setCommands(loadedCommands);
-
+    const loadedCommands = await readQuickPrompts();
+    setCommands(loadedCommands || []);
     setIsLoading(false);
   };
 
-  const handleMenuItemClick = (menuItem: Command) => {
+  const handleMenuItemClick = (menuItem: QuickPrompt) => {
     onSelect(menuItem);
   };
 
