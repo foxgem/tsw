@@ -1,4 +1,4 @@
-import { readTimerForDomain, timerStartedMap } from "./utils/db";
+import { readTimerForDomain, timerStartedMap } from "./utils/storage";
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if (!tab.url) return;

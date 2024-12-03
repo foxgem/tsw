@@ -14,7 +14,7 @@ import {
   getAllTimersForDomains,
   timerSchema,
   upsertTimerForDomain,
-} from "../utils/db";
+} from "../utils/storage";
 
 function TimerSettingPage() {
   const [TimerForDomains, setTimerForDomains] = useState<TimerForDomain[]>([]);

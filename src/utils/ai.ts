@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
-import { readApiKeys } from "./db";
+import { readApiKeys } from "./storage";
 
 const loadApiKey = async () => {
   const apiKey =
