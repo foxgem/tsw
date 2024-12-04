@@ -42,7 +42,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [systemPrompt, setSystemPrompt] = useState<Command>({
+  const [systemPrompt, setSystemPrompt] = useState({
     name: "Default",
     options: {},
   });
@@ -243,7 +243,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       description: "Downloaded.",
     });
   };
-  const handlePromptSelect = (prompt: Command) => {
+  const handlePromptSelect = (prompt: any) => {
     setSystemPrompt(prompt);
   };
 
