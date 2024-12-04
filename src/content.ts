@@ -1,7 +1,7 @@
 import React from "react";
 import { type Root, createRoot } from "react-dom/client";
 import TextSelectionMenu from "~components/TextSelectMenu";
-import { initDb, type QuickPrompt } from "~utils/storage";
+import { type QuickPrompt, initDb } from "~utils/storage";
 import { createWarningPopup } from "./WarningPopup";
 import SelectLang from "./components/SelectLang";
 import SelectionOverlay, {

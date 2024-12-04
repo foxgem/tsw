@@ -163,8 +163,14 @@
     text-decoration: underline;
   }
 
+  pre {
+    background-color: black;
+    color: white;
+    padding: 8px 12px;
+  }
+
   table {
-    @apply rounded-lg w-full border-collapse;
+    @apply rounded-lg w-[400px] border-collapse;
     border: 1px solid #e5e7eb !important;
   }
 

@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { ChatUI } from "~components/ChatUI";
 import { Loading } from "~components/Loading";
+import type { QuickPrompt } from "~utils/storage";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 import {
@@ -13,7 +14,6 @@ import {
   rewriteCode,
   summariseLink,
 } from "./utils/ai";
-import type { QuickPrompt } from "~utils/storage";
 
 function withOutputPanel(
   outputElm: string,
