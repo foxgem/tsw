@@ -87,7 +87,7 @@
 
 .chatContainer {
   @apply flex flex-col overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 100px);
 }
 
 .chatContent {
@@ -96,7 +96,7 @@
 
 .scrollArea {
   @apply overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 100px);
 }
 
 .welcomeMessage {
@@ -106,7 +106,7 @@
   background-clip: text;
   color: transparent;
   opacity: 0.5;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 56px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 100px);
 }
 
 .messageContainer {
@@ -170,16 +170,15 @@
   gap: 0.5rem;
   margin-left: 0.5rem;
   margin-right: 0.75rem;
+  justify-content: space-between;
 }
 
 .inputContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   width: 100%;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   background-color: #efefef;
+  position: relative;
 }
 
 .textarea {

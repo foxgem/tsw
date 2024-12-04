@@ -1,0 +1,85 @@
+.tswMenuContainer {
+  font-size: 14px;
+  display: flex;
+  justify-content: right;
+}
+
+.tswTriggerButton {
+  background-color: rgb(239, 239, 239) !important;
+  border: 0 !important;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: start;
+  cursor: pointer;
+  width: 150px;
+  color: black;
+}
+
+.tswTriggerButton span {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 100px;
+  width: 100%;
+  text-align: left;
+}
+
+.tswPromptList {
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  max-width: 200px;
+  max-height: 300px;
+  width: 100%;
+  overflow-y: auto !important;
+  z-index: 4000000 !important;
+  margin-right: 10px;
+}
+
+.tswPromptItem {
+  padding: 8px 20px;
+  cursor: pointer;
+  border: none;
+  background-color: #ffffff;
+  color: #1e293b;
+  width: 100%;
+  font-size: 14px;
+  border: 0;
+  border-radius: 0;
+  margin-inline-start: 0;
+  text-align: left;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  position: relative;
+  max-width: 200px;
+  @apply relative cursor-default select-none py-1.5 pl-8 pr-2 text-sm outline-none;
+}
+
+.tswPromptItem:hover {
+  background-color: #f1f5f9 !important;
+  color: #3b82f6 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+.tswPromptItem span:nth-of-type(1) {
+  width: 16px;
+}
+
+.tswPromptItem span:nth-of-type(1) svg {
+  width: 16px;
+}
+
+.tswPromptItem span:nth-of-type(2) {
+  width: 100px;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

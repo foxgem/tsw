@@ -5,6 +5,7 @@ import { ActionIcon } from "~/components/ActionIcon";
 import { Button } from "~/components/ui/button";
 import commontyles from "~/css/common.module.css";
 import { cn } from "~lib/utils";
+import { type QuickPrompt, readQuickPrompts } from "~utils/storage";
 import styles from "../css/textselect.module.css";
 import {
   DropdownMenu,
@@ -12,7 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { readQuickPrompts, type QuickPrompt } from "~utils/storage";
 
 interface Props {
   selectedText: string;

@@ -14,6 +14,7 @@ import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { StreamMessage } from "./StreamMessage";
+import SystemPromptMenu from "./SystemPromptMenu";
 import { DownloadIcon } from "./ui/icons/download";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
@@ -41,6 +42,10 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+  const [systemPrompt, setSystemPrompt] = useState({
+    name: "Default",
+    options: {},
+  });
 
   const { toast } = useToast();
 
@@ -238,6 +243,9 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       description: "Downloaded.",
     });
   };
+  const handlePromptSelect = (prompt: any) => {
+    setSystemPrompt(prompt);
+  };
 
   return (
     <>
@@ -404,38 +412,46 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
-          {editingMessageId !== null && (
-            <div className={chatStyles.editActions}>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={handleCancelEdit}
-              >
-                <SquareX />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={(e) => handleEditSubmit(e)}
-              >
-                <IterationCcw />
-              </Button>
+          <div className={chatStyles.editActions}>
+            <div>
+              <SystemPromptMenu
+                category="system-prompts"
+                onSelect={(prompt) => handlePromptSelect(prompt)}
+              />
             </div>
-          )}
-          {isStreaming && !editingMessageId && (
-            <div className={chatStyles.editActions}>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleStopChat}
-                className={chatStyles.tswActionBtn}
-              >
-                <CircleStop className={chatStyles.stopIcon} />
-              </Button>
+            <div>
+              {editingMessageId !== null && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={chatStyles.tswActionBtn}
+                    onClick={handleCancelEdit}
+                  >
+                    <SquareX />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={chatStyles.tswActionBtn}
+                    onClick={(e) => handleEditSubmit(e)}
+                  >
+                    <IterationCcw />
+                  </Button>
+                </>
+              )}
+              {isStreaming && !editingMessageId && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleStopChat}
+                  className={chatStyles.tswActionBtn}
+                >
+                  <CircleStop className={chatStyles.stopIcon} />
+                </Button>
+              )}
             </div>
-          )}
+          </div>
         </div>
         {messages.length > 0 && (
           <div className={chatStyles.downloadButtonContainer}>
