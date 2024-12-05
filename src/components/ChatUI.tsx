@@ -225,15 +225,17 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const handleDownload = () => {
     if (messages.length === 0) return;
 
-    const content = messages
-      .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
-      .join("\n\n");
+    const content = `# ${document.title}
+
+${messages.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n")};
+
+source: ${window.location.href}`;
 
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `chat-history-${new Date().toISOString().split("T")[0]}.txt`;
+    a.download = `chat-history-${new Date().toISOString().split("T")[0]}.md`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
