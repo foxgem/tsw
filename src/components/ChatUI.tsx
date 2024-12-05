@@ -227,7 +227,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
 
     const content = `# ${document.title}
 
-${messages.map((m) => `${m.role.toUpperCase()}: ${m.content}`).join("\n\n")};
+${messages.map((m) => `${m.role.toUpperCase()}:\n ${m.content}`).join("\n\n")};
 
 source: ${window.location.href}`;
 
