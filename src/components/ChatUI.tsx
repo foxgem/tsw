@@ -13,11 +13,12 @@ import iconsStyles from "~/css/icons.module.css";
 import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
+import { ExportDialog } from "./ExportDialog";
 import { StreamMessage } from "./StreamMessage";
 import SystemPromptMenu from "./SystemPromptMenu";
-import { DownloadIcon } from "./ui/icons/download";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
+
 marked.setOptions({
   breaks: true,
 });
@@ -222,36 +223,14 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       messages[lastUserMessageIndex].content,
     );
   };
-  const handleDownload = () => {
-    if (messages.length === 0) return;
 
-    const content = `# ${document.title}
-
-${messages.map((m) => `${m.role.toUpperCase()}:\n ${m.content}`).join("\n\n")};
-
-source: ${window.location.href}`;
-
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `chat-history-${new Date().toISOString().split("T")[0]}.md`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    toast({
-      description: "Downloaded.",
-    });
-  };
   const handlePromptSelect = (prompt: any) => {
     setSystemPrompt(prompt);
   };
 
   return (
     <>
-      <div className={chatStyles.chatContainer}>
+      <div className={chatStyles.chatContainer} id="tsw-chat-container">
         <div className={chatStyles.chatContent}>
           <ScrollArea className={chatStyles.scrollArea}>
             {messages.length === 0 && (
@@ -457,14 +436,7 @@ source: ${window.location.href}`;
         </div>
         {messages.length > 0 && (
           <div className={chatStyles.downloadButtonContainer}>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={chatStyles.tswActionBtn}
-              onClick={handleDownload}
-            >
-              <DownloadIcon size={16} className={iconsStyles.dynamicIcon} />
-            </Button>
+            <ExportDialog messages={messages} />
           </div>
         )}
       </div>

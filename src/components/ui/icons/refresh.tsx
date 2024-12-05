@@ -1,11 +1,9 @@
 "use client";
 
 import { motion, useAnimation } from "framer-motion";
-import type { IconProps } from "../../../types/icon";
 
 const RefreshIcon = ({ size = 28, className }: IconProps) => {
   const controls = useAnimation();
-  console.log(className);
   return (
     <div
       className={className}

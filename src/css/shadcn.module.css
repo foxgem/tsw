@@ -41,3 +41,236 @@
 .copyButton:hover {
   @apply bg-blue-600;
 }
+
+.radiogroupRoot {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.radiogroupItem {
+  aspect-ratio: 1;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 9999px;
+  border: 1px solid var(--tsw-purple);
+  color: var(--tsw-purple);
+  background: white;
+  position: relative;
+}
+
+.radiogroupItem:focus {
+  outline: none;
+}
+
+.radiogroupItem:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.radiogroupIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radiogroupCircle {
+  height: 0.625rem;
+  width: 0.625rem;
+  fill: currentColor;
+  color: currentColor;
+}
+
+.radiogroupItem span {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.dialogOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.dialogOverlay[data-state="open"] {
+  animation: fadeIn 150ms ease-out;
+}
+
+.dialogOverlay[data-state="closed"] {
+  animation: fadeOut 150ms ease-out;
+}
+
+.dialogContent {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  display: grid;
+  width: 100%;
+  max-width: 32rem;
+  transform: translate(-50%, -50%);
+  gap: 1rem;
+  border: 1px solid var(--border);
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+  transition-duration: 200ms;
+}
+
+.dialogContent[data-state="open"] {
+  animation: fadeIn 200ms ease-out, zoomIn 200ms ease-out, slideIn 200ms
+    ease-out;
+}
+
+.dialogContent[data-state="closed"] {
+  animation: fadeOut 200ms ease-out, zoomOut 200ms ease-out, slideOut 200ms
+    ease-out;
+}
+
+@media (min-width: 640px) {
+  .dialogContent {
+    border-radius: 0.5rem;
+  }
+}
+
+.dialogCloseButton {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  border-radius: 0.125rem;
+  opacity: 0.7;
+  transition: opacity;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dialogCloseButton:hover {
+  background-color: rgb(229, 231, 235);
+  border-radius: 999px;
+}
+
+.dialogCloseButton:focus {
+  outline: none;
+  background-color: rgb(229, 231, 235);
+}
+
+.dialogCloseButton:disabled {
+  pointer-events: none;
+}
+
+.dialogCloseButton[data-state="open"] {
+  background-color: var(--accent);
+  color: var(--muted-foreground);
+}
+
+.dialogHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .dialogHeader {
+    text-align: left;
+  }
+}
+
+.dialogFooter {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 640px) {
+  .dialogFooter {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+}
+
+.dialogTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+
+.dialogDescription {
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translate(-50%, -48%) scale(0.95);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -48%) scale(0.95);
+  }
+}
+
+.label {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* font-medium */
+  line-height: 1; /* leading-none */
+}
+
+.label:where(.peer-disabled) {
+  cursor: not-allowed;
+  opacity: 0.7;
+}

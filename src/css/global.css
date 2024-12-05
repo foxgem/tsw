@@ -8,6 +8,8 @@
   --tsw-secondary: blue;
   --header-height: 57px;
   --footer-height: 58px;
+  --tsw-primary: 242, 88.4%, 66.3%, 1;
+  --tsw-purple: rgb(98, 93, 245);
 }
 
 #tsw-image-content {
