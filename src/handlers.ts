@@ -41,7 +41,6 @@ function withOutputPanel(
     top: 0px;
     margin-top: 10px;
     border-radius: 10px;
-    z-index:10000;
     display:none;
   `;
   }
