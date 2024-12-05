@@ -44,6 +44,14 @@ export type QuickPrompt = {
   prompt: string;
 };
 
+export async function readInstantInputs() {
+  return await storage.get<string[]>("instantInputs");
+}
+
+export async function upsertInstantInputs(instantInputs: string[]) {
+  await storage.set("instantInputs", instantInputs);
+}
+
 export async function readQuickPrompts() {
   return await storage.get<QuickPrompt[]>("quickPrompts");
 }
@@ -78,7 +86,9 @@ export async function deleteTimerForDomain(domain: string) {
 export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
   const allItems = await storage.getAll();
   return Object.entries(allItems)
-    .filter(([key]) => !["apiKeys", "quickPrompts"].includes(key))
+    .filter(
+      ([key]) => !["apiKeys", "quickPrompts", "instantInputs"].includes(key),
+    )
     .map(([domain, time]) => ({
       domain,
       time: Number(time),
