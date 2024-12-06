@@ -87,6 +87,7 @@ function setupWrapperAndBody(): {
   wrapper: HTMLElement;
   innerWrapper: HTMLElement;
   header: HTMLElement;
+  originalHeaderWidth?: string;
 } {
   let wrapper = document.getElementById("tsw-outer-wrapper");
   const innerWrapper = document.createElement("div");
@@ -132,17 +133,21 @@ function setupWrapperAndBody(): {
           width: 80vw;
           height: 100vh;
       `;
-  const header = document.querySelector("header");
+  let header = document.querySelector("header");
+  let originalHeaderWidth: string | undefined;
   if (header && header instanceof HTMLElement) {
     const headerStyle = window.getComputedStyle(header);
     if (headerStyle.position === "fixed") {
+      originalHeaderWidth = headerStyle.width; 
       header.style.width = "60vw";
+    }else{
+      header =null
     }
   }
 
   window.dispatchEvent(new Event("resize"));
 
-  return { wrapper, innerWrapper, header };
+  return { wrapper, innerWrapper, header, originalHeaderWidth};
 }
 
 function resetWrapperCss(
@@ -150,6 +155,7 @@ function resetWrapperCss(
   innerWrapper: HTMLElement,
   header: HTMLElement,
   panel: HTMLElement,
+  originalHeaderWidth?: string,
 ) {
   panel.style.display = "none";
   wrapper.style.cssText = `
@@ -167,9 +173,15 @@ function resetWrapperCss(
     overflow: visible;
     box-shadow: none;
   `;
-  if (header.style.position === "fixed" && header.style.width === "60vw") {
+
+  if(header){
+  if (originalHeaderWidth) {
+    header.style.width = originalHeaderWidth;
+  } else {
     header.style.width = "100vw";
   }
+}
+
   window.dispatchEvent(new Event("resize"));
 }
 
