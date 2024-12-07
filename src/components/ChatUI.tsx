@@ -15,9 +15,10 @@ import { chatWithPage } from "~utils/ai";
 import { ActionIcon } from "./ActionIcon";
 import { ExportDialog } from "./ExportDialog";
 import { StreamMessage } from "./StreamMessage";
-import SystemPromptMenu from "./SystemPromptMenu";
+import ModelMenu from "./ModelMenu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
+import { DEFAULT_GEMINI_MODEL } from "~utils/constants";
 
 marked.setOptions({
   breaks: true,
@@ -43,10 +44,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [systemPrompt, setSystemPrompt] = useState({
-    name: "Default",
-    options: {},
-  });
+  const [systemPrompt, setSystemPrompt] = useState(DEFAULT_GEMINI_MODEL);
 
   const { toast } = useToast();
 
@@ -143,6 +141,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           pageText,
           pageURL,
           abortController.current.signal,
+          systemPrompt,
         );
         let fullText = "";
 
@@ -395,7 +394,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           />
           <div className={chatStyles.editActions}>
             <div>
-              <SystemPromptMenu
+              <ModelMenu
                 category="system-prompts"
                 onSelect={(prompt) => handlePromptSelect(prompt)}
               />

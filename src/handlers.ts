@@ -138,16 +138,16 @@ function setupWrapperAndBody(): {
   if (header && header instanceof HTMLElement) {
     const headerStyle = window.getComputedStyle(header);
     if (headerStyle.position === "fixed") {
-      originalHeaderWidth = headerStyle.width; 
+      originalHeaderWidth = headerStyle.width;
       header.style.width = "60vw";
-    }else{
-      header =null
+    } else {
+      header = null;
     }
   }
 
   window.dispatchEvent(new Event("resize"));
 
-  return { wrapper, innerWrapper, header, originalHeaderWidth};
+  return { wrapper, innerWrapper, header, originalHeaderWidth };
 }
 
 function resetWrapperCss(
@@ -174,13 +174,13 @@ function resetWrapperCss(
     box-shadow: none;
   `;
 
-  if(header){
-  if (originalHeaderWidth) {
-    header.style.width = originalHeaderWidth;
-  } else {
-    header.style.width = "100vw";
+  if (header) {
+    if (originalHeaderWidth) {
+      header.style.width = originalHeaderWidth;
+    } else {
+      header.style.width = "100vw";
+    }
   }
-}
 
   window.dispatchEvent(new Event("resize"));
 }

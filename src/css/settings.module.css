@@ -1,0 +1,14 @@
+.settingsLayout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .settingsLayout {
+    grid-template-columns: 1fr;
+  }
+}

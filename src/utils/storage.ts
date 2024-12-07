@@ -100,5 +100,5 @@ export const timerSchema = z.object({
     .string()
     .min(1, "Domain required.")
     .regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid domain format"),
-  time: z.number().min(10, "too short").max(3600, "too long"),
+  time: z.number().min(10, "Too short").max(3600, "Too long"),
 });
