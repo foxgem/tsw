@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "../css/promptselect.module.css";
+import styles from "../css/modelselect.module.css";
 import {
   Select,
   SelectContent,
@@ -9,11 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { DEFAULT_GEMINI_MODEL } from "~utils/constants";
+import { DEFAULT_MODEL } from "~utils/constants";
 
 interface Props {
   category: string;
-  onSelect: (action: any) => void;
+  onSelect: (model: string) => void;
 }
 
 export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
@@ -21,8 +21,7 @@ export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
   const [currentModel, setCurrentModel] = useState<string>();
 
   const loadModels = async () => {
-    const models = ["gemini-1.5-flash-8b", "gemini-1.5-pro"]; //await loadCommandsFromStorage(category);
-    models.unshift(DEFAULT_GEMINI_MODEL);
+    const models = [DEFAULT_MODEL, "gemini-1.5-flash-8b", "gemini-1.5-pro"]; //await loadCommandsFromStorage(category);
     setModels(models);
     if (!currentModel) {
       setCurrentModel(models[0]);
@@ -65,12 +64,12 @@ export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
           >
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className={styles.tswPromptList}>
+          <SelectContent className={styles.tswModelList}>
             {models.map((option) => (
               <SelectItem
                 key={option}
                 value={option}
-                className={styles.tswPromptItem}
+                className={styles.tswModelItem}
               >
                 {option}
               </SelectItem>

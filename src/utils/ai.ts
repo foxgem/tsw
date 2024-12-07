@@ -11,6 +11,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
 import { readApiKeys } from "./storage";
+import { DEFAULT_MODEL } from "./constants";
 
 const loadApiKey = async () => {
   const apiKey =
@@ -62,7 +63,8 @@ const pageRagPrompt = (context: string) => {
   You are an expert in answering user questions. You always understand user questions well, and then provide high-quality answers based on the information provided in the context.
   Try to keep the answer concise and relevant to the context without providing unnecessary information and explanations.
   If the provided context does not contain relevant information, just respond "I could not find the answer based on the context you provided."
-  Context:
+
+  Page Context:
   ${context}
   `;
 };
@@ -73,10 +75,10 @@ const prepareSystemPrompt = (
   customPrompt?: string,
 ) => {
   if (customPrompt) {
-    return `${customPrompt}\n\nThis page URL: ${pageURL}\n\nThis page content:\n\n${pageText}`;
+    return `${customPrompt}\nPage Context:\n${pageText}\nPage URL: ${pageURL}`;
   }
 
-  return `This page URL: ${pageURL}\n\n${pageRagPrompt(pageText)}`;
+  return `${pageRagPrompt(pageText)}\nPage URL: ${pageURL}`;
 };
 
 export const callPrompt = async (
@@ -226,13 +228,14 @@ export const chatWithPage = async (
   pageText: string,
   pageURL: string,
   signal: AbortSignal,
+  model = DEFAULT_MODEL,
   customPrompt?: string,
 ) => {
   try {
     const apiKey = await loadApiKey();
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = await streamText({
-      model: google("gemini-1.5-flash"),
+      model: google(model),
       system: prepareSystemPrompt(pageText, pageURL, customPrompt),
       messages,
       abortSignal: signal,

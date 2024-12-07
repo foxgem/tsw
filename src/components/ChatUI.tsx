@@ -18,7 +18,7 @@ import { StreamMessage } from "./StreamMessage";
 import ModelMenu from "./ModelMenu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import { DEFAULT_GEMINI_MODEL } from "~utils/constants";
+import { DEFAULT_MODEL } from "~utils/constants";
 
 marked.setOptions({
   breaks: true,
@@ -44,7 +44,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [isStreaming, setIsStreaming] = useState(false);
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
-  const [systemPrompt, setSystemPrompt] = useState(DEFAULT_GEMINI_MODEL);
+  const [model, setModel] = useState(DEFAULT_MODEL);
 
   const { toast } = useToast();
 
@@ -141,7 +141,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           pageText,
           pageURL,
           abortController.current.signal,
-          systemPrompt,
+          model,
         );
         let fullText = "";
 
@@ -223,8 +223,8 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
     );
   };
 
-  const handlePromptSelect = (prompt: any) => {
-    setSystemPrompt(prompt);
+  const handleModelSelect = (modelSelected: string) => {
+    setModel(modelSelected);
   };
 
   return (
@@ -395,8 +395,8 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           <div className={chatStyles.editActions}>
             <div>
               <ModelMenu
-                category="system-prompts"
-                onSelect={(prompt) => handlePromptSelect(prompt)}
+                category="gemini"
+                onSelect={(model) => handleModelSelect(model)}
               />
             </div>
             <div>

@@ -22,4 +22,4 @@ export const LANG_LIST = [
   "Soldity",
 ];
 
-export const DEFAULT_GEMINI_MODEL = "gemini-1.5-flash";
+export const DEFAULT_MODEL = "gemini-1.5-flash";

@@ -27,7 +27,7 @@
   text-align: left;
 }
 
-.tswPromptList {
+.tswModelList {
   background: #ffffff !important;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@
   margin-right: 10px;
 }
 
-.tswPromptItem {
+.tswModelItem {
   padding: 8px 20px;
   cursor: pointer;
   border: none;
@@ -61,22 +61,22 @@
   @apply relative cursor-default select-none py-1.5 pl-8 pr-2 text-sm outline-none;
 }
 
-.tswPromptItem:hover {
+.tswModelItem:hover {
   background-color: #f1f5f9 !important;
   color: #3b82f6 !important;
   border: 0 !important;
   border-radius: 0 !important;
 }
 
-.tswPromptItem span:nth-of-type(1) {
+.tswModelItem span:nth-of-type(1) {
   width: 16px;
 }
 
-.tswPromptItem span:nth-of-type(1) svg {
+.tswModelItem span:nth-of-type(1) svg {
   width: 16px;
 }
 
-.tswPromptItem span:nth-of-type(2) {
+.tswModelItem span:nth-of-type(2) {
   width: 150px;
   display: block;
   text-overflow: ellipsis;
