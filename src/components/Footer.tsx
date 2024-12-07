@@ -7,9 +7,10 @@ import { GITHUB_ROOT } from "~/utils/constants";
 
 interface FooterProps {
   className?: string;
+  showDivider?: boolean;
 }
 
-export default function Footer({ className }: FooterProps) {
+export default function Footer({ className, showDivider }: FooterProps) {
   const [version, setVersion] = React.useState("");
 
   React.useEffect(() => {
@@ -22,10 +23,18 @@ export default function Footer({ className }: FooterProps) {
   return (
     <footer
       className={cn(
-        "fixed bottom-0 left-0 right-0 p-2 text-xs text-gray-500 shadow-md",
+        "fixed bottom-0 left-0 right-0 p-2 text-xs text-gray-500",
         className,
       )}
     >
+      {showDivider && (
+        <div
+          data-orientation="horizontal"
+          role="none"
+          className="shrink-0 bg-border h-[1px] w-full my-6"
+        ></div>
+      )}
+
       <div className="flex justify-between items-center h-8 text-black dark:text-white w-full text-center px-5">
         <div>@Tiny Smart Worker v{version}</div>
         <a href={GITHUB_ROOT} target="_blank" rel="noreferrer noopener">

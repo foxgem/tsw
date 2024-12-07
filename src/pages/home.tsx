@@ -1,14 +1,11 @@
-import { BotMessageSquare, Key, TimerReset } from "lucide-react";
+import { BotMessageSquare, Settings } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
 import Footer from "~/components/Footer";
 import Header from "~/components/Header";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 function MainPage() {
-  const navigate = useNavigate();
-
   const newChat = () => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0].id) {
@@ -18,12 +15,10 @@ function MainPage() {
     window.close();
   };
 
-  const gotoTimerSetting = () => {
-    navigate("/timer-setting", {});
-  };
-
-  const gotoApiKeySetting = () => {
-    navigate("/setting-api-key", {});
+  const handleOpenSettings = () => {
+    chrome.tabs.create({
+      url: chrome.runtime.getURL("options.html"),
+    });
   };
 
   return (
@@ -34,41 +29,28 @@ function MainPage() {
           variant="outline"
           onClick={newChat}
           className={cn(
-            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
+            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start gap-2",
             "cursor-pointer",
             "transition-colors duration-300",
             "bg-accent hover:bg-primary hover:text-white dark:text-white",
           )}
         >
-          <BotMessageSquare className="mr-2" />
+          <BotMessageSquare />
           Chatting
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => gotoTimerSetting()}
-          className={cn(
-            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
-            "cursor-pointer",
-            "transition-colors duration-300",
-            "bg-accent  hover:bg-primary hover:text-white",
-          )}
-        >
-          <TimerReset className="mr-2" />
-          Site Timers
         </Button>
 
         <Button
           variant="outline"
-          onClick={() => gotoApiKeySetting()}
+          onClick={handleOpenSettings}
           className={cn(
-            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start",
+            "px-4 py-2 rounded-full h-12 mb-3 border-0 justify-start gap-2",
             "cursor-pointer",
             "transition-colors duration-300",
             "bg-accent hover:bg-primary hover:text-white dark:text-white",
           )}
         >
-          <Key className="mr-2" />
-          Service Settings
+          <Settings />
+          Settings
         </Button>
       </nav>
       <Footer className="mt-auto" />
