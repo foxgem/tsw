@@ -84,3 +84,8 @@
   white-space: nowrap;
   overflow: hidden;
 }
+
+.tswModelLabel {
+  opacity: 0.5;
+  font-size: 14px;
+}

@@ -54,13 +54,8 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [model, setModel] = useState(DEFAULT_MODEL);
   const [showInstantInput, setShowInstantInput] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [instantInputs, setInstantInputs] = useState<string[]>([]);
-
-  useEffect(() => {
-    loadInstantInputs();
-  }, []);
 
   const loadInstantInputs = async () => {
     const savedInputs = await readInstantInputs();
@@ -138,7 +133,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                 },
               ]
         ) as Message[];
-        console.log("newMessages---", newMessages);
 
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
@@ -176,6 +170,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       pageText,
       pageURL,
       abortController.current.signal,
+      model,
     );
     let fullText = "";
 
@@ -249,13 +244,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
 
   const handleModelSelect = (modelSelected: string) => {
     setModel(modelSelected);
-  };
-
-  const onSelectInstantInput = async (text: string) => {
-    setInputValue(text);
-    if (textareaRef.current) {
-      textareaRef.current.focus();
-    }
   };
 
   return (
@@ -392,16 +380,13 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
               const newValue = e.target.value;
               setInputValue(newValue);
               if (newValue.startsWith("? ") || newValue.startsWith("？ ")) {
+                loadInstantInputs();
                 const textarea = textareaRef.current;
                 if (textarea) {
                   const rect = textarea.getBoundingClientRect();
                   const lineHeight = parseInt(
                     window.getComputedStyle(textarea).lineHeight,
                   );
-                  setMenuPosition({
-                    x: rect.left,
-                    y: rect.top + lineHeight,
-                  });
                   setShowInstantInput(true);
                 }
               } else {
@@ -455,10 +440,9 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                   className={textselectStyles.tswActionList}
                   style={{
                     position: "fixed",
-                    top: `${textareaRef.current?.getBoundingClientRect().top - 155}px`,
+                    top: `${textareaRef.current?.getBoundingClientRect().top - Math.min(instantInputs.length * 37 + 15, 2000)}px`,
                     left: `${textareaRef.current?.getBoundingClientRect().left}px`,
                     width: `${textareaRef.current?.getBoundingClientRect().width}px`,
-                    maxHeight: "180px",
                     overflowY: "auto",
                   }}
                   sideOffset={0}

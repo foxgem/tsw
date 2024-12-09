@@ -35,8 +35,6 @@
   border-radius: 8px;
   margin-top: 4px;
   font-size: 14px;
-  max-width: 300px;
-  max-height: 300px;
   overflow-y: auto !important;
 }
 
@@ -46,7 +44,7 @@
   border: none;
   background-color: #ffffff;
   color: #1e293b;
-  width: 270px;
+  width: 100%;
   font-size: 14px;
   border: 0;
   border-radius: 0;
@@ -56,6 +54,9 @@
   text-overflow: ellipsis;
   white-space: nowrap !important;
   overflow: hidden;
+  display: block !important;
+  box-sizing: border-box;
+  height: 37px;
 }
 
 .tswActionItem:hover {
