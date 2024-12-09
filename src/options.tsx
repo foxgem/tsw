@@ -11,7 +11,7 @@ export default function OptionsIndex() {
   const [selectedSection, setSelectedSection] = useState("timers");
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col text-sm">
       <div className="w-4/5 mx-auto p-6 flex-1">
         <h1 className="text-2xl font-bold mb-2">Settings</h1>
         <p className="text-muted-foreground mb-8">
