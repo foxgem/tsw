@@ -429,6 +429,13 @@ function createSelectMenu() {
   document.addEventListener("mouseup", () => {
     if (!hasSelection) return;
     const selection = window.getSelection();
+
+    const togglePanel = document.getElementById("tsw-toggle-panel");
+    const selectionNode = selection?.anchorNode?.parentElement;
+    if (togglePanel?.contains(selectionNode)) {
+      return;
+    }
+
     if (selection && selection.toString().trim() !== "") {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();

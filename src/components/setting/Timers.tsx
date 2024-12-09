@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { ZodError } from "zod";
+import { DeleteIcon } from "~components/ui/icons/delete";
+import { FilePenLineIcon } from "~components/ui/icons/file-pen-line";
+import { cn } from "~lib/utils";
+import { TIMER_COUNT_LIMIT } from "~utils/constants";
 import {
+  type TimerForDomain,
   deleteTimerForDomain,
   getAllTimersForDomains,
   timerSchema,
   upsertTimerForDomain,
-  type TimerForDomain,
 } from "~utils/storage";
-import { cn } from "~lib/utils";
-import { TIMER_COUNT_LIMIT } from "~utils/constants";
-import { ZodError } from "zod";
+import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { FilePenLineIcon } from "~components/ui/icons/file-pen-line";
-import { DeleteIcon } from "~components/ui/icons/delete";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 export function Timers() {
   const [domain, setDomain] = useState("");
@@ -74,7 +74,6 @@ export function Timers() {
 
       await upsertTimerForDomain({ domain, time });
       await loadTimerForDomains();
-      setIsAdding(false);
       resetForm();
     } catch (e) {
       if (e instanceof ZodError) {
@@ -191,7 +190,7 @@ export function Timers() {
               max={3600}
               value={time}
               onChange={(e) => {
-                setTime(parseInt(e.target.value));
+                setTime(Number.parseInt(e.target.value));
                 setError("");
               }}
               placeholder="Enter time in seconds"
@@ -223,12 +222,10 @@ export function Timers() {
           <div>
             <h2 className="text-lg font-semibold">Timers</h2>
             {remainingCount > 0 && (
-              <>
-                <p className="text-sm text-gray-500">
-                  {remainingCount} {remainingCount === 1 ? "timer" : "timers"}{" "}
-                  remaining
-                </p>
-              </>
+              <p className="text-sm text-gray-500">
+                {remainingCount} {remainingCount === 1 ? "timer" : "timers"}{" "}
+                remaining
+              </p>
             )}
           </div>
           {canAddMore && (

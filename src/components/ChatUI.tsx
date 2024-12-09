@@ -12,13 +12,21 @@ import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
+import { DEFAULT_MODEL } from "~utils/constants";
+import { readInstantInputs } from "~utils/storage";
+import textselectStyles from "../css/textselect.module.css";
 import { ActionIcon } from "./ActionIcon";
 import { ExportDialog } from "./ExportDialog";
-import { StreamMessage } from "./StreamMessage";
 import ModelMenu from "./ModelMenu";
+import { SelectInstantInput } from "./SelectInstantInput";
+import { StreamMessage } from "./StreamMessage";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
-import { DEFAULT_MODEL } from "~utils/constants";
 
 marked.setOptions({
   breaks: true,
@@ -45,6 +53,19 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [model, setModel] = useState(DEFAULT_MODEL);
+  const [showInstantInput, setShowInstantInput] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [instantInputs, setInstantInputs] = useState<string[]>([]);
+
+  useEffect(() => {
+    loadInstantInputs();
+  }, []);
+
+  const loadInstantInputs = async () => {
+    const savedInputs = await readInstantInputs();
+    setInstantInputs(savedInputs);
+  };
 
   const { toast } = useToast();
 
@@ -94,7 +115,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
     customMessages?: Message[],
     lastUserMessage?: string,
   ) => {
-    const currentMessage = inputValue.trim() || lastUserMessage.trim();
+    const currentMessage = inputValue.trim() || lastUserMessage?.trim();
     e.preventDefault();
     if (isSubmitting || !currentMessage) return;
     setIsSubmitting(true);
@@ -102,7 +123,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
 
     if (currentMessage.trim()) {
       try {
-        abortController.current = new AbortController();
         const baseMessages = customMessages || messages;
 
         // Only add a new user message if we're not editing
@@ -118,6 +138,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                 },
               ]
         ) as Message[];
+        console.log("newMessages---", newMessages);
 
         setInputValue("");
         const textarea = document.getElementById("tsw-chat-textarea");
@@ -125,33 +146,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           textarea.style.height = "80px";
         }
         setMessages(newMessages);
-
-        setMessages([
-          ...newMessages,
-          {
-            role: "assistant",
-            content: "TSW",
-            id: newMessages.length,
-            isThinking: true,
-          },
-        ]);
-
-        const textStream = await chatWithPage(
-          newMessages,
-          pageText,
-          pageURL,
-          abortController.current.signal,
-          model,
-        );
-        let fullText = "";
-
-        for await (const text of textStream) {
-          fullText += text;
-          setMessages([
-            ...newMessages,
-            { role: "assistant", content: fullText, id: newMessages.length },
-          ]);
-        }
+        await generateContent(newMessages);
       } catch (error) {
         if (error.name === "AbortError") {
           console.log("Chat was stopped");
@@ -161,6 +156,35 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
         abortController.current = null;
         setIsStreaming(false);
       }
+    }
+  };
+
+  const generateContent = async (newMessages) => {
+    abortController.current = new AbortController();
+    setMessages([
+      ...newMessages,
+      {
+        role: "assistant",
+        content: "TSW",
+        id: newMessages.length,
+        isThinking: true,
+      },
+    ]);
+
+    const textStream = await chatWithPage(
+      newMessages,
+      pageText,
+      pageURL,
+      abortController.current.signal,
+    );
+    let fullText = "";
+
+    for await (const text of textStream) {
+      fullText += text;
+      setMessages([
+        ...newMessages,
+        { role: "assistant", content: fullText, id: newMessages.length },
+      ]);
     }
   };
 
@@ -225,6 +249,13 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
 
   const handleModelSelect = (modelSelected: string) => {
     setModel(modelSelected);
+  };
+
+  const onSelectInstantInput = async (text: string) => {
+    setInputValue(text);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
   };
 
   return (
@@ -354,13 +385,32 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       <div className={chatStyles.tswPanelFooter} id="tsw-panel-footer">
         <div className={chatStyles.inputContainer}>
           <Textarea
+            ref={textareaRef}
             value={inputValue}
             onChange={(e) => {
-              setInputValue(e.target.value);
-              // Auto-resize the textarea
+              console.log(e.target.value);
+              const newValue = e.target.value;
+              setInputValue(newValue);
+              if (newValue.startsWith("? ") || newValue.startsWith("？ ")) {
+                const textarea = textareaRef.current;
+                if (textarea) {
+                  const rect = textarea.getBoundingClientRect();
+                  const lineHeight = parseInt(
+                    window.getComputedStyle(textarea).lineHeight,
+                  );
+                  setMenuPosition({
+                    x: rect.left,
+                    y: rect.top + lineHeight,
+                  });
+                  setShowInstantInput(true);
+                }
+              } else {
+                setShowInstantInput(false);
+              }
+
               const textarea = e.target as HTMLTextAreaElement;
               textarea.style.height = "auto";
-              textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`; // Set maximum height to 200px
+              textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
             }}
             placeholder={
               editingMessageId !== null
@@ -392,6 +442,45 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             }}
             id="tsw-chat-textarea"
           />
+          {showInstantInput && (
+            <DropdownMenu
+              open={showInstantInput}
+              onOpenChange={setShowInstantInput}
+            >
+              <DropdownMenuTrigger asChild>
+                <div style={{ display: "none" }} />
+              </DropdownMenuTrigger>
+              {instantInputs.length > 0 && (
+                <DropdownMenuContent
+                  className={textselectStyles.tswActionList}
+                  style={{
+                    position: "fixed",
+                    top: `${textareaRef.current?.getBoundingClientRect().top - 155}px`,
+                    left: `${textareaRef.current?.getBoundingClientRect().left}px`,
+                    width: `${textareaRef.current?.getBoundingClientRect().width}px`,
+                    maxHeight: "180px",
+                    overflowY: "auto",
+                  }}
+                  sideOffset={0}
+                  alignOffset={0}
+                  forceMount
+                >
+                  <SelectInstantInput
+                    instantInputs={instantInputs}
+                    onSelect={(instantInput) => {
+                      setInputValue(instantInput);
+                      setTimeout(() => {
+                        if (textareaRef.current) {
+                          textareaRef.current.focus();
+                        }
+                      }, 0);
+                      setShowInstantInput(false);
+                    }}
+                  />
+                </DropdownMenuContent>
+              )}
+            </DropdownMenu>
+          )}
           <div className={chatStyles.editActions}>
             <div>
               <ModelMenu

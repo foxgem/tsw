@@ -45,7 +45,8 @@ export type QuickPrompt = {
 };
 
 export async function readInstantInputs() {
-  return await storage.get<string[]>("instantInputs");
+  const inputs = await storage.get<string[]>("instantInputs");
+  return inputs || [];
 }
 
 export async function upsertInstantInputs(instantInputs: string[]) {
@@ -102,3 +103,8 @@ export const timerSchema = z.object({
     .regex(/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Invalid domain format"),
   time: z.number().min(10, "Too short").max(3600, "Too long"),
 });
+
+export const instantInputSchema = z
+  .string()
+  .min(1, "Input required")
+  .max(200, "String too long");

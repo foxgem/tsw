@@ -1,0 +1,39 @@
+.container {
+  @apply flex flex-col items-center justify-center px-4;
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 130px);
+}
+
+.titleContain {
+  @apply flex justify-center items-center gap-2 mb-6;
+}
+
+.title {
+  @apply text-center font-bold text-[32px] opacity-80;
+  background: linear-gradient(135deg, #3b82f6, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.InstantInputsContainer {
+  @apply text-sm w-full max-w-[450px] box-border space-y-2;
+}
+
+.instantInputButton {
+  @apply rounded-lg p-3 
+    border border-gray-100
+    text-left w-full 
+    whitespace-nowrap overflow-hidden truncate
+    bg-white
+    transition-all duration-200 ease-in-out
+    hover:border-blue-200
+    hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50
+    hover:shadow-md hover:scale-[1.02]
+    active:scale-[0.98]
+    active:bg-blue-100;
+}
+
+.sparkle {
+  @apply text-2xl animate-bounce;
+}
