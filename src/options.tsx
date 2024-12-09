@@ -50,7 +50,10 @@ export default function OptionsIndex() {
         </div>
       </div>
 
-      <Footer className="sticky bottom-0 bg-white" showDivider={true} />
+      <Footer
+        className="sticky bottom-0 bg-white w-4/5 mx-auto"
+        showDivider={true}
+      />
     </div>
   );
 }

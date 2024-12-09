@@ -142,8 +142,25 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
         setMessages(newMessages);
         await generateContent(newMessages);
       } catch (error) {
+        setMessages((messages) => {
+          const lastMessage = messages[messages.length - 1];
+          if (
+            lastMessage.role === "assistant" &&
+            lastMessage.content === "TSW"
+          ) {
+            return messages.map((msg, index) =>
+              index === messages.length - 1
+                ? { ...msg, content: error.message }
+                : msg,
+            );
+          }
+          return messages;
+        });
+
         if (error.name === "AbortError") {
           console.log("Chat was stopped");
+        } else {
+          console.error("Error during chat:", error.message);
         }
       } finally {
         setIsSubmitting(false);
@@ -376,7 +393,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
             ref={textareaRef}
             value={inputValue}
             onChange={(e) => {
-              console.log(e.target.value);
               const newValue = e.target.value;
               setInputValue(newValue);
               if (newValue.startsWith("? ") || newValue.startsWith("？ ")) {
