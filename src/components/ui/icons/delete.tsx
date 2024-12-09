@@ -33,6 +33,7 @@ const DeleteIcon = ({ size = 28, className }: IconProps) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       >
+        <title>Delete</title>
         <motion.g
           variants={lidVariants}
           animate={controls}

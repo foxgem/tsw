@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { DEFAULT_MODEL } from "~utils/constants";
 import styles from "../css/modelselect.module.css";
 import {
   Select,
@@ -9,7 +10,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { DEFAULT_MODEL } from "~utils/constants";
 
 interface Props {
   category: string;

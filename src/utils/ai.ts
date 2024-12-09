@@ -10,8 +10,8 @@ import {
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
-import { readApiKeys } from "./storage";
 import { DEFAULT_MODEL } from "./constants";
+import { readApiKeys } from "./storage";
 
 const loadApiKey = async () => {
   const apiKey =

@@ -23,3 +23,5 @@ export const LANG_LIST = [
 ];
 
 export const DEFAULT_MODEL = "gemini-1.5-flash";
+export const IINSTANT_INPUT_COUNT_LIMIT = 10;
+export const INSTANT_INPUT_MAX_LENGTH = 200;

@@ -1,9 +1,14 @@
 import { cn } from "~lib/utils";
 import "../css/extention.css";
-import { Key, TimerReset } from "lucide-react";
+import { Key, NotebookIcon, TimerReset } from "lucide-react";
 const links = [
   { key: "timers", label: "Site Timers", icon: <TimerReset size="20" /> },
   { key: "keys", label: "Service Settings", icon: <Key size="20" /> },
+  {
+    key: "instant-inputs",
+    label: "Instant Inputs",
+    icon: <NotebookIcon size="20" />,
+  },
 ];
 
 interface SettingsSidebarProps {

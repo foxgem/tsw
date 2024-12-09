@@ -46,13 +46,16 @@
   border: none;
   background-color: #ffffff;
   color: #1e293b;
-  width: 100%;
+  width: 270px;
   font-size: 14px;
   border: 0;
   border-radius: 0;
   margin-inline-start: 0;
   text-align: left;
   font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap !important;
+  overflow: hidden;
 }
 
 .tswActionItem:hover {
@@ -60,24 +63,4 @@
   color: #3b82f6 !important;
   border: 0;
   border-radius: 0;
-}
-
-.tswActionItem button {
-  color: black !important;
-  padding: 0 !important;
-  height: unset !important;
-  justify-content: start !important;
-  text-align: left !important;
-  background-color: unset !important;
-  border: 0 !important;
-  text-overflow: ellipsis;
-  white-space: nowrap !important;
-  overflow: hidden;
-  width: 150px;
-  display: block !important;
-  margin: 0;
-}
-
-.tswActionItem button:hover {
-  color: #3b82f6 !important;
 }

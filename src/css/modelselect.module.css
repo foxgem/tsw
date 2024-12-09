@@ -13,7 +13,6 @@
   align-items: center !important;
   justify-content: start;
   cursor: pointer;
-  width: 150px;
   color: black;
 }
 
@@ -38,11 +37,10 @@
   width: 100%;
   overflow-y: auto !important;
   z-index: 4000000 !important;
-  margin-right: 10px;
 }
 
 .tswModelItem {
-  padding: 8px 20px;
+  padding: 8px 10px;
   cursor: pointer;
   border: none;
   background-color: #ffffff;
@@ -58,7 +56,11 @@
   align-items: center;
   position: relative;
   max-width: 200px;
-  @apply relative cursor-default select-none py-1.5 pl-8 pr-2 text-sm outline-none;
+  user-select: none;
+  padding: 0.375rem 0.5rem;
+  padding-left: 2rem;
+  padding-right: 0.5rem;
+  outline: none;
 }
 
 .tswModelItem:hover {
@@ -77,7 +79,6 @@
 }
 
 .tswModelItem span:nth-of-type(2) {
-  width: 150px;
   display: block;
   text-overflow: ellipsis;
   white-space: nowrap;
