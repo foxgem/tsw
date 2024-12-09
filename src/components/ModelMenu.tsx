@@ -21,7 +21,12 @@ export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
   const [currentModel, setCurrentModel] = useState<string>();
 
   const loadModels = async () => {
-    const models = [DEFAULT_MODEL, "gemini-1.5-flash-8b", "gemini-1.5-pro"]; //await loadCommandsFromStorage(category);
+    const models = [
+      DEFAULT_MODEL,
+      "gemini-1.5-flash-8b",
+      "gemini-1.5-pro",
+      "gemini-exp-1206",
+    ]; //await loadCommandsFromStorage(category);
     setModels(models);
     if (!currentModel) {
       setCurrentModel(models[0]);
