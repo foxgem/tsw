@@ -23,5 +23,19 @@ export const LANG_LIST = [
 ];
 
 export const DEFAULT_MODEL = "gemini-1.5-flash";
+export const MODELS = {
+  gemini: [
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-pro",
+    "gemini-exp-1206",
+  ],
+  groq: [
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+    "gemma2-9b-it",
+    "mixtral-8x7b-32768",
+  ],
+};
 export const IINSTANT_INPUT_COUNT_LIMIT = 10;
 export const INSTANT_INPUT_MAX_LENGTH = 200;

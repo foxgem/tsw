@@ -1,57 +1,55 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEFAULT_MODEL } from "~utils/constants";
+import { MODELS } from "~utils/constants";
 import styles from "../css/modelselect.module.css";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
 
 interface Props {
-  category: string;
   onSelect: (model: string) => void;
 }
 
-export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
-  const [models, setModels] = useState([]);
+interface ModelGroups {
+  gemini: string[];
+  groq: string[];
+}
+
+export default function ModelMenu({ onSelect }: Readonly<Props>) {
+  const [models, setModels] = useState<ModelGroups>({ gemini: [], groq: [] });
   const [currentModel, setCurrentModel] = useState<string>();
 
   const loadModels = async () => {
-    const models = [
-      DEFAULT_MODEL,
-      "gemini-1.5-flash-8b",
-      "gemini-1.5-pro",
-      "gemini-exp-1206",
-    ]; //await loadCommandsFromStorage(category);
-    setModels(models);
+    setModels(MODELS);
     if (!currentModel) {
-      setCurrentModel(models[0]);
+      setCurrentModel(MODELS.gemini[0]);
     }
   };
 
   useEffect(() => {
     loadModels();
-  }, [category]);
+  }, []);
 
   const handleselectItemClick = (selectItem: string) => {
     setCurrentModel(selectItem);
-
-    const selectedModel = models.find((cmd) => cmd === selectItem);
-    if (selectedModel) {
-      onSelect(selectedModel);
-    }
+    onSelect(selectItem);
   };
 
   useEffect(() => {
-    if (currentModel && models.length > 0) {
-      const modelExists = models.some((cmd) => cmd === currentModel);
+    if (currentModel && models.gemini.length > 0) {
+      const modelExists = [...models.gemini, ...models.groq].includes(
+        currentModel,
+      );
       if (!modelExists) {
-        setCurrentModel(models[0]);
-        onSelect(models[0]);
+        setCurrentModel(models.gemini[0]);
+        onSelect(models.gemini[0]);
       }
     }
   }, [models, currentModel]);
@@ -70,14 +68,21 @@ export default function ModelMenu({ category, onSelect }: Readonly<Props>) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent className={styles.tswModelList}>
-            {models.map((option) => (
-              <SelectItem
-                key={option}
-                value={option}
-                className={styles.tswModelItem}
-              >
-                {option}
-              </SelectItem>
+            {Object.entries(models).map(([groupName, options]) => (
+              <SelectGroup key={groupName}>
+                <SelectLabel className={styles.tswModelLabel}>
+                  {groupName.charAt(0).toUpperCase() + groupName.slice(1)}
+                </SelectLabel>
+                {options.map((option) => (
+                  <SelectItem
+                    key={option}
+                    value={option}
+                    className={styles.tswModelItem}
+                  >
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             ))}
           </SelectContent>
         </Select>

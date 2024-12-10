@@ -288,7 +288,8 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                     chatStyles.chatItemContainer,
                     m.role === "user" ? chatStyles.userChatItem : "",
                     chatStyles.tswChatItem,
-                    String(m.content).split("\n").length === 1
+                    String(m.content).split("\n").length === 1 &&
+                      m.content.length < 100
                       ? chatStyles.tswChatItemSingle
                       : "",
                   )}
@@ -399,10 +400,6 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                 loadInstantInputs();
                 const textarea = textareaRef.current;
                 if (textarea) {
-                  const rect = textarea.getBoundingClientRect();
-                  const lineHeight = parseInt(
-                    window.getComputedStyle(textarea).lineHeight,
-                  );
                   setShowInstantInput(true);
                 }
               } else {
@@ -483,10 +480,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           )}
           <div className={chatStyles.editActions}>
             <div>
-              <ModelMenu
-                category="gemini"
-                onSelect={(model) => handleModelSelect(model)}
-              />
+              <ModelMenu onSelect={(model) => handleModelSelect(model)} />
             </div>
             <div>
               {editingMessageId !== null && (

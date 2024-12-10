@@ -134,7 +134,7 @@
 }
 
 .messageContent {
-  @apply rounded-lg max-w-[80%];
+  @apply max-w-[80%] text-base;
 }
 
 .loadingContainer {

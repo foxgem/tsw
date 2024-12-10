@@ -1,11 +1,10 @@
 import { useState } from "react";
-
 import "./css/extention.css";
-import { SettingsSidebar } from "~components/SettingsSidebar";
-import { Timers } from "~components/setting/Timers";
 import Footer from "~components/Footer";
-import { ServiceSettings } from "~components/setting/ServiceSettings";
+import { SettingsSidebar } from "~components/SettingsSidebar";
 import { InstantInputs } from "~components/setting/InstantInputs";
+import { ServiceSettings } from "~components/setting/ServiceSettings";
+import { Timers } from "~components/setting/Timers";
 
 export default function OptionsIndex() {
   const [selectedSection, setSelectedSection] = useState("timers");
@@ -31,21 +30,9 @@ export default function OptionsIndex() {
           />
 
           <div className="space-y-8 w-full">
-            {selectedSection === "timers" && (
-              <>
-                <Timers />
-              </>
-            )}
-            {selectedSection === "keys" && (
-              <>
-                <ServiceSettings />
-              </>
-            )}
-            {selectedSection === "instant-inputs" && (
-              <>
-                <InstantInputs />
-              </>
-            )}
+            {selectedSection === "timers" && <Timers />}
+            {selectedSection === "keys" && <ServiceSettings />}
+            {selectedSection === "instant-inputs" && <InstantInputs />}
           </div>
         </div>
       </div>
