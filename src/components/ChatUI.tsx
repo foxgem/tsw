@@ -38,6 +38,7 @@ type Message = {
   content: string;
   isComplete?: boolean;
   isThinking?: boolean;
+  isError?: boolean;
 };
 
 export interface ChatUIProps {
@@ -150,7 +151,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
           ) {
             return messages.map((msg, index) =>
               index === messages.length - 1
-                ? { ...msg, content: error.message }
+                ? { ...msg, content: error.message, isError: true }
                 : msg,
             );
           }
@@ -287,6 +288,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
                   className={cn(
                     chatStyles.chatItemContainer,
                     m.role === "user" ? chatStyles.userChatItem : "",
+                    m.isError ? chatStyles.errorChatItem : "",
                     chatStyles.tswChatItem,
                     String(m.content).split("\n").length === 1 &&
                       m.content.length < 100
