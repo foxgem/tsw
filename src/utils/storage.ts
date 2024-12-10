@@ -13,14 +13,23 @@ setInterval(async () => {
 
 export async function initDb() {
   const gemini = await storage.get("apiKey");
-  const apiKyes = await storage.get<ApiKeyEntry[]>("apiKeys");
+  const apiKeys = await storage.get<ApiKeyEntry[]>("apiKeys");
+  const defaultKeys = [
+    { name: "Gemini API", key: gemini || "" },
+    { name: "Neon DB URL", key: "" },
+    { name: "Groq API", key: "" },
+  ];
 
-  if (!apiKyes || (apiKyes && apiKyes.length === 0)) {
-    const defaultKeys = [
-      { name: "Gemini API", key: gemini || "" },
-      { name: "Neon DB URL", key: "" },
-    ];
+  if (!apiKeys || (apiKeys && apiKeys.length === 0)) {
     await storage.set("apiKeys", defaultKeys);
+  } else {
+    for (const defaultKey of defaultKeys) {
+      const hasKey = apiKeys.some((entry) => entry.name === defaultKey.name);
+      if (!hasKey) {
+        apiKeys.push({ name: defaultKey.name, key: "" });
+      }
+    }
+    await storage.set("apiKeys", apiKeys);
   }
 
   if (gemini) {

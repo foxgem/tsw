@@ -71,19 +71,19 @@ export function ServiceSettings() {
 
       <div className="flex justify-start space-x-2">
         <Button
+          size="sm"
+          className="hover:opacity-75 hover:bg-primary w-[80px]"
+          onClick={handleSave}
+        >
+          Save
+        </Button>
+        <Button
           variant="outline"
           size="sm"
           className="w-[80px]"
           onClick={handleCancel}
         >
           Cancel
-        </Button>
-        <Button
-          size="sm"
-          className="hover:opacity-75 hover:bg-primary w-[80px]"
-          onClick={handleSave}
-        >
-          Save
         </Button>
       </div>
     </div>
