@@ -218,7 +218,6 @@
 }
 
 .downloadButtonContainer {
-  /* background-color: var(--background); */
   border-radius: 999;
 }
 
@@ -254,4 +253,8 @@
 
 .dialogContentRadioDiv {
   @apply space-y-4;
+}
+
+.errorChatItem {
+  @apply text-red-500;
 }
