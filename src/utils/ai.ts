@@ -17,7 +17,7 @@ import {
   MODEL_PROVIDERS,
   type ModelProvider,
 } from "./constants";
-import { loadApiKey } from "~ai/utils";
+import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
 
 const siEnglishTeacher =
@@ -241,8 +241,8 @@ export const chatWithPage = async (
     throw new Error("Invalid provider");
   }
 
-  let chattingContext = context;
-  if (provider !== DEFAULT_MODEL_PROVIDER) {
+  let chattingContext = turndown(context);
+  if (provider !== "gemini") {
     if (!pageVector) {
       pageVector = new MemVector(context);
       await pageVector.indexing();
@@ -255,7 +255,7 @@ export const chatWithPage = async (
   try {
     const apiKey = await loadApiKey(provider);
     const modelProvider =
-      provider === DEFAULT_MODEL_PROVIDER
+      provider === "gemini"
         ? createGoogleGenerativeAI({ apiKey })
         : createGroq({ apiKey });
     const { textStream } = streamText({

@@ -66,9 +66,8 @@ export class MemVector {
       };
     });
 
-    console.log(similarities);
     return similarities
-      .filter((item) => item.similarity > 0.65)
+      .filter((item) => item.similarity > 0.5)
       .map((item) => item.text);
   }
 }
