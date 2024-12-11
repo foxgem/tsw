@@ -26,7 +26,7 @@ export const DEFAULT_MODEL = "gemini-1.5-flash";
 
 export type ModelProvider = "gemini" | "groq";
 
-export const DEFAULT_MODEL_PROVIDER = "gemini" as ModelProvider;
+export const DEFAULT_MODEL_PROVIDER: ModelProvider = "gemini";
 export const MODEL_PROVIDERS = ["gemini", "groq"];
 export const MODELS = {
   gemini: [
