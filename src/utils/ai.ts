@@ -1,4 +1,5 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createGroq } from "@ai-sdk/groq";
 import {
   type CoreAssistantMessage,
   type CoreMessage,
@@ -11,19 +12,8 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
 import { DEFAULT_MODEL } from "./constants";
-import { readApiKeys } from "./storage";
-
-const loadApiKey = async () => {
-  const apiKey =
-    process.env.PLASMO_PUBLIC_GOOGLE_GENERATIVE_AI_API_KEY ||
-    (await readApiKeys()).find((k) => k.name === "Gemini API")?.key;
-  if (!apiKey) {
-    throw new Error(
-      "Google Generative AI API key not found in environment variables or storage",
-    );
-  }
-  return apiKey;
-};
+import { loadApiKey } from "~ai/utils";
+import { MemVector } from "~ai/vector";
 
 const siEnglishTeacher =
   "你是一名资深英语老师有丰富的教学经验，可以深入浅出的用中文讲解英文疑难杂句和单词释义。";
@@ -60,9 +50,17 @@ const ocrExpert = (postProcessing: string) => {
 
 const pageRagPrompt = (context: string) => {
   return `
-  You are an expert in answering user questions. You always understand user questions well, and then provide high-quality answers based on the information provided in the context.
+  You are a helpful assistant and can do the following tasks:
+  1. answering users's question based on the given context.
+  2. finding relevant information based on the input.
+
+  Workflow:
+  1. try to answer the question based on the context.
+  2. if the context is not sufficient, ask the user if he/she wants to search on web.
+  3. if the user agrees, search the web and provide the answer. Don't try to answer the question without searching.
+
   Try to keep the answer concise and relevant to the context without providing unnecessary information and explanations.
-  If the provided context does not contain relevant information, just respond "I could not find the answer based on the context you provided."
+  If you don't know how answer, just respond "I could not find the answer based on the context you provided."
 
   Page Context:
   ${context}
@@ -89,7 +87,7 @@ export const callPrompt = async (
   const root = createRoot(messageElement);
 
   try {
-    const apiKey = await loadApiKey();
+    const apiKey = await loadApiKey("gemini");
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = streamText({
       model: google("gemini-1.5-flash"),
@@ -120,7 +118,7 @@ const genChatFunction = async (
   const root = createRoot(messageElement);
 
   try {
-    const apiKey = await loadApiKey();
+    const apiKey = await loadApiKey("gemini");
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = streamText({
       model: google("gemini-1.5-flash"),
@@ -223,20 +221,48 @@ export const ocr = (
     messageElement,
   );
 
+let pageVector: MemVector;
+
 export const chatWithPage = async (
   messages: CoreMessage[],
-  pageText: string,
+  context: string,
   pageURL: string,
   signal: AbortSignal,
+  provider: "gemini" | "groq" = "gemini",
   model = DEFAULT_MODEL,
   customPrompt?: string,
 ) => {
+  if (["gemini", "groq"].indexOf(provider) === -1) {
+    throw new Error("Invalid provider");
+  }
+
+  let chattingContext = context;
+  if (provider !== "gemini") {
+    if (!pageVector) {
+      pageVector = new MemVector(context);
+      await pageVector.indexing();
+    }
+
+    const userMessage = messages[messages.length - 1].content.toString();
+    chattingContext = (await pageVector.search(userMessage)).join("\n");
+  }
+
   try {
-    const apiKey = await loadApiKey();
-    const google = createGoogleGenerativeAI({ apiKey });
+    const apiKey = await loadApiKey(provider);
+    const modelProvider =
+      provider === "gemini"
+        ? createGoogleGenerativeAI({ apiKey })
+        : createGroq({ apiKey });
     const { textStream } = streamText({
-      model: google(model),
-      system: prepareSystemPrompt(pageText, pageURL, customPrompt),
+      model: modelProvider(model),
+      system: prepareSystemPrompt(chattingContext, pageURL, customPrompt),
+      // tools: {
+      //   search: createGoogleSearch({
+      //     apiKey: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_API_KEY,
+      //     cx: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_CX,
+      //   }),
+      //   summarise: createSummarizer(document.body.innerHTML),
+      // },
       messages,
       abortSignal: signal,
     });

@@ -6,10 +6,10 @@ const storage = new Storage();
 export const timerStartedMap = new Map<number, boolean>();
 
 // For debugging
-setInterval(async () => {
-  console.log(timerStartedMap);
-  console.log(await storage.getAll());
-}, 3000);
+// setInterval(async () => {
+//   console.log(timerStartedMap);
+//   console.log(await storage.getAll());
+// }, 3000);
 
 export async function initDb() {
   const gemini = await storage.get("apiKey");

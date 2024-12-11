@@ -171,7 +171,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
     }
   };
 
-  const generateContent = async (newMessages) => {
+  const generateContent = async (newMessages: Message[]) => {
     abortController.current = new AbortController();
     setMessages([
       ...newMessages,
@@ -188,6 +188,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       pageText,
       pageURL,
       abortController.current.signal,
+      "gemini",
       model,
     );
     let fullText = "";
