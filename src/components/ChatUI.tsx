@@ -10,9 +10,13 @@ import { SquarePenIcon } from "~/components/ui/icons/square-pen";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
-import { cn, upperCaseFirstLetter } from "~lib/utils";
+import { cn, getProviderFromModel, upperCaseFirstLetter } from "~lib/utils";
 import { chatWithPage } from "~utils/ai";
-import { DEFAULT_MODEL } from "~utils/constants";
+import {
+  DEFAULT_MODEL,
+  DEFAULT_MODEL_PROVIDER,
+  type ModelProvider,
+} from "~utils/constants";
 import { readInstantInputs } from "~utils/storage";
 import textselectStyles from "../css/textselect.module.css";
 import { ActionIcon } from "./ActionIcon";
@@ -54,6 +58,9 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   const abortController = useRef<AbortController | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
   const [model, setModel] = useState(DEFAULT_MODEL);
+  const [modelProvider, setModelProvider] = useState<ModelProvider>(
+    DEFAULT_MODEL_PROVIDER,
+  );
   const [showInstantInput, setShowInstantInput] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [instantInputs, setInstantInputs] = useState<string[]>([]);
@@ -188,7 +195,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
       pageText,
       pageURL,
       abortController.current.signal,
-      "gemini",
+      modelProvider,
       model,
     );
     let fullText = "";
@@ -262,6 +269,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
   };
 
   const handleModelSelect = (modelSelected: string) => {
+    setModelProvider(getProviderFromModel(modelSelected));
     setModel(modelSelected);
   };
 
