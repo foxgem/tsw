@@ -438,11 +438,44 @@ function createSelectMenu() {
 
     if (selection && selection.toString().trim() !== "") {
       const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
-      const position = {
-        x: rect.left + window.scrollX + rect.width / 2,
-        y: rect.bottom + window.scrollY,
+
+      let rect = range.getBoundingClientRect();
+      let position = {
+        x: 0,
+        y: 0,
       };
+      if (rect.x === 0 && rect.y === 0) {
+        const selectedNode = range.startContainer.parentElement;
+        if (selectedNode) {
+          rect = selectedNode.getBoundingClientRect();
+          if (rect.x === 0) {
+            const mouseEvent = window.event as MouseEvent;
+            position = {
+              x: mouseEvent?.clientX || 0,
+              y: Math.max(rect.bottom + window.scrollY, 0),
+            };
+          } else {
+            position = {
+              x: rect.left + 100,
+              y: Math.max(rect.bottom + window.scrollY, 0),
+            };
+          }
+        }
+      } else {
+        position = {
+          x: Math.min(
+            rect.left + window.scrollX + rect.width / 2,
+            window.innerWidth - 100,
+          ),
+          y: Math.max(rect.bottom + window.scrollY, 0),
+        };
+      }
+
+      if (position.x === 0 && position.y === 0) {
+        const mouseEvent = window.event as MouseEvent;
+        position.x = mouseEvent?.clientX || rect.left;
+        position.y = mouseEvent?.clientY || rect.bottom;
+      }
 
       root.render(
         React.createElement(TextSelectionMenu, {

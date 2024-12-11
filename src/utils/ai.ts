@@ -11,7 +11,12 @@ import {
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
-import { DEFAULT_MODEL } from "./constants";
+import {
+  DEFAULT_MODEL,
+  DEFAULT_MODEL_PROVIDER,
+  MODEL_PROVIDERS,
+  type ModelProvider,
+} from "./constants";
 import { loadApiKey } from "~ai/utils";
 import { MemVector } from "~ai/vector";
 
@@ -228,16 +233,16 @@ export const chatWithPage = async (
   context: string,
   pageURL: string,
   signal: AbortSignal,
-  provider: "gemini" | "groq" = "gemini",
+  provider: ModelProvider = DEFAULT_MODEL_PROVIDER,
   model = DEFAULT_MODEL,
   customPrompt?: string,
 ) => {
-  if (["gemini", "groq"].indexOf(provider) === -1) {
+  if (MODEL_PROVIDERS.indexOf(provider) === -1) {
     throw new Error("Invalid provider");
   }
 
   let chattingContext = context;
-  if (provider !== "gemini") {
+  if (provider !== DEFAULT_MODEL_PROVIDER) {
     if (!pageVector) {
       pageVector = new MemVector(context);
       await pageVector.indexing();
@@ -250,7 +255,7 @@ export const chatWithPage = async (
   try {
     const apiKey = await loadApiKey(provider);
     const modelProvider =
-      provider === "gemini"
+      provider === DEFAULT_MODEL_PROVIDER
         ? createGoogleGenerativeAI({ apiKey })
         : createGroq({ apiKey });
     const { textStream } = streamText({
