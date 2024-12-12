@@ -26,7 +26,7 @@ export async function loadApiKey(provider: "gemini" | "groq") {
 function cleanPageText(root: HTMLElement, selector = "") {
   const temp = root.cloneNode(true) as HTMLElement;
   for (const el of temp.querySelectorAll(
-    `script, style, img${selector ? `, ${selector}` : ""}`,
+    `script, style, form, audio, video, iframe, picture, img${selector ? `, ${selector}` : ""}`,
   )) {
     el.remove();
   }
