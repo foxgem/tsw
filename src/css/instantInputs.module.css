@@ -4,7 +4,7 @@
 }
 
 .titleContain {
-  @apply flex justify-center items-center gap-2 mb-6;
+  @apply flex justify-center items-center gap-[8px] mb-[24px];
 }
 
 .title {
@@ -17,11 +17,11 @@
 }
 
 .InstantInputsContainer {
-  @apply text-sm w-full max-w-[450px] box-border space-y-2;
+  @apply text-sm w-full max-w-[450px] box-border space-y-[8px];
 }
 
 .instantInputButton {
-  @apply rounded-lg p-3 
+  @apply rounded-lg p-[12px] 
     border border-gray-100
     text-left w-full 
     whitespace-nowrap overflow-hidden truncate

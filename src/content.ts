@@ -37,6 +37,11 @@ function registerElmPicker(checkers: PickingChecker[]) {
       return;
     }
 
+    const togglePanel = document.getElementById("tsw-toggle-panel");
+    if (togglePanel?.contains(elementMouseIsOver)) {
+      return;
+    }
+
     if (elementMouseIsOver === prevElementMouseIsOver) {
       return;
     }
@@ -378,7 +383,6 @@ const showWarning = () => {
 };
 
 chrome.runtime.onMessage.addListener((request) => {
-  console.log(request.action);
   switch (request.action) {
     case "openChat":
       chattingHandler("tsw-toggle-panel");

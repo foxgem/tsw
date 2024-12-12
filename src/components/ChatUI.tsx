@@ -468,6 +468,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                     left: `${textareaRef.current?.getBoundingClientRect().left}px`,
                     width: `${textareaRef.current?.getBoundingClientRect().width}px`,
                     overflowY: "auto",
+                    zIndex: 10000,
                   }}
                   sideOffset={0}
                   alignOffset={0}

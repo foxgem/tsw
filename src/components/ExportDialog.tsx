@@ -1,6 +1,6 @@
 import * as htmlToImage from "html-to-image";
 import jsPDF from "jspdf";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
@@ -174,6 +174,19 @@ source: ${window.location.href}`;
     }
   };
 
+  useEffect(() => {
+    const panel = document.getElementById("tsw-toggle-panel");
+    const selectionOverlay = document.getElementById("selection-overlay");
+
+    if (panel) {
+      panel.style.zIndex = isOpen ? "10" : "10000";
+    }
+
+    if (selectionOverlay) {
+      selectionOverlay.style.zIndex = isOpen ? "9" : "9999";
+    }
+  }, [isOpen]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -185,7 +198,7 @@ source: ${window.location.href}`;
           <DownloadIcon size={16} className={iconsStyles.dynamicIcon} />
         </Button>
       </DialogTrigger>
-      <DialogContent className={styles.dialogContent}>
+      <DialogContent className={cn(styles.dialogContent, styles.dialogOverlay)}>
         <div className={chatStyles.dialogContentDiv}>
           <div className={chatStyles.dialogContentRadioDiv}>
             <h4 className={chatStyles.dialogChoseTitle}>

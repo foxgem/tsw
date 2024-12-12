@@ -15,6 +15,8 @@ import {
   summariseLink,
 } from "./utils/ai";
 
+const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
+
 function withOutputPanel(
   outputElm: string,
   title: string,
@@ -42,6 +44,7 @@ function withOutputPanel(
     margin-top: 10px;
     border-radius: 10px;
     display:none;
+    z-index:10000;
   `;
   }
 
@@ -51,6 +54,8 @@ function withOutputPanel(
   panel.style.display = "block";
   panel.innerHTML = "";
   const root = createRoot(panel);
+  panelRoots.set(outputElm, root);
+
   root.render(
     React.createElement(TSWPanel, {
       title: title,
@@ -89,6 +94,10 @@ function setupWrapperAndBody(): {
   header: HTMLElement;
   originalHeaderWidth?: string;
 } {
+  const scrollPosition = {
+    x: window.scrollX,
+    y: window.scrollY,
+  };
   let wrapper = document.getElementById("tsw-outer-wrapper");
   const innerWrapper = document.createElement("div");
 
@@ -127,6 +136,9 @@ function setupWrapperAndBody(): {
     margin-right:10px;
   `;
 
+  wrapper.scrollLeft = scrollPosition.x;
+  wrapper.scrollTop = scrollPosition.y;
+
   const newWidth = "60vw";
   wrapper.style.width = newWidth;
   innerWrapper.style.cssText = `
@@ -150,6 +162,18 @@ function setupWrapperAndBody(): {
   return { wrapper, innerWrapper, header, originalHeaderWidth };
 }
 
+function cleanupPanel(outputElm: string) {
+  const root = panelRoots.get(outputElm);
+  if (root) {
+    try {
+      root.unmount();
+    } catch (e) {
+      console.warn("Failed to unmount root:", e);
+    }
+    panelRoots.delete(outputElm);
+  }
+}
+
 function resetWrapperCss(
   wrapper: HTMLElement,
   innerWrapper: HTMLElement,
@@ -157,6 +181,11 @@ function resetWrapperCss(
   panel: HTMLElement,
   originalHeaderWidth?: string,
 ) {
+  const scrollPosition = {
+    x: wrapper.scrollLeft,
+    y: wrapper.scrollTop,
+  };
+  cleanupPanel(panel.id);
   panel.style.display = "none";
   wrapper.style.cssText = `
     width: 100%;
@@ -183,6 +212,8 @@ function resetWrapperCss(
   }
 
   window.dispatchEvent(new Event("resize"));
+  console.log(scrollPosition);
+  window.scrollTo(scrollPosition.x, scrollPosition.y);
 }
 
 export async function summarize(outputElm: string) {
