@@ -95,7 +95,7 @@ export const callPrompt = async (
     const apiKey = await loadApiKey("gemini");
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = streamText({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.0-flash-exp"),
       system,
       prompt,
     });
@@ -126,7 +126,7 @@ const genChatFunction = async (
     const apiKey = await loadApiKey("gemini");
     const google = createGoogleGenerativeAI({ apiKey });
     const { textStream } = streamText({
-      model: google("gemini-1.5-flash"),
+      model: google("gemini-2.0-flash-exp"),
       messages,
     });
 
