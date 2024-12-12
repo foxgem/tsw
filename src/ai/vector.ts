@@ -6,22 +6,22 @@ import { cosineSimilarity, embed, embedMany, type Embedding } from "ai";
 // Use Gemini to embed text into vectors
 export class MemVector {
   apiKey: string;
-  rawHtml: string;
+  htmlRoot: HTMLElement;
   cleanedMarkdown: string;
   store: Array<{
     text: string;
     embedding: Embedding;
   }>;
 
-  constructor(rawHtml: string) {
-    this.rawHtml = rawHtml;
+  constructor(htmlRoot: HTMLElement) {
+    this.htmlRoot = htmlRoot;
     loadApiKey("gemini").then((apiKey) => {
       this.apiKey = apiKey;
     });
   }
 
   async split() {
-    const markdown = turndown(this.rawHtml);
+    const markdown = turndown(this.htmlRoot);
     const textSplitter = RecursiveCharacterTextSplitter.fromLanguage(
       "markdown",
       {

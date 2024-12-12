@@ -192,7 +192,7 @@ export async function summarize(outputElm: string) {
     async () => {
       const summaryElement = document.getElementById("tsw-output-body");
       if (summaryElement) {
-        await summariseLink(document.body.innerHTML, summaryElement);
+        await summariseLink(document.body, summaryElement);
       }
     },
     React.createElement(Loading, {
@@ -288,7 +288,7 @@ export function chattingHandler(outputElm: string) {
     "Chatting With Page",
     async () => {},
     React.createElement(ChatUI, {
-      pageText: document.body.innerHTML,
+      pageRoot: document.body,
       pageURL: window.location.href,
     }),
   );

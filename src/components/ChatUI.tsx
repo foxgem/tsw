@@ -46,11 +46,11 @@ type Message = {
 };
 
 export interface ChatUIProps {
-  readonly pageText: string;
+  readonly pageRoot: HTMLElement;
   readonly pageURL: string;
 }
 
-export function ChatUI({ pageText, pageURL }: ChatUIProps) {
+export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -192,7 +192,7 @@ export function ChatUI({ pageText, pageURL }: ChatUIProps) {
 
     const textStream = await chatWithPage(
       newMessages,
-      pageText,
+      pageRoot,
       pageURL,
       abortController.current.signal,
       modelProvider,

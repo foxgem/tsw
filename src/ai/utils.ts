@@ -23,12 +23,19 @@ export async function loadApiKey(provider: "gemini" | "groq") {
   return apiKey;
 }
 
-export function turndown(html: string, filter: TurndownService.TagName[] = []) {
-  const turndownService = new TurndownService().remove([
-    "script",
-    "style",
-    "img",
-    ...filter,
-  ]);
+function cleanPageText(root: HTMLElement, selector = "") {
+  const temp = root.cloneNode(true) as HTMLElement;
+  for (const el of temp.querySelectorAll(
+    `script, style, img${selector ? `, ${selector}` : ""}`,
+  )) {
+    el.remove();
+  }
+
+  return temp.innerHTML.replace(/\s+/g, " ").trim();
+}
+
+export function turndown(root: HTMLElement, selector = "") {
+  const html = cleanPageText(root, selector);
+  const turndownService = new TurndownService();
   return turndownService.turndown(html);
 }

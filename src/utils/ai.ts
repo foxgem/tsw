@@ -161,10 +161,10 @@ export const explainWord = (word: string, messageElement: HTMLElement) =>
     messageElement,
   );
 
-export const summariseLink = (pageText: string, messageElement: HTMLElement) =>
+export const summariseLink = (root: HTMLElement, messageElement: HTMLElement) =>
   callPrompt(
     `分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。
-    ${pageText}
+    ${turndown(root, "code")}
     输出格式要求如下：
     语言： 采用原文同语种。如：原文是英文，输出用英文；原文是中文，输出用中文，以此类推。
     关键字： 5 个以内
@@ -230,7 +230,7 @@ let pageVector: MemVector;
 
 export const chatWithPage = async (
   messages: CoreMessage[],
-  context: string,
+  root: HTMLElement,
   pageURL: string,
   signal: AbortSignal,
   provider: ModelProvider = DEFAULT_MODEL_PROVIDER,
@@ -241,15 +241,15 @@ export const chatWithPage = async (
     throw new Error("Invalid provider");
   }
 
-  let chattingContext = turndown(context);
+  let context = turndown(root);
   if (provider !== "gemini") {
     if (!pageVector) {
-      pageVector = new MemVector(context);
+      pageVector = new MemVector(root);
       await pageVector.indexing();
     }
 
     const userMessage = messages[messages.length - 1].content.toString();
-    chattingContext = (await pageVector.search(userMessage)).join("\n");
+    context = (await pageVector.search(userMessage)).join("\n");
   }
 
   try {
@@ -260,7 +260,7 @@ export const chatWithPage = async (
         : createGroq({ apiKey });
     const { textStream } = streamText({
       model: modelProvider(model),
-      system: prepareSystemPrompt(chattingContext, pageURL, customPrompt),
+      system: prepareSystemPrompt(context, pageURL, customPrompt),
       // tools: {
       //   search: createGoogleSearch({
       //     apiKey: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_API_KEY,
