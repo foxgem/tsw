@@ -11,11 +11,11 @@
 }
 
 .scrollbarVertical {
-  @apply h-full w-2.5 border-l border-l-transparent p-[1px];
+  @apply h-full w-[10px] border-l border-l-transparent p-[1px];
 }
 
 .scrollbarHorizontal {
-  @apply h-2.5 flex-col border-t border-t-transparent p-[1px];
+  @apply h-[10px] flex-col border-t border-t-transparent p-[1px];
 }
 
 .thumb {
@@ -23,7 +23,7 @@
 }
 
 .textareaComponent {
-  @apply flex rounded-md border px-3 py-2 text-[16px] w-full;
+  @apply flex rounded-md border px-[10px] py-[8px] text-[16px] w-full;
 }
 
 .textareaComponent::placeholder {
@@ -31,11 +31,11 @@
 }
 
 .textareaComponent:focus {
-  @apply ring-2 ring-blue-500 outline-none;
+  @apply ring-[8px] ring-blue-500 outline-none;
 }
 
 .copyButton {
-  @apply ml-2 px-3 py-1 text-sm rounded bg-blue-500 text-white;
+  @apply ml-[8px] px-[10px] py-[4px] text-sm rounded bg-blue-500 text-white;
 }
 
 .copyButton:hover {
@@ -44,13 +44,13 @@
 
 .radiogroupRoot {
   display: grid;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .radiogroupItem {
   aspect-ratio: 1;
-  height: 1rem;
-  width: 1rem;
+  height: 16px;
+  width: 16px;
   border-radius: 9999px;
   border: 1px solid var(--tsw-purple);
   color: var(--tsw-purple);
@@ -74,8 +74,8 @@
 }
 
 .radiogroupCircle {
-  height: 0.625rem;
-  width: 0.625rem;
+  height: 10px;
+  width: 10px;
   fill: currentColor;
   color: currentColor;
 }
@@ -110,12 +110,12 @@
   z-index: 50;
   display: grid;
   width: 100%;
-  max-width: 32rem;
+  max-width: 332px;
   transform: translate(-50%, -50%);
-  gap: 1rem;
+  gap: 16px;
   border: 1px solid var(--border);
   background-color: white;
-  padding: 1.5rem;
+  padding: 24px;
   box-shadow: var(--shadow-lg);
   transition-duration: 200ms;
 }
@@ -132,15 +132,15 @@
 
 @media (min-width: 640px) {
   .dialogContent {
-    border-radius: 0.5rem;
+    border-radius: 8px;
   }
 }
 
 .dialogCloseButton {
   position: absolute;
-  right: 1rem;
-  top: 1rem;
-  border-radius: 0.125rem;
+  right: 16px;
+  top: 16px;
+  border-radius: 2px;
   opacity: 0.7;
   transition: opacity;
   border: none;
@@ -175,7 +175,7 @@
 .dialogHeader {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 6px;
   text-align: center;
 }
 
@@ -194,19 +194,19 @@
   .dialogFooter {
     flex-direction: row;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: 8px;
   }
 }
 
 .dialogTitle {
-  font-size: 1.125rem;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.025em;
 }
 
 .dialogDescription {
-  font-size: 0.875rem;
+  font-size: 14px;
   color: var(--muted-foreground);
 }
 
@@ -265,7 +265,7 @@
 }
 
 .label {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 14px; /* text-sm */
   font-weight: 500; /* font-medium */
   line-height: 1; /* leading-none */
 }

@@ -63,7 +63,7 @@
 #tsw-close-right-part {
   font-weight: 700;
   font-size: 14px;
-  line-height: 1.25rem;
+  line-height: 20px;
   cursor: pointer;
   height: 28px;
   color: black;
@@ -130,8 +130,8 @@
   ol,
   ul {
     list-style-position: inside;
-    margin: 1em 0;
-    padding-left: 1em;
+    margin: 16px 0;
+    padding-left: 16px;
   }
 
   ol {
@@ -143,18 +143,18 @@
   }
 
   li {
-    margin: 0.5em 0;
+    margin: 8px 0;
   }
 
   blockquote {
-    font-size: 1rem;
+    font-size: 16px;
     color: #999;
-    border-left: .2rem solid #dfe2e5;
-    margin: 0.5rem 0;
-    padding: .25rem 0 .25rem 1rem;
+    border-left: 3px solid #dfe2e5;
+    margin: 8px 0;
+    padding: 4px 0 4px 16px;
     display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
+    margin-block-start: 16px;
+    margin-block-end: 16px;
     margin-inline-start: 40px;
     margin-inline-end: 40px;
     unicode-bidi: isolate;
@@ -180,7 +180,7 @@
   table th,
   table td {
     border: 1px solid #e5e7eb !important;
-    @apply p-2;
+    @apply p-[8px];
   }
 
   table tr {

@@ -1,7 +1,7 @@
 .tswActionBtn {
   font-weight: 700;
   font-size: 14px;
-  line-height: 1.25rem;
+  line-height: 20px;
   cursor: pointer;
   height: 28px;
   color: black;
@@ -41,9 +41,9 @@
 .tswPanelFooter {
   position: sticky;
   bottom: 0;
-  padding: 1rem 0 0;
+  padding: 16px 0 0;
   display: flex;
-  gap: 1rem;
+  gap: 16px;
   max-height: 200px;
   align-items: center;
 }
@@ -110,7 +110,7 @@
 }
 
 .messageContainer {
-  @apply mb-1;
+  @apply mb-[4px];
 }
 
 .messageContainer svg path {
@@ -138,7 +138,7 @@
 }
 
 .loadingContainer {
-  @apply flex items-center space-x-2;
+  @apply flex items-center space-x-[8px];
 }
 
 .loadingDot {
@@ -146,11 +146,11 @@
 }
 
 .dotBase {
-  @apply w-3 h-3 bg-blue-500 rounded-full;
+  @apply w-[12px] h-[12px] bg-blue-500 rounded-full;
 }
 
 .dotPing {
-  @apply absolute top-0 left-0 w-3 h-3 bg-blue-500 rounded-full animate-ping;
+  @apply absolute top-0 left-0 w-[12px] h-[12px] bg-blue-500 rounded-full animate-ping;
 }
 
 .actionContainer {
@@ -167,9 +167,9 @@
 
 .editActions {
   display: flex;
-  gap: 0.5rem;
-  margin-left: 0.5rem;
-  margin-right: 0.75rem;
+  gap: 8px;
+  margin-left: 8px;
+  margin-right: 12px;
   justify-content: space-between;
 }
 
@@ -222,7 +222,7 @@
 }
 
 .radioItem {
-  @apply flex items-center space-x-2 text-black;
+  @apply flex items-center space-x-[8px] text-black;
 }
 
 .downloadStatus {
@@ -230,7 +230,7 @@
 }
 
 .radioGroup {
-  @apply grid gap-4 mt-2;
+  @apply grid gap-[16px] mt-[8px];
 }
 
 .dialogChoseTitle {
@@ -242,17 +242,17 @@
 }
 
 .downloadButton {
-  @apply inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-white hover:opacity-50 h-10 px-4 py-2 border-0;
+  @apply inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-white hover:opacity-50 h-[40px] px-[8px] py-[4px] border-0;
 
   background-color: rgb(98, 93, 245) !important;
 }
 
 .dialogContentDiv {
-  @apply grid gap-4 py-4;
+  @apply grid gap-[8px] py-[8px];
 }
 
 .dialogContentRadioDiv {
-  @apply space-y-4;
+  @apply space-y-[8px];
 }
 
 .errorChatItem {
