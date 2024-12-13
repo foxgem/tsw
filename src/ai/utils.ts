@@ -25,6 +25,18 @@ export async function loadApiKey(provider: "gemini" | "groq") {
 
 function cleanPageText(root: HTMLElement, selector = "") {
   const temp = root.cloneNode(true) as HTMLElement;
+
+  // Keep only article content if found
+  const articles = temp.querySelectorAll("article");
+  if (articles.length > 0) {
+    const mainDiv = document.createElement("div");
+    for (const article of articles) {
+      mainDiv.appendChild(article);
+    }
+    temp.innerHTML = mainDiv.innerHTML;
+  }
+
+  // Remove unwanted elements
   for (const el of temp.querySelectorAll(
     `script, style, form, audio, video, iframe, picture, img${selector ? `, ${selector}` : ""}`,
   )) {
