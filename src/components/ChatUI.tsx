@@ -482,7 +482,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                     left: `${textareaRef.current?.getBoundingClientRect().left}px`,
                     width: `${textareaRef.current?.getBoundingClientRect().width}px`,
                     overflowY: "auto",
-                    zIndex: 10000,
+                    zIndex: "1000",
                   }}
                   sideOffset={0}
                   alignOffset={0}
@@ -508,7 +508,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
             <div>
               <ModelMenu onSelect={(model) => handleModelSelect(model)} />
             </div>
-            <div>
+            <div className={chatStyles.tswActionBtnGroup}>
               {editingMessageId !== null && (
                 <>
                   <Button
@@ -517,7 +517,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                     className={chatStyles.tswActionBtn}
                     onClick={handleCancelEdit}
                   >
-                    <SquareX />
+                    <SquareX size="16" />
                   </Button>
                   <Button
                     variant="ghost"
@@ -525,7 +525,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                     className={chatStyles.tswActionBtn}
                     onClick={(e) => handleEditSubmit(e)}
                   >
-                    <IterationCcw />
+                    <IterationCcw size="16" />
                   </Button>
                 </>
               )}

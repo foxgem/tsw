@@ -169,7 +169,7 @@ function registerElmPicker(checkers: PickingChecker[]) {
               border-radius: 4px;
               box-shadow: 0 2px 10px rgba(0,0,0,0.1);
               pointer-events: auto;
-              z-index: 9999;
+              z-index: 999;
             `;
 
             selectLangElement.addEventListener("click", (e) => {

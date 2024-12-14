@@ -56,6 +56,11 @@
   color: var(--tsw-purple);
   background: white;
   position: relative;
+  padding: 0;
+}
+
+.radiogroupItem:hover {
+  background: white;
 }
 
 .radiogroupItem:focus {
@@ -110,7 +115,7 @@
   z-index: 50;
   display: grid;
   width: 100%;
-  max-width: 332px;
+  max-width: 500px;
   transform: translate(-50%, -50%);
   gap: 16px;
   border: 1px solid var(--border);
@@ -140,7 +145,6 @@
   position: absolute;
   right: 16px;
   top: 16px;
-  border-radius: 2px;
   opacity: 0.7;
   transition: opacity;
   border: none;
@@ -148,6 +152,7 @@
   cursor: pointer;
   width: 36px;
   height: 36px;
+  padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -170,6 +175,10 @@
 .dialogCloseButton[data-state="open"] {
   background-color: var(--accent);
   color: var(--muted-foreground);
+}
+
+.dialogCloseButton svg {
+  color: black;
 }
 
 .dialogHeader {
@@ -265,9 +274,10 @@
 }
 
 .label {
-  font-size: 14px; /* text-sm */
-  font-weight: 500; /* font-medium */
-  line-height: 1; /* leading-none */
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  margin: 0;
 }
 
 .label:where(.peer-disabled) {

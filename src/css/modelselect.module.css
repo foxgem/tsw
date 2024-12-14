@@ -24,6 +24,7 @@
   max-width: 250px;
   width: 100%;
   text-align: left;
+  color: black;
 }
 
 .tswModelList {
@@ -35,16 +36,16 @@
   width: 250px;
   max-height: 300px;
   overflow-y: auto !important;
-  z-index: 10000 !important;
+  z-index: 1000 !important;
 }
 
 .tswModelItem {
-  padding: 8px 10px;
+  padding: 0px;
   cursor: pointer;
   border: none;
   background-color: #ffffff;
   color: #1e293b;
-  width: 200px;
+  width: 250px !important;
   font-size: 14px;
   border: 0;
   border-radius: 0;
@@ -55,7 +56,6 @@
   align-items: center;
   position: relative;
   user-select: none;
-  padding: 6px 16px;
   outline: none;
 }
 
@@ -79,6 +79,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  margin-left: 16px;
+  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .tswModelLabel {

@@ -1,7 +1,7 @@
 .tswMenuContainer {
   position: absolute;
   transform: translate(-50%, 8px);
-  z-index: 9999;
+  z-index: 999;
   padding: 5px 10px;
   border-radius: 8px;
   background-color: #ffffff;
@@ -36,6 +36,7 @@
   margin-top: 4px;
   font-size: 14px;
   overflow-y: auto !important;
+  z-index: 1000 !important;
 }
 
 .tswActionItem {
