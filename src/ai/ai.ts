@@ -1,15 +1,15 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import { type CoreMessage, streamText, tool } from "ai";
+import { type CoreMessage, streamText } from "ai";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { z } from "zod";
 import { StreamMessage } from "~/components/StreamMessage";
 import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDERS,
   type ModelProvider,
+  type Tools,
 } from "~/utils/constants";
 import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
@@ -227,6 +227,7 @@ export const chatWithPage = async (
   signal: AbortSignal,
   provider: ModelProvider = DEFAULT_MODEL_PROVIDER,
   model = DEFAULT_MODEL,
+  tools: Tools = {},
   customPrompt?: string,
 ) => {
   if (MODEL_PROVIDERS.indexOf(provider) === -1) {
@@ -253,22 +254,7 @@ export const chatWithPage = async (
     const { textStream, toolResults } = streamText({
       model: modelProvider(model),
       system: prepareSystemPrompt(context, pageURL, customPrompt),
-      tools: {
-        //   search: createGoogleSearch({
-        //     apiKey: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_API_KEY,
-        //     cx: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_CX,
-        //   }),
-        //   summarise: createSummarizer(document.body.innerHTML),
-        accumulator: tool({
-          parameters: z.object({
-            a: z.number(),
-            b: z.number(),
-          }),
-          execute: async ({ a, b }) => {
-            return a + b;
-          },
-        }),
-      },
+      tools,
       messages,
       abortSignal: signal,
     });

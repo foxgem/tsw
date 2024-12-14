@@ -16,6 +16,7 @@ import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
   type ModelProvider,
+  type Tools,
 } from "~utils/constants";
 import { readInstantInputs } from "~utils/storage";
 import textselectStyles from "../css/textselect.module.css";
@@ -31,15 +32,14 @@ import {
 } from "./ui/dropdown-menu";
 import { Textarea } from "./ui/textarea";
 import { useToast } from "./ui/use-toast";
+import type { CoreMessage } from "ai";
 
 marked.setOptions({
   breaks: true,
 });
 
-type Message = {
+type Message = CoreMessage & {
   id: number;
-  role: "user" | "assistant";
-  content: string;
   isComplete?: boolean;
   isThinking?: boolean;
   isError?: boolean;
@@ -64,6 +64,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
   const [showInstantInput, setShowInstantInput] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [instantInputs, setInstantInputs] = useState<string[]>([]);
+  const [tools, setTools] = useState<Tools>({});
 
   const loadInstantInputs = async () => {
     const savedInputs = await readInstantInputs();
@@ -197,9 +198,10 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
       abortController.current.signal,
       modelProvider,
       model,
+      tools,
     );
-    let fullText = "";
 
+    let fullText = "";
     for await (const text of textStream) {
       fullText += text;
       setMessages([
@@ -209,13 +211,12 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
     }
 
     const results = await toolResults;
-    for (const toolResult of results) {
-      const { toolName, args, result } = toolResult;
+    if (results.length) {
       setMessages([
         ...newMessages,
         {
-          role: "assistant",
-          content: `${toolName}(${Object.values(args).join(", ")}) = ${result}`,
+          role: "tool",
+          content: results,
           id: newMessages.length,
         },
       ]);
