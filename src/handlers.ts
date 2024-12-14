@@ -13,7 +13,7 @@ import {
   ocr,
   rewriteCode,
   summariseLink,
-} from "./utils/ai";
+} from "~/ai/ai";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
 

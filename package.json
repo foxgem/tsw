@@ -12,7 +12,6 @@
     "fix": "biome check --write",
     "format": "biome format --write",
     "removeUnused": "biome lint --fix --only=lint/correctness/noUnusedImports",
-    "ai": "tsx scripts/genAi.ts",
     "prepare": "husky"
   },
   "dependencies": {

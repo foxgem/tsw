@@ -10,8 +10,8 @@ import { SquarePenIcon } from "~/components/ui/icons/square-pen";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
-import { cn, getProviderFromModel, upperCaseFirstLetter } from "~lib/utils";
-import { chatWithPage } from "~utils/ai";
+import { cn, getProviderFromModel, upperCaseFirstLetter } from "~/lib/utils";
+import { chatWithPage } from "~/ai/ai";
 import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
@@ -190,7 +190,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
       },
     ]);
 
-    const textStream = await chatWithPage(
+    const { textStream, toolResults } = await chatWithPage(
       newMessages,
       pageRoot,
       pageURL,
@@ -205,6 +205,19 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
       setMessages([
         ...newMessages,
         { role: "assistant", content: fullText, id: newMessages.length },
+      ]);
+    }
+
+    const results = await toolResults;
+    for (const toolResult of results) {
+      const { toolName, args, result } = toolResult;
+      setMessages([
+        ...newMessages,
+        {
+          role: "assistant",
+          content: `${toolName}(${Object.values(args).join(", ")}) = ${result}`,
+          id: newMessages.length,
+        },
       ]);
     }
   };

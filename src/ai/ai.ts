@@ -1,22 +1,16 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import {
-  type CoreAssistantMessage,
-  type CoreMessage,
-  type CoreSystemMessage,
-  type CoreToolMessage,
-  type CoreUserMessage,
-  streamText,
-} from "ai";
+import { type CoreMessage, streamText, tool } from "ai";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { z } from "zod";
 import { StreamMessage } from "~/components/StreamMessage";
 import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDERS,
   type ModelProvider,
-} from "./constants";
+} from "~/utils/constants";
 import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
 
@@ -115,9 +109,7 @@ export const callPrompt = async (
 };
 
 const genChatFunction = async (
-  messages: Array<
-    CoreSystemMessage | CoreUserMessage | CoreAssistantMessage | CoreToolMessage
-  >,
+  messages: Array<CoreMessage>,
   messageElement: HTMLElement,
 ) => {
   const root = createRoot(messageElement);
@@ -258,20 +250,29 @@ export const chatWithPage = async (
       provider === "gemini"
         ? createGoogleGenerativeAI({ apiKey })
         : createGroq({ apiKey });
-    const { textStream } = streamText({
+    const { textStream, toolResults } = streamText({
       model: modelProvider(model),
       system: prepareSystemPrompt(context, pageURL, customPrompt),
-      // tools: {
-      //   search: createGoogleSearch({
-      //     apiKey: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_API_KEY,
-      //     cx: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_CX,
-      //   }),
-      //   summarise: createSummarizer(document.body.innerHTML),
-      // },
+      tools: {
+        //   search: createGoogleSearch({
+        //     apiKey: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_API_KEY,
+        //     cx: process.env.PLASMO_PUBLIC_GOOGLE_SEARCH_CX,
+        //   }),
+        //   summarise: createSummarizer(document.body.innerHTML),
+        accumulator: tool({
+          parameters: z.object({
+            a: z.number(),
+            b: z.number(),
+          }),
+          execute: async ({ a, b }) => {
+            return a + b;
+          },
+        }),
+      },
       messages,
       abortSignal: signal,
     });
-    return textStream;
+    return { textStream, toolResults };
   } catch (e) {
     return e.message;
   }
