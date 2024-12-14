@@ -171,6 +171,7 @@
   margin-left: 8px;
   margin-right: 12px;
   justify-content: space-between;
+  align-items: center;
 }
 
 .inputContainer {
@@ -222,7 +223,7 @@
 }
 
 .radioItem {
-  @apply flex items-center space-x-[8px] text-black;
+  @apply flex items-center space-x-[8px] text-black m-0;
 }
 
 .downloadStatus {
@@ -257,4 +258,8 @@
 
 .errorChatItem {
   @apply text-red-500;
+}
+
+.tswActionBtnGroup {
+  display: flex;
 }

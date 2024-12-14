@@ -179,11 +179,15 @@ source: ${window.location.href}`;
     const selectionOverlay = document.getElementById("selection-overlay");
 
     if (panel) {
-      panel.style.zIndex = isOpen ? "10" : "10000";
+      panel.style.zIndex = isOpen ? "10" : "1000";
     }
 
     if (selectionOverlay) {
-      selectionOverlay.style.zIndex = isOpen ? "9" : "9999";
+      selectionOverlay.style.zIndex = isOpen ? "9" : "999";
+    }
+
+    if (isOpen) {
+      setDownloadStatus("");
     }
   }, [isOpen]);
 

@@ -44,7 +44,7 @@ function withOutputPanel(
     margin-top: 10px;
     border-radius: 10px;
     display:none;
-    z-index:10000;
+    z-index:1000 !important;
   `;
   }
 

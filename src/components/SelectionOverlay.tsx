@@ -60,7 +60,7 @@ const SelectionOverlay: React.FC<SelectionOverlayProps> = ({
         boxShadow: "rgba(200, 200, 200, 0.5) 0px 0px 5px",
         boxSizing: "border-box",
         pointerEvents: "none",
-        zIndex: 9999,
+        zIndex: 999,
       }}
     >
       <div

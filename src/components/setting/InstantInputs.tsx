@@ -263,7 +263,7 @@ export function InstantInputs() {
           <div className="space-y-4">
             <p className="w-[400px] whitespace-pre-wrap break-words">
               Are you sure you want to delete the instant input for{" "}
-              <span className="font-medium">{toDelete}</span>?
+              <span className="font-medium italic">{toDelete}</span> ?
             </p>
             <div className="flex justify-end gap-2">
               <Button
