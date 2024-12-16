@@ -506,7 +506,10 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
           )}
           <div className={chatStyles.editActions}>
             <div>
-              <ModelMenu onSelect={(model) => handleModelSelect(model)} />
+              <ModelMenu
+                onSelect={(model) => handleModelSelect(model)}
+                currentModel={model}
+              />
             </div>
             <div className={chatStyles.tswActionBtnGroup}>
               {editingMessageId !== null && (
@@ -544,7 +547,13 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
         </div>
         {messages.length > 0 && (
           <div className={chatStyles.downloadButtonContainer}>
-            <ExportDialog messages={messages} />
+            <ExportDialog
+              content={messages
+                .map((m) => `${m.role.toUpperCase()}:\n ${m.content}`)
+                .join("\n\n")}
+              elementId="tsw-chat-container"
+              fileName="chat-history"
+            />
           </div>
         )}
       </div>

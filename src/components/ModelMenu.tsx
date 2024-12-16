@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MODELS } from "~utils/constants";
+import { DEFAULT_MODEL, MODELS } from "~utils/constants";
 import styles from "../css/modelselect.module.css";
 import {
   Select,
@@ -14,6 +14,7 @@ import {
 } from "./ui/select";
 
 interface Props {
+  currentModel: string;
   onSelect: (model: string) => void;
 }
 
@@ -22,15 +23,11 @@ interface ModelGroups {
   groq: string[];
 }
 
-export default function ModelMenu({ onSelect }: Readonly<Props>) {
+export default function ModelMenu({ currentModel, onSelect }: Readonly<Props>) {
   const [models, setModels] = useState<ModelGroups>({ gemini: [], groq: [] });
-  const [currentModel, setCurrentModel] = useState<string>();
 
   const loadModels = async () => {
     setModels(MODELS);
-    if (!currentModel) {
-      setCurrentModel(MODELS.gemini[0]);
-    }
   };
 
   useEffect(() => {
@@ -38,7 +35,6 @@ export default function ModelMenu({ onSelect }: Readonly<Props>) {
   }, []);
 
   const handleselectItemClick = (selectItem: string) => {
-    setCurrentModel(selectItem);
     onSelect(selectItem);
   };
 
@@ -48,7 +44,6 @@ export default function ModelMenu({ onSelect }: Readonly<Props>) {
         currentModel,
       );
       if (!modelExists) {
-        setCurrentModel(models.gemini[0]);
         onSelect(models.gemini[0]);
       }
     }

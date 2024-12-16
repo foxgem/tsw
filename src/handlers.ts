@@ -14,6 +14,7 @@ import {
   rewriteCode,
   summariseLink,
 } from "~/ai/ai";
+import { ExportDialog } from "./components/ExportDialog";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
 
@@ -212,7 +213,6 @@ function resetWrapperCss(
   }
 
   window.dispatchEvent(new Event("resize"));
-  console.log(scrollPosition);
   window.scrollTo(scrollPosition.x, scrollPosition.y);
 }
 
@@ -223,11 +223,13 @@ export async function summarize(outputElm: string) {
     async () => {
       const summaryElement = document.getElementById("tsw-output-body");
       if (summaryElement) {
-        await summariseLink(
+        const results = await summariseLink(
           document.body,
           window.location.href,
           summaryElement,
         );
+
+        loadToolBar(summaryElement, results);
       }
     },
     React.createElement(Loading, {
@@ -235,6 +237,49 @@ export async function summarize(outputElm: string) {
     }),
   );
 }
+
+const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
+  const toolbarContainer = document.createElement("div");
+  toolbarContainer.id = "tsw-toolbar";
+  toolbarContainer.style.cssText = `
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px;
+    display: none;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: opacity 0.2s;
+  `;
+
+  const exportDialogRoot = document.createElement("div");
+  exportDialogRoot.id = "export-dialog-container";
+  toolbarContainer.appendChild(exportDialogRoot);
+  summaryElement.appendChild(toolbarContainer);
+
+  summaryElement.addEventListener("mouseenter", () => {
+    toolbarContainer.style.display = "flex";
+    toolbarContainer.style.opacity = "1";
+  });
+
+  summaryElement.addEventListener("mouseleave", () => {
+    toolbarContainer.style.opacity = "0";
+    setTimeout(() => {
+      toolbarContainer.style.display = "none";
+    }, 200);
+  });
+
+  createRoot(exportDialogRoot).render(
+    React.createElement(ExportDialog, {
+      content: results.map((el) => `${el}`).join(""),
+      fileName: "Summary",
+      elementId: "tsw-output-body",
+    }),
+  );
+};
 
 export async function explainSelected(outputElm: string, text: string) {
   const isWord = text.split(" ").length === 1;
