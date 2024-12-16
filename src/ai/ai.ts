@@ -101,6 +101,7 @@ export const callPrompt = async (
         React.createElement(StreamMessage, { outputString: results.join("") }),
       );
     }
+    return results;
   } catch (e) {
     root.render(
       React.createElement(StreamMessage, { outputString: e.message }),
@@ -153,12 +154,12 @@ export const explainWord = (word: string, messageElement: HTMLElement) =>
     messageElement,
   );
 
-export const summariseLink = (
+export const summariseLink = async (
   root: HTMLElement,
   link: string,
   messageElement: HTMLElement,
-) =>
-  callPrompt(
+) => {
+  return await callPrompt(
     `分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。
     ${turndown(root, "code")}
     输出格式要求如下：
@@ -175,6 +176,7 @@ export const summariseLink = (
     siSummariser,
     messageElement,
   );
+};
 
 export const explainCode = (message: string, messageElement: HTMLElement) =>
   callPrompt(

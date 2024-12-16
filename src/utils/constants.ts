@@ -24,7 +24,7 @@ export const LANG_LIST = [
   "Soldity",
 ];
 
-export const DEFAULT_MODEL = "gemini-1.5-flash";
+export const DEFAULT_MODEL = "gemini-2.0-flash-exp";
 
 export type ModelProvider = "gemini" | "groq";
 

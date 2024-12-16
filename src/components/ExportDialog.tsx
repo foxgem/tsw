@@ -12,16 +12,17 @@ import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
-interface Message {
-  role: string;
-  content: string;
-}
-
 interface ExportDialogProps {
-  messages: Message[];
+  elementId: string;
+  content: string;
+  fileName: string;
 }
 
-export function ExportDialog({ messages }: ExportDialogProps) {
+export function ExportDialog({
+  content,
+  elementId,
+  fileName,
+}: ExportDialogProps) {
   const [exportType, setExportType] = useState<"image" | "pdf" | "markdown">(
     "image",
   );
@@ -53,23 +54,28 @@ export function ExportDialog({ messages }: ExportDialogProps) {
     titleElement.style.fontSize = "24px";
     titleElement.style.fontWeight = "bold";
     titleElement.style.textAlign = "center";
+    titleElement.id = "titleElement";
     clonedContent.insertBefore(titleElement, clonedContent.firstChild);
 
     const footerElement = document.createElement("div");
     footerElement.textContent = `source: ${window.location.href}`;
+    footerElement.id = "footerElement";
     footerElement.style.margin = "20px 0";
     footerElement.style.color = "#666";
     clonedContent.appendChild(footerElement);
 
     const tempContainer = document.createElement("div");
+    tempContainer.id = "tempContainer";
     tempContainer.style.position = "absolute";
     tempContainer.style.left = "-9999px";
     tempContainer.style.top = "0";
     tempContainer.style.width = `${panel.scrollWidth}px`;
     tempContainer.appendChild(clonedContent);
-    document.body.appendChild(tempContainer);
 
-    return { clonedContent, tempContainer };
+    document.body.appendChild(tempContainer);
+    tempContainer.offsetHeight;
+    const offsetHeight = titleElement.clientHeight + footerElement.clientHeight;
+    return { clonedContent, tempContainer, offsetHeight };
   };
 
   const downloadFile = (url: string, filename: string) => {
@@ -83,7 +89,7 @@ export function ExportDialog({ messages }: ExportDialogProps) {
     setIsLoading(true);
     setDownloadStatus("");
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const panel = document.getElementById("tsw-chat-container");
+    const panel = document.getElementById(elementId);
     const padding = 16;
 
     try {
@@ -94,15 +100,25 @@ export function ExportDialog({ messages }: ExportDialogProps) {
             const viewport = document.querySelector(
               "[data-radix-scroll-area-viewport]",
             );
-            const contentDiv = viewport.querySelector("div");
-            const { clonedContent, tempContainer } = createStyledClone(
-              contentDiv,
-              panel,
-            );
+            const contentDiv = viewport
+              ? viewport.querySelector("div")
+              : panel.querySelector("div");
+
+            if (!contentDiv) {
+              throw new Error("Cann't find the element.");
+            }
+
+            const { clonedContent, tempContainer, offsetHeight } =
+              createStyledClone(contentDiv, panel);
+
+            const footerElement = document.getElementById("footerElement");
 
             const dataUrl = await htmlToImage.toPng(clonedContent, {
               backgroundColor: "#ffffff",
-              height: clonedContent.clientHeight + padding * 2,
+              height:
+                clonedContent.clientHeight +
+                padding * 2 +
+                (viewport ? 0 : offsetHeight * 2),
               width: panel.scrollWidth + padding * 2,
               style: {
                 maxHeight: "none",
@@ -115,7 +131,7 @@ export function ExportDialog({ messages }: ExportDialogProps) {
             document.body.removeChild(tempContainer);
 
             if (exportType === "image") {
-              downloadFile(dataUrl, `chat-history-${timestamp}.png`);
+              downloadFile(dataUrl, `${fileName}-${timestamp}.png`);
             } else {
               const pdf = new jsPDF();
               const imgProps = pdf.getImageProperties(dataUrl);
@@ -142,7 +158,7 @@ export function ExportDialog({ messages }: ExportDialogProps) {
                 );
               }
 
-              pdf.save(`chat-history-${timestamp}.pdf`);
+              pdf.save(`${fileName}-${timestamp}.pdf`);
             }
           }
           break;
@@ -151,13 +167,13 @@ export function ExportDialog({ messages }: ExportDialogProps) {
         case "markdown": {
           const text = `# ${document.title} \n
 
-${messages.map((m) => `${m.role.toUpperCase()}:\n ${m.content}`).join("\n\n")}
+${content}
 
 source: ${window.location.href}`;
 
           const blob = new Blob([text], { type: "text/plain" });
           const url = URL.createObjectURL(blob);
-          downloadFile(url, `chat-history-${timestamp}.md`);
+          downloadFile(url, `${fileName}-${timestamp}.md`);
           URL.revokeObjectURL(url);
           break;
         }
