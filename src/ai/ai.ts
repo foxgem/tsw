@@ -153,7 +153,11 @@ export const explainWord = (word: string, messageElement: HTMLElement) =>
     messageElement,
   );
 
-export const summariseLink = (root: HTMLElement, messageElement: HTMLElement) =>
+export const summariseLink = (
+  root: HTMLElement,
+  link: string,
+  messageElement: HTMLElement,
+) =>
   callPrompt(
     `分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。
     ${turndown(root, "code")}
@@ -166,7 +170,7 @@ export const summariseLink = (root: HTMLElement, messageElement: HTMLElement) =>
       - 否则，那么按段落大意的相似性进行归类，总结输出。
     相关工具：如果文章中提到了一些工具，在此处列出相关工具的名称和链接。
     参考文献：如果有参考文献，列出参考文献的名称和链接。
-    文章链接：文章的原始链接。
+    原文链接：${link}。
     最后进行一致性检查，确保整个输出不会出现前后矛盾与原文不符的地方，同时保证段落顺序的一致性。`,
     siSummariser,
     messageElement,

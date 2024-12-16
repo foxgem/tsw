@@ -223,7 +223,11 @@ export async function summarize(outputElm: string) {
     async () => {
       const summaryElement = document.getElementById("tsw-output-body");
       if (summaryElement) {
-        await summariseLink(document.body, summaryElement);
+        await summariseLink(
+          document.body,
+          window.location.href,
+          summaryElement,
+        );
       }
     },
     React.createElement(Loading, {
