@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./css/extention.css";
 import Footer from "~components/Footer";
 import { SettingsSidebar } from "~components/SettingsSidebar";
 import { InstantInputs } from "~components/setting/InstantInputs";
 import { ServiceSettings } from "~components/setting/ServiceSettings";
 import { Timers } from "~components/setting/Timers";
+import { initDb } from "~utils/storage";
 
 export default function OptionsIndex() {
   const [selectedSection, setSelectedSection] = useState("timers");
-
+  useEffect(() => {
+    const init = async () => {
+      await initDb();
+    };
+    init();
+  }, []);
   return (
     <div className="min-h-screen flex flex-col text-sm">
       <div className="w-4/5 mx-auto p-6 flex-1">

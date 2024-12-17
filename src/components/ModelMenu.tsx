@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DEFAULT_MODEL, MODELS } from "~utils/constants";
+import { MODELS } from "~utils/constants";
 import styles from "../css/modelselect.module.css";
 import {
   Select,
