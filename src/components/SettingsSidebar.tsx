@@ -21,6 +21,7 @@ export function SettingsSidebar({ onSelect, selected }: SettingsSidebarProps) {
       {links.map((link) => (
         <div
           onClick={() => onSelect?.(link.key)}
+          key={link.key}
           className={cn(
             "flex items-center px-3 py-2 text-sm font-medium rounded-md w-full text-left cursor-pointer gap-2",
             selected === link.key
