@@ -82,7 +82,7 @@ export function ActionIcon({ name }: ActionIconProps) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="lucide lucide-wand rotate"
+          className="lucide lucide-wand tswRotate"
           aria-label={name}
           style={{ minWidth: "24px", width: "24px" }}
         >
