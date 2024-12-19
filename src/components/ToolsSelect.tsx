@@ -52,7 +52,7 @@ export function ToolsSelect({ tools, width, onChange }: ToolsProps) {
             ({tools ? Object.keys(tools).length : 0})
           </span>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent style={{ zIndex: "1000" }}>
           <div className={styles.toolsContent} style={{ width: width }}>
             <div className={styles.toolsTitle}>
               <h2 className={styles.toolName}>Available Tools</h2>
