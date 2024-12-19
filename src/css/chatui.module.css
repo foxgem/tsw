@@ -348,14 +348,37 @@
   gap: 8px;
   border-radius: 4px;
   background: #fff;
+  color: black;
 }
 
 .toolItem:hover {
   background: rgb(241, 245, 249);
 }
 
-.toolName {
-  font-weight: 500;
-  white-space: nowrap;
-  font-size: 14px;
+.toolItem input[type="checkbox"] {
+  border: 1px solid #ccc;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  margin-right: 8px;
+  cursor: pointer;
+  position: relative;
+}
+
+.toolItem input[type="checkbox"]:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.toolItem input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
