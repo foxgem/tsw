@@ -32,7 +32,7 @@ export default function Footer({ className, showDivider }: FooterProps) {
           data-orientation="horizontal"
           role="none"
           className="shrink-0 bg-border h-[1px] w-full my-6"
-        ></div>
+        />
       )}
 
       <div className="flex justify-between items-center h-8 text-black dark:text-white w-full text-center px-5">

@@ -22,3 +22,9 @@ export function getProviderFromModel(model: string) {
   }
   return DEFAULT_MODEL_PROVIDER;
 }
+
+export const formatMessageContent = (content: string | object) => {
+  return typeof content === "object"
+    ? `\`\`\`json\n${JSON.stringify(content, null, 2)}\n\`\`\``
+    : content;
+};

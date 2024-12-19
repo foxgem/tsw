@@ -5,6 +5,7 @@ import { SettingsSidebar } from "~components/SettingsSidebar";
 import { InstantInputs } from "~components/setting/InstantInputs";
 import { ServiceSettings } from "~components/setting/ServiceSettings";
 import { Timers } from "~components/setting/Timers";
+import Tools from "~components/setting/Tools";
 import { initDb } from "~utils/storage";
 
 export default function OptionsIndex() {
@@ -39,6 +40,7 @@ export default function OptionsIndex() {
             {selectedSection === "timers" && <Timers />}
             {selectedSection === "keys" && <ServiceSettings />}
             {selectedSection === "instant-inputs" && <InstantInputs />}
+            {selectedSection === "tools" && <Tools />}
           </div>
         </div>
       </div>

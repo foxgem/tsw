@@ -1,5 +1,6 @@
 import { Storage } from "@plasmohq/storage";
 import { z } from "zod";
+import { initializeTools } from "./toolsstorage";
 
 const storage = new Storage();
 
@@ -35,6 +36,8 @@ export async function initDb() {
   if (gemini) {
     await storage.remove("apiKey");
   }
+
+  initializeTools();
 }
 
 export type TimerForDomain = {
@@ -97,7 +100,8 @@ export async function getAllTimersForDomains(): Promise<TimerForDomain[]> {
   const allItems = await storage.getAll();
   return Object.entries(allItems)
     .filter(
-      ([key]) => !["apiKeys", "quickPrompts", "instantInputs"].includes(key),
+      ([key]) =>
+        !["apiKeys", "quickPrompts", "instantInputs", "tools"].includes(key),
     )
     .map(([domain, time]) => ({
       domain,

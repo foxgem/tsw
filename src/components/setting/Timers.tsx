@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ZodError } from "zod";
+import { ConfirmDialog } from "~components/ui/confirm-dialog";
 import { DeleteIcon } from "~components/ui/icons/delete";
 import { FilePenLineIcon } from "~components/ui/icons/file-pen-line";
 import { cn } from "~lib/utils";
@@ -12,7 +13,6 @@ import {
   upsertTimerForDomain,
 } from "~utils/storage";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 
@@ -288,30 +288,19 @@ export function Timers() {
         </div>
       )}
 
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Confirm Delete</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p>
-              Are you sure you want to delete the timer for{" "}
-              <span className="font-medium">{timerToDelete?.domain}</span>?
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setDeleteConfirmOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="danger" onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Confirm Delete"
+        description={
+          <>
+            Are you sure you want to delete the timer for{" "}
+            <span className="font-medium italic">{timerToDelete?.domain}</span>{" "}
+            ?
+          </>
+        }
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
