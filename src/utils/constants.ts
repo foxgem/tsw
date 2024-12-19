@@ -1,5 +1,3 @@
-import type { CoreTool } from "ai";
-
 export const TIMER_COUNT_LIMIT = 3;
 
 export const TAB_CSS =
@@ -27,8 +25,6 @@ export const LANG_LIST = [
 export const DEFAULT_MODEL = "gemini-2.0-flash-exp";
 
 export type ModelProvider = "gemini" | "groq";
-
-export type Tools = Record<string, CoreTool>;
 
 export const DEFAULT_MODEL_PROVIDER: ModelProvider = "gemini";
 export const MODEL_PROVIDERS = ["gemini", "groq"];

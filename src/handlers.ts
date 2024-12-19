@@ -1,10 +1,5 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { ChatUI } from "~components/ChatUI";
-import { Loading } from "~components/Loading";
-import type { QuickPrompt } from "~utils/storage";
-import { TSWPanel } from "./components/TSWPanel";
-import { iconArray } from "./content";
 import {
   callPrompt,
   explainCode,
@@ -14,7 +9,12 @@ import {
   rewriteCode,
   summariseLink,
 } from "~/ai/ai";
+import { ChatUI } from "~components/ChatUI";
+import { Loading } from "~components/Loading";
+import type { QuickPrompt } from "~utils/storage";
 import { ExportDialog } from "./components/ExportDialog";
+import { TSWPanel } from "./components/TSWPanel";
+import { iconArray } from "./content";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
 

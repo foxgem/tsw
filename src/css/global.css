@@ -226,3 +226,15 @@
 #tsw-buttons-container button {
   padding: 0;
 }
+
+.errorMessage {
+  color: #ff4d4f;
+}
+
+.toolResultItem {
+  margin-bottom: 20px;
+}
+
+.toolResultItem:last-child {
+  margin-bottom: 0;
+}

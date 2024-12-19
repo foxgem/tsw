@@ -41,10 +41,13 @@
 .tswPanelFooter {
   position: sticky;
   bottom: 0;
-  padding: 16px 0 0;
-  display: flex;
   gap: 16px;
   max-height: 200px;
+}
+
+.tswTextAreaContent {
+  display: flex;
+  gap: 16px;
   align-items: center;
 }
 
@@ -87,7 +90,7 @@
 
 .chatContainer {
   @apply flex flex-col overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 130px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
 }
 
 .chatContent {
@@ -96,7 +99,7 @@
 
 .scrollArea {
   @apply overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 130px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
 }
 
 .welcomeMessage {
@@ -106,7 +109,7 @@
   background-clip: text;
   color: transparent;
   opacity: 0.5;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 130px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
 }
 
 .messageContainer {
@@ -262,4 +265,97 @@
 
 .tswActionBtnGroup {
   display: flex;
+}
+
+.toolsContainer {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.toolsButton {
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.toolsButton svg {
+  margin-right: 4px;
+}
+
+.toolsButton:hover {
+  background: #f5f5f5;
+}
+
+.toolsNumber {
+  margin-left: 4px;
+  color: rgb(107 114 128);
+}
+
+.toolsContent {
+  position: absolute;
+  bottom: 40px;
+  left: -50px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 4px;
+  max-height: 300px;
+  padding: 12px 8px;
+}
+
+.toolsList {
+  max-height: 280px;
+  overflow: scroll;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.toolsTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(107 114 128);
+  margin-bottom: 8px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.toolsTitle a {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toolName {
+  font-weight: 500;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.toolItem {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  cursor: pointer;
+  gap: 8px;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.toolItem:hover {
+  background: rgb(241, 245, 249);
+}
+
+.toolName {
+  font-weight: 500;
+  white-space: nowrap;
+  font-size: 14px;
 }

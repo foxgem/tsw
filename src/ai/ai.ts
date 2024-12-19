@@ -1,6 +1,6 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import { type CoreMessage, streamText } from "ai";
+import { type CoreMessage, type CoreTool, streamText } from "ai";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { StreamMessage } from "~/components/StreamMessage";
@@ -9,10 +9,10 @@ import {
   DEFAULT_MODEL_PROVIDER,
   MODEL_PROVIDERS,
   type ModelProvider,
-  type Tools,
 } from "~/utils/constants";
 import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
+import type { Tool, Tools } from "./tools";
 
 const siEnglishTeacher =
   "你是一名资深英语老师有丰富的教学经验，可以深入浅出的用中文讲解英文疑难杂句和单词释义。";
@@ -251,17 +251,25 @@ export const chatWithPage = async (
     context = (await pageVector.search(userMessage)).join("\n");
   }
 
+  const filteredMessages = messages.filter((msg) => msg.role !== "tool");
+
   try {
     const apiKey = await loadApiKey(provider);
     const modelProvider =
       provider === "gemini"
         ? createGoogleGenerativeAI({ apiKey })
         : createGroq({ apiKey });
+
+    const filteredTools: Record<string, CoreTool> = {};
+    Object.entries(tools).forEach(([key, tool]) => {
+      filteredTools[key] = (tool as Tool).handler;
+    });
+
     const { textStream, toolResults } = streamText({
       model: modelProvider(model),
       system: prepareSystemPrompt(context, pageURL, customPrompt),
-      tools,
-      messages,
+      tools: filteredTools,
+      messages: filteredMessages,
       abortSignal: signal,
     });
     return { textStream, toolResults };

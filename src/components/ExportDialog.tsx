@@ -1,6 +1,6 @@
 import * as htmlToImage from "html-to-image";
 import jsPDF from "jspdf";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
@@ -12,6 +12,7 @@ import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
+const SCALE_FACTOR = 2;
 interface ExportDialogProps {
   elementId: string;
   content: string;
@@ -30,22 +31,90 @@ export function ExportDialog({
   const [isOpen, setIsOpen] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState<string>("");
 
-  const createStyledClone = (contentDiv: Element, panel: HTMLElement) => {
+  const createStyledClone = async (contentDiv: Element, panel: HTMLElement) => {
     const clonedContent = contentDiv.cloneNode(true) as HTMLElement;
 
-    const originalStyles = window.getComputedStyle(contentDiv);
-    Array.from(originalStyles).forEach((key) => {
-      clonedContent.style[key] = originalStyles.getPropertyValue(key);
-    });
+    const elementsToRemove = clonedContent.querySelectorAll(
+      "iframe, canvas, video",
+    );
+    for (const element of elementsToRemove) {
+      element.remove();
+    }
 
-    const originalElements = contentDiv.getElementsByTagName("*");
-    const clonedElements = clonedContent.getElementsByTagName("*");
-    for (let i = 0; i < originalElements.length; i++) {
-      const originalStyle = window.getComputedStyle(originalElements[i]);
-      const element = clonedElements[i] as HTMLElement;
-      Array.from(originalStyle).forEach((key) => {
-        element.style[key] = originalStyle.getPropertyValue(key);
+    const images = clonedContent.getElementsByTagName("img");
+    await Promise.all(
+      Array.from(images).map(async (img) => {
+        try {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+
+          const tempImg = new Image();
+          tempImg.crossOrigin = "anonymous";
+
+          await new Promise((resolve, reject) => {
+            tempImg.onload = () => {
+              canvas.width = tempImg.width;
+              canvas.height = tempImg.height;
+
+              ctx.drawImage(tempImg, 0, 0);
+
+              try {
+                img.src = canvas.toDataURL("image/png");
+              } catch (e) {
+                console.warn("Failed to convert image to base64:", e);
+              }
+              resolve(null);
+            };
+
+            tempImg.onerror = () => {
+              console.warn(`Failed to load image: ${img.src}`);
+              resolve(null);
+            };
+
+            const timestamp = new Date().getTime();
+            tempImg.src = img.src.includes("?")
+              ? `${img.src}&_t=${timestamp}`
+              : `${img.src}?_t=${timestamp}`;
+          });
+        } catch (e) {
+          console.warn("Error processing image:", e);
+        }
+      }),
+    );
+
+    try {
+      const originalStyles = window.getComputedStyle(contentDiv);
+      Array.from(originalStyles).forEach((key) => {
+        try {
+          clonedContent.style[key] = originalStyles.getPropertyValue(key);
+        } catch (e) {
+          console.warn(`Failed to set style property ${key}:`, e);
+        }
       });
+
+      const originalElements = contentDiv.getElementsByTagName("*");
+      const clonedElements = clonedContent.getElementsByTagName("*");
+      for (let i = 0; i < originalElements.length; i++) {
+        try {
+          const originalStyle = window.getComputedStyle(originalElements[i]);
+          const element = clonedElements[i] as HTMLElement;
+          Array.from(originalStyle).forEach((key) => {
+            try {
+              element.style[key] = originalStyle.getPropertyValue(key);
+            } catch (e) {
+              console.warn(
+                `Failed to set child element style property ${key}:`,
+                e,
+              );
+            }
+          });
+        } catch (e) {
+          console.warn(`Error processing element ${i}:`, e);
+        }
+      }
+    } catch (e) {
+      console.error("Error applying styles:", e);
     }
 
     const titleElement = document.createElement("h1");
@@ -96,39 +165,56 @@ export function ExportDialog({
       switch (exportType) {
         case "image":
         case "pdf": {
-          if (panel) {
-            const viewport = document.querySelector(
-              "[data-radix-scroll-area-viewport]",
-            );
-            const contentDiv = viewport
-              ? viewport.querySelector("div")
-              : panel.querySelector("div");
+          if (!panel) {
+            throw new Error("Target element not found");
+          }
 
-            if (!contentDiv) {
-              throw new Error("Cann't find the element.");
-            }
+          const viewport = document.querySelector(
+            "[data-radix-scroll-area-viewport]",
+          );
+          const contentDiv = viewport
+            ? viewport.querySelector("div")
+            : panel.querySelector("div");
 
-            const { clonedContent, tempContainer, offsetHeight } =
-              createStyledClone(contentDiv, panel);
+          if (!contentDiv) {
+            throw new Error("Content element not found");
+          }
 
-            const footerElement = document.getElementById("footerElement");
+          const { clonedContent, tempContainer, offsetHeight } =
+            await createStyledClone(contentDiv, panel);
 
-            const dataUrl = await htmlToImage.toPng(clonedContent, {
-              backgroundColor: "#ffffff",
-              height:
-                clonedContent.clientHeight +
-                padding * 2 +
-                (viewport ? 0 : offsetHeight * 2),
-              width: panel.scrollWidth + padding * 2,
-              style: {
-                maxHeight: "none",
-                overflow: "visible",
-                padding: `${padding}px`,
-                boxSizing: "border-box",
-              },
-            });
+          try {
+            const dataUrl = await htmlToImage
+              .toPng(clonedContent, {
+                backgroundColor: "#ffffff",
+                height:
+                  clonedContent.clientHeight +
+                  padding * 2 +
+                  (viewport ? 0 : offsetHeight * 2),
+                width: panel.scrollWidth + padding * 2,
+                style: {
+                  maxHeight: "none",
+                  overflow: "visible",
+                  padding: `${padding}px`,
+                  boxSizing: "border-box",
+                  transform: "scale(1)",
+                },
+                quality: 1,
+                skipAutoScale: true,
+                cacheBust: true,
+                imagePlaceholder:
+                  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+              })
+              .catch((err) => {
+                console.error("Detailed error:", err);
+                throw err;
+              });
 
-            document.body.removeChild(tempContainer);
+            setTimeout(() => {
+              if (tempContainer?.parentNode) {
+                tempContainer.parentNode.removeChild(tempContainer);
+              }
+            }, 100);
 
             if (exportType === "image") {
               downloadFile(dataUrl, `${fileName}-${timestamp}.png`);
@@ -160,17 +246,15 @@ export function ExportDialog({
 
               pdf.save(`${fileName}-${timestamp}.pdf`);
             }
+          } catch (error) {
+            console.error("Failed to generate image:", error);
+            throw new Error("Failed to generate image, please try again");
           }
           break;
         }
 
         case "markdown": {
-          const text = `# ${document.title} \n
-
-${content}
-
-source: ${window.location.href}`;
-
+          const text = `# ${document.title} \n\n${content}\n\nsource: ${window.location.href}`;
           const blob = new Blob([text], { type: "text/plain" });
           const url = URL.createObjectURL(blob);
           downloadFile(url, `${fileName}-${timestamp}.md`);

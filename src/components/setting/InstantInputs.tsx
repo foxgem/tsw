@@ -14,7 +14,7 @@ import {
   upsertInstantInputs,
 } from "~utils/storage";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { ConfirmDialog } from "../ui/confirm-dialog";
 
 export function InstantInputs() {
   const [newInput, setNewInput] = useState("");
@@ -255,30 +255,18 @@ export function InstantInputs() {
         </div>
       )}
 
-      <Dialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Confirm Delete</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <p className="w-[400px] whitespace-pre-wrap break-words">
-              Are you sure you want to delete the instant input for{" "}
-              <span className="font-medium italic">{toDelete}</span> ?
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setDeleteConfirmOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button variant="danger" onClick={handleConfirmDelete}>
-                Delete
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={deleteConfirmOpen}
+        onOpenChange={setDeleteConfirmOpen}
+        title="Confirm Delete"
+        description={
+          <>
+            Are you sure you want to delete the instant input for{" "}
+            <span className="font-medium italic">{toDelete}</span> ?
+          </>
+        }
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 }
