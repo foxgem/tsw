@@ -259,11 +259,10 @@ export const chatWithPage = async (
       provider === "gemini"
         ? createGoogleGenerativeAI({ apiKey })
         : createGroq({ apiKey });
-
     const filteredTools: Record<string, CoreTool> = {};
-    Object.entries(tools).forEach(([key, tool]) => {
+    for (const [key, tool] of Object.entries(tools)) {
       filteredTools[key] = (tool as Tool).handler;
-    });
+    }
 
     const { textStream, toolResults } = streamText({
       model: modelProvider(model),
