@@ -147,9 +147,9 @@ export function ExportDialog({
     return { clonedContent, tempContainer, offsetHeight };
   };
 
-  const downloadFile = (url: string, filename: string) => {
+  const downloadFile = (url: string, type: "md" | "pdf" | "png") => {
     const link = document.createElement("a");
-    link.download = filename;
+    link.download = `${document.title.toLowerCase().replace(/ /g, "-")}.${type}`;
     link.href = url;
     link.click();
   };
@@ -217,7 +217,7 @@ export function ExportDialog({
             }, 100);
 
             if (exportType === "image") {
-              downloadFile(dataUrl, `${fileName}-${timestamp}.png`);
+              downloadFile(dataUrl, "png");
             } else {
               const pdf = new jsPDF();
               const imgProps = pdf.getImageProperties(dataUrl);
@@ -244,7 +244,9 @@ export function ExportDialog({
                 );
               }
 
-              pdf.save(`${fileName}-${timestamp}.pdf`);
+              pdf.save(
+                `${document.title.toLowerCase().replace(/ /g, "-")}.pdf`,
+              );
             }
           } catch (error) {
             console.error("Failed to generate image:", error);
@@ -257,7 +259,7 @@ export function ExportDialog({
           const text = `# ${document.title} \n\n${content}\n\nsource: ${window.location.href}`;
           const blob = new Blob([text], { type: "text/plain" });
           const url = URL.createObjectURL(blob);
-          downloadFile(url, `${fileName}-${timestamp}.md`);
+          downloadFile(url, "md");
           URL.revokeObjectURL(url);
           break;
         }
