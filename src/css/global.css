@@ -173,13 +173,15 @@
   }
 
   table {
-    @apply rounded-lg w-[400px] border-collapse;
+    @apply rounded-lg w-[400px] border-collapse table-fixed;
     border: 1px solid #e5e7eb !important;
   }
 
   table th,
   table td {
     border: 1px solid #e5e7eb !important;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
     @apply p-[8px];
   }
 

@@ -56,7 +56,10 @@ export function ToolsSelect({ tools, width, onChange }: ToolsProps) {
           <div className={styles.toolsContent} style={{ width: width }}>
             <div className={styles.toolsTitle}>
               <h2 className={styles.toolName}>Available Tools</h2>
-              <a onClick={handleToggleAll} style={{ cursor: "pointer" }}>
+              <a
+                onClick={handleToggleAll}
+                style={{ color: "black", cursor: "pointer" }}
+              >
                 {(tools ? Object.keys(tools).length : 0) ===
                 Object.keys(AVAILABLE_TOOLS).length
                   ? "Disable All"
