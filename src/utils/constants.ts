@@ -33,6 +33,7 @@ export const MODELS = {
     "gemini-1.5-flash",
     "gemini-1.5-flash-8b",
     "gemini-2.0-flash-exp",
+    "gemini-2.0-flash-thinking-exp",
     "gemini-1.5-pro",
     "gemini-exp-1206",
   ],
