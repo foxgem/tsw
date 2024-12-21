@@ -15,6 +15,7 @@ import type { QuickPrompt } from "~utils/storage";
 import { ExportDialog } from "./components/ExportDialog";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
+import { ThinkingUI } from "~components/ThinkingUI";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
 
@@ -368,6 +369,18 @@ export function chattingHandler(outputElm: string) {
     "Chatting With Page",
     async () => {},
     React.createElement(ChatUI, {
+      pageRoot: document.body,
+      pageURL: window.location.href,
+    }),
+  );
+}
+
+export function thinkingHandler(outputElm: string) {
+  withOutputPanel(
+    outputElm,
+    "Thinking on Page",
+    async () => {},
+    React.createElement(ThinkingUI, {
       pageRoot: document.body,
       pageURL: window.location.href,
     }),

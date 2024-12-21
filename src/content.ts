@@ -15,6 +15,7 @@ import {
   ocrHandler,
   rewriteHandler,
   summarize,
+  thinkingHandler,
 } from "./handlers";
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
@@ -319,7 +320,7 @@ export const iconArray = [
   {
     name: "Chat",
     action: () => {
-      chattingHandler("tsw-toggle-panel");
+      thinkingHandler("tsw-toggle-panel");
     },
   },
 ];

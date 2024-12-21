@@ -13,8 +13,8 @@ import { SquarePenIcon } from "./ui/icons/square-pen";
 
 interface UserMessageProps {
   message: Message;
-  onCopy: (content: string) => void;
-  onEdit: (message: any) => void;
+  onCopy?: (content: string) => void;
+  onEdit?: (message: any) => void;
 }
 
 interface AssistantMessageProps {
@@ -22,12 +22,13 @@ interface AssistantMessageProps {
   messagesLength: number;
   messageIndex: number;
   isStreaming?: boolean;
-  editingMessageId: number | null;
+  editingMessageId?: number | null;
   isThinking?: boolean;
-  onCopy: (content: string) => void;
+  onCopy?: (content: string) => void;
   onSetMessage?: (message: any) => void;
-  onRefresh: (e: React.MouseEvent) => void;
+  onRefresh?: (e: React.MouseEvent) => void;
 }
+
 interface ToolMessageProps {
   message: Message;
 }
