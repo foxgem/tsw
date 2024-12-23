@@ -507,7 +507,6 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                   )
                   .join("\n\n")}
                 elementId="tsw-chat-container"
-                fileName="chat-history"
               />
             </div>
           )}

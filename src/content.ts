@@ -320,6 +320,12 @@ export const iconArray = [
   {
     name: "Chat",
     action: () => {
+      chattingHandler("tsw-toggle-panel");
+    },
+  },
+  {
+    name: "Thinking",
+    action: () => {
       thinkingHandler("tsw-toggle-panel");
     },
   },

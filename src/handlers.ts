@@ -11,11 +11,11 @@ import {
 } from "~/ai/ai";
 import { ChatUI } from "~components/ChatUI";
 import { Loading } from "~components/Loading";
+import { ThinkingUI } from "~components/ThinkingUI";
 import type { QuickPrompt } from "~utils/storage";
 import { ExportDialog } from "./components/ExportDialog";
 import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
-import { ThinkingUI } from "~components/ThinkingUI";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
 
@@ -43,7 +43,7 @@ function withOutputPanel(
     position: fixed;
     right: 10px;
     top: 0px;
-    margin-top: 10px;
+    margin-top: 5px;
     border-radius: 10px;
     display:none;
     z-index:1000 !important;
@@ -276,7 +276,6 @@ const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
   createRoot(exportDialogRoot).render(
     React.createElement(ExportDialog, {
       content: results.map((el) => `${el}`).join(""),
-      fileName: "Summary",
       elementId: "tsw-output-body",
     }),
   );

@@ -46,3 +46,4 @@ export const MODELS = {
 };
 export const IINSTANT_INPUT_COUNT_LIMIT = 10;
 export const INSTANT_INPUT_MAX_LENGTH = 200;
+export const THINKING_ROUND_COUNT = 10;

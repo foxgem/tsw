@@ -15,6 +15,8 @@ interface UserMessageProps {
   message: Message;
   onCopy?: (content: string) => void;
   onEdit?: (message: any) => void;
+  onSetMessage?: (message: any) => void;
+  isChatMode?: boolean;
 }
 
 interface AssistantMessageProps {
@@ -33,7 +35,13 @@ interface ToolMessageProps {
   message: Message;
 }
 
-export const UserMessage = ({ message, onCopy, onEdit }: UserMessageProps) => {
+export const UserMessage = ({
+  message,
+  onCopy,
+  onEdit,
+  onSetMessage,
+  isChatMode = true,
+}: UserMessageProps) => {
   return (
     <>
       <div
@@ -48,12 +56,39 @@ export const UserMessage = ({ message, onCopy, onEdit }: UserMessageProps) => {
             message.content.length < 100 ? chatStyles.tswChatItemSingle : "",
           )}
         >
-          <div className={chatStyles.messageContent}>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: marked(message.content as string),
-              }}
-            />
+          <div
+            className={cn(
+              chatStyles.messageContent,
+              message.isError ? chatStyles.errorChatItem : "",
+            )}
+          >
+            {message.content === "TSW" ? (
+              <div className={chatStyles.loadingContainer}>
+                <div className={chatStyles.loadingDot}>
+                  <div className={chatStyles.dotBase} />
+                  <div className={chatStyles.dotPing} />
+                </div>
+              </div>
+            ) : message.isError || isChatMode ? (
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: marked(message.content as string),
+                }}
+              />
+            ) : (
+              <StreamMessage
+                outputString={message.content as string}
+                onStreamComplete={(isComplete) => {
+                  if (onSetMessage) {
+                    onSetMessage((prev) =>
+                      prev.map((msg) =>
+                        msg.id === message.id ? { ...msg, isComplete } : msg,
+                      ),
+                    );
+                  }
+                }}
+              />
+            )}
           </div>
           <div className={chatStyles.tswUser}>
             <ActionIcon name={upperCaseFirstLetter(message.role)} />
@@ -67,22 +102,29 @@ export const UserMessage = ({ message, onCopy, onEdit }: UserMessageProps) => {
         >
           {message.content && (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={() => onCopy(JSON.stringify(message.content))}
-              >
-                <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={() => onEdit(message)}
-              >
-                <SquarePenIcon size={16} className={iconsStyles.dynamicIcon} />
-              </Button>
+              {onCopy && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={chatStyles.tswActionBtn}
+                  onClick={() => onCopy(JSON.stringify(message.content))}
+                >
+                  <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
+                </Button>
+              )}
+              {onEdit && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={chatStyles.tswActionBtn}
+                  onClick={() => onEdit(message)}
+                >
+                  <SquarePenIcon
+                    size={16}
+                    className={iconsStyles.dynamicIcon}
+                  />
+                </Button>
+              )}
             </>
           )}
         </div>
@@ -128,6 +170,12 @@ export const AssistantMessage = ({
                   <div className={chatStyles.dotPing} />
                 </div>
               </div>
+            ) : message.isError ? (
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: marked(message.content as string),
+                }}
+              />
             ) : (
               <StreamMessage
                 outputString={message.content as string}
@@ -157,16 +205,17 @@ export const AssistantMessage = ({
         >
           {message.isComplete && message.content && (
             <>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={chatStyles.tswActionBtn}
-                onClick={() => onCopy(JSON.stringify(message.content))}
-              >
-                <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
-              </Button>
-
-              {messageIndex === messagesLength - 1 && (
+              {onCopy && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={chatStyles.tswActionBtn}
+                  onClick={() => onCopy(JSON.stringify(message.content))}
+                >
+                  <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
+                </Button>
+              )}
+              {messageIndex === messagesLength - 1 && onRefresh && (
                 <Button
                   variant="ghost"
                   size="icon"
