@@ -157,7 +157,7 @@
 }
 
 .actionContainer {
-  @apply flex mx-[36px];
+  @apply flex mx-[36px] h-[24px];
 }
 
 .userActionContainer {
@@ -382,4 +382,29 @@
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.thinkingContainer {
+  @apply flex flex-col overflow-y-auto;
+  height: calc(97vh - var(--header-height) - 50px);
+}
+
+.thinkingScrollArea {
+  @apply overflow-y-auto;
+  height: calc(97vh - var(--header-height) - 50px);
+}
+
+.tswToolBar {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: opacity 0.2s;
+  display: flex;
+  gap: 8px;
 }

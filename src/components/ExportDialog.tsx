@@ -12,18 +12,12 @@ import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
-const SCALE_FACTOR = 2;
 interface ExportDialogProps {
   elementId: string;
   content: string;
-  fileName: string;
 }
 
-export function ExportDialog({
-  content,
-  elementId,
-  fileName,
-}: ExportDialogProps) {
+export function ExportDialog({ content, elementId }: ExportDialogProps) {
   const [exportType, setExportType] = useState<"image" | "pdf" | "markdown">(
     "image",
   );
@@ -85,13 +79,13 @@ export function ExportDialog({
 
     try {
       const originalStyles = window.getComputedStyle(contentDiv);
-      Array.from(originalStyles).forEach((key) => {
+      for (const key of Array.from(originalStyles)) {
         try {
           clonedContent.style[key] = originalStyles.getPropertyValue(key);
         } catch (e) {
           console.warn(`Failed to set style property ${key}:`, e);
         }
-      });
+      }
 
       const originalElements = contentDiv.getElementsByTagName("*");
       const clonedElements = clonedContent.getElementsByTagName("*");
@@ -99,7 +93,7 @@ export function ExportDialog({
         try {
           const originalStyle = window.getComputedStyle(originalElements[i]);
           const element = clonedElements[i] as HTMLElement;
-          Array.from(originalStyle).forEach((key) => {
+          for (const key of Array.from(originalStyle)) {
             try {
               element.style[key] = originalStyle.getPropertyValue(key);
             } catch (e) {
@@ -108,7 +102,7 @@ export function ExportDialog({
                 e,
               );
             }
-          });
+          }
         } catch (e) {
           console.warn(`Error processing element ${i}:`, e);
         }
@@ -157,7 +151,6 @@ export function ExportDialog({
   const handleExport = async () => {
     setIsLoading(true);
     setDownloadStatus("");
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const panel = document.getElementById(elementId);
     const padding = 16;
 

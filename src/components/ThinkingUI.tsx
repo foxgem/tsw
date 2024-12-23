@@ -5,8 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import { chatWithPage } from "~/ai/ai";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
+import { THINKING_ROUND_COUNT } from "~utils/constants";
 import type { Message } from "./ChatUI";
-import { AssistantMessage } from "./MessageRenders";
+import { AssistantMessage, UserMessage } from "./MessageRenders";
+import { TSWToolBar } from "./TSWToolBar";
 
 marked.setOptions({
   breaks: true,
@@ -23,17 +25,21 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
   const [round, setRound] = useState(0);
 
   useEffect(() => {
-    if (round % 2 === 0 && round < 10) {
-      kickOff(think);
+    if (round % 2 === 0 && round < THINKING_ROUND_COUNT) {
+      const lastMessage = messages[messages.length - 1];
+      if (!messages.length || lastMessage?.isComplete) {
+        kickOff(think);
+      }
     }
-  }, [round]);
+  }, [round, messages]);
 
   useEffect(() => {
     if (
       round % 2 === 1 &&
-      round < 10 &&
+      round < THINKING_ROUND_COUNT &&
       messages.length > 0 &&
-      messages[messages.length - 1].role === "user"
+      messages[messages.length - 1].role === "user" &&
+      messages[messages.length - 1].isComplete
     ) {
       kickOff(answer);
     }
@@ -60,13 +66,21 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
   const generateThinkingMessages = () => {
     const thinkingMessages: CoreMessage[] = [];
     for (const m of messages) {
-      const tm = { ...m };
-      tm.role = m.role === "assistant" ? "user" : "assistant";
-      thinkingMessages.push(tm);
+      thinkingMessages.push({
+        role: m.role === "assistant" ? "user" : "assistant",
+        content: m.content,
+        id: m.id,
+      } as CoreMessage);
     }
     return thinkingMessages.length > 0
       ? thinkingMessages
-      : [{ role: "user", content: "What's your question?", id: 0 }];
+      : [
+          {
+            role: "user",
+            content: "What's your question?",
+            id: 0,
+          } as CoreMessage,
+        ];
   };
 
   const think = async () => {
@@ -107,8 +121,31 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
   };
 
   const kickOff = async (fn) => {
-    await fn();
-    setRound(round + 1);
+    try {
+      await fn();
+      if (abortController.current === null) {
+        setRound(round + 1);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.name === "AbortError"
+          ? "Operation was cancelled"
+          : `Error: ${error.message}`;
+      console.log(errorMessage);
+      setMessages((prevMessages) => {
+        const lastMessage = prevMessages[prevMessages.length - 1];
+        return [
+          ...prevMessages.slice(0, -1),
+          {
+            ...lastMessage,
+            content: errorMessage,
+            isError: true,
+            isComplete: true,
+            role: lastMessage.role,
+          } as Message,
+        ];
+      });
+    }
   };
 
   const answer = async () => {
@@ -154,23 +191,45 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
     }
   };
 
+  const handleStop = () => {
+    if (abortController.current) {
+      abortController.current.abort();
+      setRound(THINKING_ROUND_COUNT);
+      abortController.current = null;
+    }
+  };
+
   return (
     <>
-      <div className={chatStyles.chatContainer} id="tsw-chat-container">
+      <div className={chatStyles.thinkingContainer} id="tsw-chat-container">
         <div className={chatStyles.chatContent}>
-          <ScrollArea className={chatStyles.scrollArea}>
+          <ScrollArea className={chatStyles.thinkingScrollArea}>
             {messages.map((m, index) => (
               <div key={m.id}>
-                <AssistantMessage
-                  message={m}
-                  onSetMessage={setMessages}
-                  messagesLength={messages.length}
-                  messageIndex={index}
-                />
+                {m.role === "user" && (
+                  <UserMessage
+                    message={m}
+                    onSetMessage={setMessages}
+                    isChatMode={false}
+                  />
+                )}
+                {m.role === "assistant" && (
+                  <AssistantMessage
+                    message={m}
+                    onSetMessage={setMessages}
+                    messagesLength={messages.length}
+                    messageIndex={index}
+                  />
+                )}
               </div>
             ))}
           </ScrollArea>
         </div>
+        <TSWToolBar
+          isThinking={round < THINKING_ROUND_COUNT}
+          onStop={handleStop}
+          messages={messages}
+        />
       </div>
     </>
   );
