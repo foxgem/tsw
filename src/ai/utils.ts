@@ -27,7 +27,7 @@ function cleanPageText(root: HTMLElement, selector = "") {
   const temp = root.cloneNode(true) as HTMLElement;
 
   // Keep only article content if found
-  const articles = temp.querySelectorAll("article");
+  const articles = temp.querySelectorAll("article:has(h1), section:has(h1)");
   if (articles.length > 0) {
     const mainDiv = document.createElement("div");
     for (const article of articles) {
