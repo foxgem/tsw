@@ -232,7 +232,7 @@ export const chatWithPage = async (
   pageURL: string,
   signal: AbortSignal,
   provider: ModelProvider = DEFAULT_MODEL_PROVIDER,
-  model = DEFAULT_MODEL,
+  modelName = DEFAULT_MODEL,
   tools: Tools = {},
   customPrompt?: string,
 ) => {
@@ -255,17 +255,19 @@ export const chatWithPage = async (
 
   try {
     const apiKey = await loadApiKey(provider);
-    const modelProvider =
+    const model =
       provider === "gemini"
-        ? createGoogleGenerativeAI({ apiKey })
-        : createGroq({ apiKey });
+        ? createGoogleGenerativeAI({ apiKey })(modelName, {
+            useSearchGrounding: true,
+          })
+        : createGroq({ apiKey })(modelName);
     const filteredTools: Record<string, CoreTool> = {};
     for (const [key, tool] of Object.entries(tools)) {
       filteredTools[key] = (tool as Tool).handler;
     }
 
     const { textStream, toolResults } = streamText({
-      model: modelProvider(model),
+      model,
       system: prepareSystemPrompt(context, pageURL, customPrompt),
       tools: filteredTools,
       messages: filteredMessages,
