@@ -258,7 +258,7 @@ export const chatWithPage = async (
     const model =
       provider === "gemini"
         ? createGoogleGenerativeAI({ apiKey })(modelName, {
-            useSearchGrounding: true,
+            useSearchGrounding: modelName === "gemini-2.0-flash-exp",
           })
         : createGroq({ apiKey })(modelName);
     const filteredTools: Record<string, CoreTool> = {};
