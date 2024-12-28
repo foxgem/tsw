@@ -12,6 +12,8 @@ import {
   chattingHandler,
   codeHandler,
   explainSelected,
+  knowledgeCardHandler,
+  mindmapHandler,
   ocrHandler,
   rewriteHandler,
   summarize,
@@ -312,21 +314,33 @@ export const iconArray = [
     },
   },
   {
+    name: "KnowledgeCard",
+    action: () => {
+      knowledgeCardHandler("tsw-toggle-panel");
+    },
+  },
+  {
+    name: "Mindmap",
+    action: () => {
+      mindmapHandler("tsw-toggle-panel");
+    },
+  },
+  {
     name: "Wand",
     action: () => {
       window.picking = !window.picking;
     },
   },
   {
-    name: "Chat",
-    action: () => {
-      chattingHandler("tsw-toggle-panel");
-    },
-  },
-  {
     name: "Thinking",
     action: () => {
       thinkingHandler("tsw-toggle-panel");
+    },
+  },
+  {
+    name: "Chat",
+    action: () => {
+      chattingHandler("tsw-toggle-panel");
     },
   },
 ];

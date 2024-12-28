@@ -246,9 +246,9 @@
 }
 
 .downloadButton {
-  @apply inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-white hover:opacity-50 h-[40px] px-[8px] py-[4px] border-0;
-
+  @apply inline-flex items-center justify-center whitespace-nowrap rounded-[8px] text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:opacity-50 h-[40px] px-[8px] py-[4px] border-0 cursor-pointer;
   background-color: rgb(98, 93, 245) !important;
+  color: white !important;
 }
 
 .dialogContentDiv {
@@ -407,4 +407,10 @@
   transition: opacity 0.2s;
   display: flex;
   gap: 8px;
+}
+
+.knowledgeContainer,
+.mindmapContainer {
+  @apply flex flex-col overflow-y-auto;
+  height: calc(97vh - var(--header-height) - 50px);
 }

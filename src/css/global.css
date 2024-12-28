@@ -235,6 +235,7 @@
 
 .toolResultItem {
   margin-bottom: 20px;
+  width: 400px;
 }
 
 .toolResultItem:last-child {

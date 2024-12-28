@@ -15,9 +15,14 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 interface ExportDialogProps {
   elementId: string;
   content: string;
+  title?: string;
 }
 
-export function ExportDialog({ content, elementId }: ExportDialogProps) {
+export function ExportDialog({
+  content,
+  elementId,
+  title = "Chatting History",
+}: ExportDialogProps) {
   const [exportType, setExportType] = useState<"image" | "pdf" | "markdown">(
     "image",
   );
@@ -300,9 +305,7 @@ export function ExportDialog({ content, elementId }: ExportDialogProps) {
       <DialogContent className={cn(styles.dialogContent, styles.dialogOverlay)}>
         <div className={chatStyles.dialogContentDiv}>
           <div className={chatStyles.dialogContentRadioDiv}>
-            <h4 className={chatStyles.dialogChoseTitle}>
-              Dowload Chatting History{" "}
-            </h4>
+            <h4 className={chatStyles.dialogChoseTitle}>Dowload {title}</h4>
             <RadioGroup
               value={exportType}
               onValueChange={(value) => {

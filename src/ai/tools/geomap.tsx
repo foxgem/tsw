@@ -49,30 +49,24 @@ interface GeoMapData {
 
 type GeoMapResponse = GeoMapData | { error: string; location: string };
 
-class GeoMapService {
-  private static async getApiKeys() {
+const geoMapService = {
+  async getApiKeys() {
     return {
       geocodeKey:
         process.env.PLASMO_PUBLIC_GEOCODE_MAP_API_KEY ||
         (await getToolApiKey("geomap", "Geocode Map API")),
     };
-  }
+  },
 
-  static async getGeoMapData(location: string): Promise<GeoMapResponse> {
+  async getGeoMapData(location: string): Promise<GeoMapResponse> {
     try {
-      const { geocodeKey } = await GeoMapService.getApiKeys();
-
+      const { geocodeKey } = await this.getApiKeys();
       if (!geocodeKey) {
         throw new Error(
           "Geocode Map API key not configured. Please set it in settings.",
         );
       }
-
-      const geoData = await GeoMapService.getGeocodingData(
-        location,
-        geocodeKey,
-      );
-      return geoData;
+      return await this.getGeocodingData(location, geocodeKey);
     } catch (error) {
       return {
         error:
@@ -82,9 +76,9 @@ class GeoMapService {
         location,
       };
     }
-  }
+  },
 
-  private static async getGeocodingData(
+  async getGeocodingData(
     location: string,
     apiKey: string,
   ): Promise<GeoMapData> {
@@ -101,8 +95,8 @@ class GeoMapService {
       throw new Error("Location not found");
     }
     return results[0];
-  }
-}
+  },
+};
 
 export const geomap = {
   handler: tool({
@@ -111,7 +105,7 @@ export const geomap = {
       location: z.string(),
     }),
     execute: async ({ location }) => {
-      return GeoMapService.getGeoMapData(location);
+      return geoMapService.getGeoMapData(location);
     },
   }),
   render: (data: GeoMapData) => {

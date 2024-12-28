@@ -93,8 +93,8 @@ const styles = {
   },
 } as const;
 
-class WeatherService {
-  private static async getApiKeys() {
+const weatherService = {
+  async getApiKeys() {
     return {
       geocodeKey:
         process.env.PLASMO_PUBLIC_GEOCODE_MAP_API_KEY ||
@@ -103,11 +103,11 @@ class WeatherService {
         process.env.PLASMO_PUBLIC_OPENWEATHER_API_KEY ||
         (await getToolApiKey("weather", "Weather API")),
     };
-  }
+  },
 
-  static async getWeatherData(location: string): Promise<WeatherResponse> {
+  async getWeatherData(location: string): Promise<WeatherResponse> {
     try {
-      const { geocodeKey, weatherKey } = await WeatherService.getApiKeys();
+      const { geocodeKey, weatherKey } = await this.getApiKeys();
 
       if (!geocodeKey || !weatherKey) {
         throw new Error(
@@ -115,11 +115,8 @@ class WeatherService {
         );
       }
 
-      const geoData = await WeatherService.getGeocodingData(
-        location,
-        geocodeKey,
-      );
-      return await WeatherService.getWeatherDetails(geoData, weatherKey);
+      const geoData = await this.getGeocodingData(location, geocodeKey);
+      return await this.getWeatherDetails(geoData, weatherKey);
     } catch (error) {
       return {
         error:
@@ -129,9 +126,9 @@ class WeatherService {
         location,
       };
     }
-  }
+  },
 
-  private static async getGeocodingData(
+  async getGeocodingData(
     location: string,
     apiKey: string,
   ): Promise<GeocodingResult> {
@@ -149,9 +146,9 @@ class WeatherService {
     }
 
     return results[0];
-  }
+  },
 
-  private static async getWeatherDetails(
+  async getWeatherDetails(
     geoData: GeocodingResult,
     apiKey: string,
   ): Promise<WeatherData> {
@@ -182,8 +179,8 @@ class WeatherService {
         longitude: geoData.lon,
       },
     };
-  }
-}
+  },
+};
 
 export const weather = {
   handler: tool({
@@ -192,7 +189,7 @@ export const weather = {
       location: z.string(),
     }),
     execute: async ({ location }) => {
-      return WeatherService.getWeatherData(location);
+      return weatherService.getWeatherData(location);
     },
   }),
   render: (data: WeatherData) => {

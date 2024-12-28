@@ -229,6 +229,7 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
           isThinking={round < THINKING_ROUND_COUNT}
           onStop={handleStop}
           messages={messages}
+          exportTitle="Thinking History"
         />
       </div>
     </>
