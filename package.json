@@ -1,6 +1,6 @@
 {
   "name": "tsw",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "displayName": "TSW",
   "description": "Your tiny smart worker",
   "scripts": {
@@ -82,7 +82,7 @@
     },
     "name": "tsw - tiny smart worker",
     "description": "Your tiny smart worker",
-    "version": "0.1.5",
+    "version": "0.2.0",
     "browser_specific_settings": {
       "gecko": {
         "id": "{cdcc0160-f0ca-4350-91a5-bf7c06b8f12e}"
