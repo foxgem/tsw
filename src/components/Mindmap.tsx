@@ -55,7 +55,7 @@ const styles = {
     transformStyle: "preserve-3d",
     borderRadius: "20px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    overflow: "scroll",
+    overflow: "auto",
     padding: "20px",
     backgroundColor: "#f8f9fa",
   },

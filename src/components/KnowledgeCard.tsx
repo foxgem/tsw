@@ -30,7 +30,7 @@ const styles = {
     transformStyle: "preserve-3d",
     borderRadius: "20px",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    overflow: "scroll",
+    overflow: "auto",
   },
   cardSide: {
     position: "absolute",
@@ -286,7 +286,7 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({ data }) => {
             </div>
             <div style={styles.cardContent}>
               <div style={styles.section}>
-                <h3 style={styles.sectionTitle}>Tools</h3>
+                <h3 style={styles.sectionTitle}>References</h3>
                 <ul style={styles.referencesList}>
                   {references.attachments.map((attachment) => (
                     <li key={attachment.title} style={styles.listItem}>
