@@ -16,17 +16,6 @@ interface KnowledgeCardProps {
   data: KnowledgeCardData;
 }
 
-export interface KnowledgeCardData {
-  title: string;
-  keywords: string[];
-  keyPoints: string[];
-  originalLink: string;
-  references: {
-    tools?: { title: string; link: string }[];
-    attachments: { title: string; link: string }[];
-  };
-}
-
 const styles = {
   container: {
     width: "95%",

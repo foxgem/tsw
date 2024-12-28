@@ -76,12 +76,12 @@ const pageRagPrompt = (context: string) => {
 
 const siMindmap = `Based on the given article:
         1. try to summary and extra the key points for the diagram generation.
-        2. these key points must be informative and concise. 
+        2. these key points must be informative and concise.
         3. these key points should highlight the author's viewpoints.
         4. try to keep the key points in a logical order.
         5. don't include any extra explanation and irrelevant information.
-        
-        Use them to generate a Mindmap. 
+
+        Use them to generate a Mindmap.
         Mindmap syntax rules:
         - Each line should not have quotes at start or end
         - Do not include 'mermaid' at the start of the diagram
@@ -92,7 +92,7 @@ const siMindmap = `Based on the given article:
             A
               B
               C
-        
+
         Each node in the mindmap can be different shapes:
         <Square>
         id[I am a square]
@@ -139,15 +139,14 @@ const siMindmap = `Based on the given article:
             Tools
               Pen and paper
               Mermaid
-        
+
         The max deepth of the generated mindmap should be 4.
 
         The output syntax should be correct. Try to avoid the following common errors:
-        - quotation marks in the output
+        - never use \" in the output
         - \`\`\`mermaid in the output
         - 3-nesting parentheses, ie: (((...))). The correct format is ((...))
         - a parenthese in the sentence, ie: xxx(...) xxx. The correct format is xxx(...)
-
     `;
 
 const siKnowledge =
