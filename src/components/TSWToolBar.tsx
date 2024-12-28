@@ -9,9 +9,15 @@ interface TSWToolBarProps {
   isThinking: boolean;
   messages?: Message[];
   onStop?: () => void;
+  exportTitle?: string;
 }
 
-export function TSWToolBar({ isThinking, onStop, messages }: TSWToolBarProps) {
+export function TSWToolBar({
+  isThinking,
+  onStop,
+  messages,
+  exportTitle,
+}: TSWToolBarProps) {
   return (
     <>
       {isThinking ? (
@@ -35,6 +41,7 @@ export function TSWToolBar({ isThinking, onStop, messages }: TSWToolBarProps) {
               )
               .join("\n\n")}
             elementId="tsw-chat-container"
+            title={exportTitle}
           />
         </div>
       ) : null}

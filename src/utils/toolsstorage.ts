@@ -8,7 +8,7 @@ export type ToolApiKey = {
 
 // Tool configuration type definitions
 export type ToolConfig = {
-  apiKeys: ToolApiKey[];
+  apiKeys?: ToolApiKey[];
   checked: boolean;
 };
 
@@ -21,13 +21,19 @@ const initializeWeatherTool = (): ToolConfig => {
     apiKeys: [
       {
         name: "Geocode Map API",
-        key: "your api key",
+        key: "",
       },
       {
         name: "Weather API",
-        key: "your api key",
+        key: "",
       },
     ],
+    checked: false,
+  };
+};
+
+const initializeTool = () => {
+  return {
     checked: false,
   };
 };
@@ -37,7 +43,7 @@ const initializeGeoMapTool = (): ToolConfig => {
     apiKeys: [
       {
         name: "Geocode Map API",
-        key: "your api key",
+        key: "",
       },
     ],
     checked: false,
@@ -52,6 +58,8 @@ export async function initializeTools(): Promise<Tools> {
       ...tools,
       weather: initializeWeatherTool(),
       geomap: initializeGeoMapTool(),
+      KnowledgeCard: initializeTool(),
+      mindmap: initializeTool(),
     };
     await storage.set("tools", initialTools);
     return initialTools;
@@ -90,13 +98,13 @@ export async function enableTools(toolNames: string[]): Promise<void> {
   }, {} as Tools);
 
   const updatedTools = Object.entries({ ...tools, ...newTools }).reduce(
-    (acc, [name, config]) => ({
-      ...acc,
-      [name]: {
+    (acc, [name, config]) => {
+      acc[name] = {
         ...config,
         checked: toolNames.includes(name),
-      },
-    }),
+      };
+      return acc;
+    },
     {} as Tools,
   );
 

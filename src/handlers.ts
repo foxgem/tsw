@@ -10,7 +10,9 @@ import {
   summariseLink,
 } from "~/ai/ai";
 import { ChatUI } from "~components/ChatUI";
+import { KnowledgeCardUI } from "~components/KnowledgeCardUI";
 import { Loading } from "~components/Loading";
+import { MindmapUI } from "~components/MindmapUI";
 import { ThinkingUI } from "~components/ThinkingUI";
 import type { QuickPrompt } from "~utils/storage";
 import { ExportDialog } from "./components/ExportDialog";
@@ -277,6 +279,7 @@ const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
     React.createElement(ExportDialog, {
       content: results.map((el) => `${el}`).join(""),
       elementId: "tsw-output-body",
+      title: "Summary",
     }),
   );
 };
@@ -406,6 +409,30 @@ export async function callQuickPromptWithSelected(
     },
     React.createElement(Loading, {
       message: "Rewriting",
+    }),
+  );
+}
+
+export function knowledgeCardHandler(outputElm: string) {
+  withOutputPanel(
+    outputElm,
+    "Knowledge Card",
+    async () => {},
+    React.createElement(KnowledgeCardUI, {
+      pageRoot: document.body,
+      pageURL: window.location.href,
+    }),
+  );
+}
+
+export function mindmapHandler(outputElm: string) {
+  withOutputPanel(
+    outputElm,
+    "Mindmap",
+    async () => {},
+    React.createElement(MindmapUI, {
+      pageRoot: document.body,
+      pageURL: window.location.href,
     }),
   );
 }

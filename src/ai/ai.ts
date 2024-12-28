@@ -1,8 +1,14 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import { type CoreMessage, type CoreTool, streamText } from "ai";
+import {
+  type CoreMessage,
+  type CoreTool,
+  generateObject,
+  streamText,
+} from "ai";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { z } from "zod";
 import { StreamMessage } from "~/components/StreamMessage";
 import {
   DEFAULT_MODEL,
@@ -12,6 +18,8 @@ import {
 } from "~/utils/constants";
 import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
+import type { KnowledgeCardData } from "~components/KnowledgeCard";
+import type { MindmapData } from "~components/Mindmap";
 import type { Tool, Tools } from "./tools";
 
 const siEnglishTeacher =
@@ -65,6 +73,85 @@ const pageRagPrompt = (context: string) => {
   ${context}
   `;
 };
+
+const siMindmap = `Based on the given article:
+        1. try to summary and extra the key points for the diagram generation.
+        2. these key points must be informative and concise. 
+        3. these key points should highlight the author's viewpoints.
+        4. try to keep the key points in a logical order.
+        5. don't include any extra explanation and irrelevant information.
+        
+        Use them to generate a Mindmap. 
+        Mindmap syntax rules:
+        - Each line should not have quotes at start or end
+        - Do not include 'mermaid' at the start of the diagram
+        - Basic structure example:
+        <Basic Structure>
+        mindmap
+          Root
+            A
+              B
+              C
+        
+        Each node in the mindmap can be different shapes:
+        <Square>
+        id[I am a square]
+        <Rounded square>
+        id(I am a rounded square)
+        <Circle>
+        id((I am a circle))
+        <Bang>
+        id))I am a bang((
+        <Cloud>
+        id)I am a cloud(
+        <Hexagon>
+        id{{I am a hexagon}}
+        <Default>
+        I am the default shape
+
+        Icons can be used in the mindmap with syntax: "::icon()"
+
+        Markdown string can be used like the following:
+        <Markdown string>
+        mindmap
+            id1["\`**Root** with
+        a second line
+        Unicode works too: 🤓\`"]
+              id2["\`The dog in **the** hog... a *very long text* that wraps to a new line\`"]
+              id3[Regular labels still works]
+
+        Here is a mindmap example:
+        <example mindmap>
+        mindmap
+          root((mindmap))
+            Origins
+              Long history
+              ::icon(fa fa-book)
+              Popularisation
+                British popular psychology author Tony Buzan
+            Research
+              On effectiveness<br/>and features
+              On Automatic creation
+                Uses
+                    Creative techniques
+                    Strategic planning
+                    Argument mapping
+            Tools
+              Pen and paper
+              Mermaid
+        
+        The max deepth of the generated mindmap should be 4.
+
+        The output syntax should be correct. Try to avoid the following common errors:
+        - quotation marks in the output
+        - \`\`\`mermaid in the output
+        - 3-nesting parentheses, ie: (((...))). The correct format is ((...))
+        - a parenthese in the sentence, ie: xxx(...) xxx. The correct format is xxx(...)
+
+    `;
+
+const siKnowledge =
+  "分析文本并输出文章摘要，关键字，概述，分节阅读，相关工具和参考文献。需要注意：5个关键字，5个关键点";
 
 const prepareSystemPrompt = (
   pageText: string,
@@ -223,6 +310,77 @@ export const ocr = (
     ],
     messageElement,
   );
+
+export const genObject = async (
+  prompt: string,
+  system: string,
+  schema: z.Schema,
+) => {
+  try {
+    const apiKey = await loadApiKey("gemini");
+    const google = createGoogleGenerativeAI({ apiKey });
+
+    const { object } = await generateObject({
+      model: google("gemini-2.0-flash-exp"),
+      schema,
+      system,
+      prompt,
+    });
+
+    return object;
+  } catch (e) {
+    return { error: true, message: e.message };
+  }
+};
+
+const MindmapSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  diagram: z.string(),
+});
+
+export const generateMindmap = async (
+  root: HTMLElement,
+): Promise<MindmapData> => {
+  const result = await genObject(
+    turndown(root, "code"),
+    siMindmap,
+    MindmapSchema,
+  );
+  return result;
+};
+
+const KnowledgeCardSchema = z.object({
+  title: z.string(),
+  keywords: z.array(z.string()),
+  keyPoints: z.array(z.string()),
+  originalLink: z.string(),
+  references: z.object({
+    tools: z.array(
+      z.object({
+        title: z.string(),
+        link: z.string(),
+      }),
+    ),
+    attachments: z.array(
+      z.object({
+        title: z.string(),
+        link: z.string(),
+      }),
+    ),
+  }),
+});
+
+export const generateKnowledgeCard = async (
+  root: HTMLElement,
+): Promise<KnowledgeCardData> => {
+  const result = await genObject(
+    turndown(root, "code"),
+    siKnowledge,
+    KnowledgeCardSchema,
+  );
+  return result;
+};
 
 let pageVector: MemVector;
 
