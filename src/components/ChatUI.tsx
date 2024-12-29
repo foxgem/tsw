@@ -9,14 +9,13 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import { formatMessageContent, getProviderFromModel } from "~/lib/utils";
-import { AVAILABLE_TOOLS, type Tools } from "~ai/tools";
+import { toolRegistry, type Tools } from "~ai/tools";
 import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
   type ModelProvider,
 } from "~utils/constants";
 import { readInstantInputs } from "~utils/storage";
-import { getEnabledTools } from "~utils/toolsstorage";
 import textselectStyles from "../css/textselect.module.css";
 import { ExportDialog } from "./ExportDialog";
 import { AssistantMessage, ToolMessage, UserMessage } from "./MessageRenderers";
@@ -74,14 +73,8 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
 
   useEffect(() => {
     const loadTools = async () => {
-      const savedToolKeys = (await getEnabledTools()) || [];
-      const savedTools = savedToolKeys.reduce((acc, key) => {
-        if (key in AVAILABLE_TOOLS) {
-          acc[key] = AVAILABLE_TOOLS[key];
-        }
-        return acc;
-      }, {} as Tools);
-      setTools(savedTools);
+      const enabledTools = toolRegistry.getEnabledTools();
+      setTools(enabledTools);
     };
 
     loadTools();
@@ -315,6 +308,25 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
     }
   }, [tswPanelFooterRef.current]);
 
+  const handleToolsChange = async (newTools: Tools) => {
+    const currentToolNames = Object.keys(tools);
+    const newToolNames = Object.keys(newTools);
+
+    for (const toolName of newToolNames) {
+      if (!currentToolNames.includes(toolName)) {
+        await toolRegistry.enableTool(toolName, true);
+      }
+    }
+
+    for (const toolName of currentToolNames) {
+      if (!newToolNames.includes(toolName)) {
+        await toolRegistry.enableTool(toolName, false);
+      }
+    }
+
+    setTools(newTools);
+  };
+
   return (
     <>
       <div className={chatStyles.chatContainer} id="tsw-chat-container">
@@ -360,9 +372,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
       >
         <ToolsSelect
           tools={tools}
-          onChange={(tools) => {
-            setTools(tools);
-          }}
+          onChange={handleToolsChange}
           width={footerWidth}
         />
         <div className={chatStyles.tswTextAreaContent}>

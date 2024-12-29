@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import { MapPin } from "lucide-react";
 import { z } from "zod";
-import { getToolApiKey } from "~utils/toolsstorage";
+import type { Tool } from "./types";
 
 const styles = {
   container: {
@@ -50,23 +50,9 @@ interface GeoMapData {
 type GeoMapResponse = GeoMapData | { error: string; location: string };
 
 const geoMapService = {
-  async getApiKeys() {
-    return {
-      geocodeKey:
-        process.env.PLASMO_PUBLIC_GEOCODE_MAP_API_KEY ||
-        (await getToolApiKey("geomap", "Geocode Map API")),
-    };
-  },
-
-  async getGeoMapData(location: string): Promise<GeoMapResponse> {
+  async getLocation(location: string, apiKey: string): Promise<GeoMapResponse> {
     try {
-      const { geocodeKey } = await this.getApiKeys();
-      if (!geocodeKey) {
-        throw new Error(
-          "Geocode Map API key not configured. Please set it in settings.",
-        );
-      }
-      return await this.getGeocodingData(location, geocodeKey);
+      return await this.callGeoApi(location, apiKey);
     } catch (error) {
       return {
         error:
@@ -78,10 +64,7 @@ const geoMapService = {
     }
   },
 
-  async getGeocodingData(
-    location: string,
-    apiKey: string,
-  ): Promise<GeoMapData> {
+  async callGeoApi(location: string, apiKey: string): Promise<GeoMapData> {
     const response = await fetch(
       `https://geocode.maps.co/search?q=${encodeURIComponent(location)}&api_key=${apiKey}`,
     );
@@ -98,16 +81,20 @@ const geoMapService = {
   },
 };
 
-export const geomap = {
-  handler: tool({
-    description: "Display the weather for a location",
-    parameters: z.object({
-      location: z.string(),
-    }),
-    execute: async ({ location }) => {
-      return geoMapService.getGeoMapData(location);
-    },
-  }),
+export const geomap: Tool = {
+  name: "geomap",
+  settingsSchema: () => z.object({ apiKey: z.string() }),
+  createCoreTool: (settings) => {
+    return tool({
+      description: "Display the weather for a location",
+      parameters: z.object({
+        location: z.string(),
+      }),
+      execute: async ({ location }) => {
+        return geoMapService.getLocation(location, settings.apiKey);
+      },
+    });
+  },
   render: (data: GeoMapData) => {
     const getLatitudeDirection = (lat: number) => (lat >= 0 ? "N" : "S");
     const getLongitudeDirection = (lon: number) => (lon >= 0 ? "E" : "W");

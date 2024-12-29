@@ -1,10 +1,10 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
 import {
-  type CoreMessage,
-  type CoreTool,
   generateObject,
   streamText,
+  type CoreMessage,
+  type CoreTool,
 } from "ai";
 import React from "react";
 import { createRoot } from "react-dom/client";
@@ -20,7 +20,7 @@ import { loadApiKey, turndown } from "~ai/utils";
 import { MemVector } from "~ai/vector";
 import type { KnowledgeCardData } from "~components/KnowledgeCard";
 import type { MindmapData } from "~components/Mindmap";
-import type { Tool, Tools } from "./tools";
+import { toolRegistry, type Tools } from "./tools";
 
 const siEnglishTeacher =
   "你是一名资深英语老师有丰富的教学经验，可以深入浅出的用中文讲解英文疑难杂句和单词释义。";
@@ -420,7 +420,9 @@ export const chatWithPage = async (
     const filteredTools: Record<string, CoreTool> = {};
     if (modelName !== "gemini-2.0-flash-thinking-exp") {
       for (const [key, tool] of Object.entries(tools)) {
-        filteredTools[key] = (tool as Tool).handler;
+        filteredTools[key] = tool.createCoreTool(
+          toolRegistry.getToolSettings(tool.name),
+        );
       }
     }
 

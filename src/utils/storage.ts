@@ -1,6 +1,5 @@
 import { Storage } from "@plasmohq/storage";
 import { z } from "zod";
-import { initializeTools } from "./toolsstorage";
 
 const storage = new Storage();
 
@@ -36,8 +35,6 @@ export async function initDb() {
   if (gemini) {
     await storage.remove("apiKey");
   }
-
-  initializeTools();
 }
 
 export type TimerForDomain = {

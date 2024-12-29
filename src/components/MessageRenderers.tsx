@@ -9,7 +9,7 @@ import { StreamMessage } from "./StreamMessage";
 import { Button } from "./ui/button";
 import { RefreshIcon } from "./ui/icons/refresh";
 import { SquarePenIcon } from "./ui/icons/square-pen";
-import { ToolViews, type ToolResult } from "./ToolViewe";
+import { ToolViews, type ToolResult } from "./ToolViewer";
 
 interface UserMessageProps {
   message: Message;

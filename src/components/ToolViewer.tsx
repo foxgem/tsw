@@ -1,5 +1,6 @@
-import type * as React from "react";
-import { AVAILABLE_TOOLS } from "~ai/tools";
+"use client";
+
+import { toolRegistry } from "~ai/tools";
 
 export interface ToolResult {
   type: "tool-result";
@@ -24,7 +25,7 @@ export const ToolViews: React.FC<ToolsResultsProps> = ({ results }) => {
       );
     }
 
-    const tool = AVAILABLE_TOOLS[data.toolName];
+    const tool = toolRegistry.getTool(data.toolName);
     if (!tool) return null;
 
     if (!tool.render) {

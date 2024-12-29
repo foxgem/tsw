@@ -1,9 +1,16 @@
 import { Sparkles } from "lucide-react";
-import { AVAILABLE_TOOLS, type Tool, type Tools } from "~ai/tools";
+import { toolRegistry, type Tool, type Tools } from "~ai/tools";
 import { upperCaseFirstLetter } from "~lib/utils";
-import { enableTools } from "~utils/toolsstorage";
 import styles from "../css/chatui.module.css";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+
+async function enableTools(toolNames: string[]) {
+  const allTools = Object.keys(toolRegistry.getAllTools());
+
+  for (const toolName of allTools) {
+    await toolRegistry.enableTool(toolName, toolNames.includes(toolName));
+  }
+}
 
 interface ToolsProps {
   tools: Tools;
@@ -16,29 +23,30 @@ export function ToolsSelect({ tools, width, onChange }: ToolsProps) {
     return tools ? key in tools : false;
   };
 
-  const handleToolChange = (key: string, tool: Tool) => {
+  const handleToolChange = async (key: string, tool: Tool) => {
     if (isToolSelected(key)) {
       const newTools = { ...tools };
       delete newTools[key];
 
-      enableTools(Object.keys(newTools));
+      await enableTools(Object.keys(newTools));
       onChange(newTools);
     } else {
       const updatedTools = { ...tools, [key]: tool };
-      enableTools(Object.keys(updatedTools));
+      await enableTools(Object.keys(updatedTools));
       onChange(updatedTools);
     }
   };
-  const handleToggleAll = () => {
+
+  const handleToggleAll = async () => {
+    const allTools = toolRegistry.getAllTools();
     if (
-      (tools ? Object.keys(tools).length : 0) ===
-      Object.keys(AVAILABLE_TOOLS).length
+      (tools ? Object.keys(tools).length : 0) === Object.keys(allTools).length
     ) {
+      await enableTools([]);
       onChange({});
-      enableTools([]);
     } else {
-      enableTools(Object.keys(AVAILABLE_TOOLS));
-      onChange(AVAILABLE_TOOLS);
+      await enableTools(Object.keys(allTools));
+      onChange(allTools);
     }
   };
 
@@ -61,13 +69,13 @@ export function ToolsSelect({ tools, width, onChange }: ToolsProps) {
                 style={{ color: "black", cursor: "pointer" }}
               >
                 {(tools ? Object.keys(tools).length : 0) ===
-                Object.keys(AVAILABLE_TOOLS).length
+                Object.keys(toolRegistry.getAllTools()).length
                   ? "Disable All"
                   : "Enable All"}
               </a>
             </div>
             <div className={styles.toolsList}>
-              {Object.entries(AVAILABLE_TOOLS).map(([key, tool]) => (
+              {Object.entries(toolRegistry.getAllTools()).map(([key, tool]) => (
                 <label key={key} className={styles.toolItem}>
                   <input
                     type="checkbox"

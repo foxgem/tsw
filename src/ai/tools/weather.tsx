@@ -1,7 +1,7 @@
 import { tool } from "ai";
 import { Sunrise, Sunset } from "lucide-react";
 import { z } from "zod";
-import { getToolApiKey } from "~utils/toolsstorage";
+import type { Tool } from "./types";
 
 interface GeocodingResult {
   lat: string;
@@ -94,28 +94,13 @@ const styles = {
 } as const;
 
 const weatherService = {
-  async getApiKeys() {
-    return {
-      geocodeKey:
-        process.env.PLASMO_PUBLIC_GEOCODE_MAP_API_KEY ||
-        (await getToolApiKey("weather", "Geocode Map API")),
-      weatherKey:
-        process.env.PLASMO_PUBLIC_OPENWEATHER_API_KEY ||
-        (await getToolApiKey("weather", "Weather API")),
-    };
-  },
-
-  async getWeatherData(location: string): Promise<WeatherResponse> {
+  async getWeatherData(
+    location: string,
+    geoCodeKey: string,
+    weatherKey: string,
+  ): Promise<WeatherResponse> {
     try {
-      const { geocodeKey, weatherKey } = await this.getApiKeys();
-
-      if (!geocodeKey || !weatherKey) {
-        throw new Error(
-          "API keys not configured. Please set them in settings.",
-        );
-      }
-
-      const geoData = await this.getGeocodingData(location, geocodeKey);
+      const geoData = await this.getGeocodingData(location, geoCodeKey);
       return await this.getWeatherDetails(geoData, weatherKey);
     } catch (error) {
       return {
@@ -182,16 +167,28 @@ const weatherService = {
   },
 };
 
-export const weather = {
-  handler: tool({
-    description: "Display the weather for a location",
-    parameters: z.object({
-      location: z.string(),
+export const weather: Tool = {
+  name: "weather",
+  settingsSchema: () =>
+    z.object({
+      geoCodeKey: z.string(),
+      weatherKey: z.string(),
     }),
-    execute: async ({ location }) => {
-      return weatherService.getWeatherData(location);
-    },
-  }),
+  createCoreTool: (settings) => {
+    return tool({
+      description: "Display the weather for a location",
+      parameters: z.object({
+        location: z.string(),
+      }),
+      execute: async ({ location }) => {
+        return weatherService.getWeatherData(
+          location,
+          settings.geoCodeKey,
+          settings.weatherKey,
+        );
+      },
+    });
+  },
   render: (data: WeatherData) => {
     return (
       <div style={styles.container}>
