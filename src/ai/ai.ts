@@ -83,10 +83,11 @@ const siMindmap = `Based on the given article:
 
         Use them to generate a Mindmap.
         Mindmap syntax rules:
-        - Each line should not have quotes at start or end
+        - Each line should not have any quotes marks
         - Do not include 'mermaid' at the start of the diagram
         - Do not use 3-nesting parentheses, ie: (((...))). The correct format is ((...))
         - Do not use abbreviations with parentheses in the middle of a line, but it can be used at the end of a line
+        - Do not use any special characters in the diagram except emojis
         - Basic structure example:
         <Basic Structure>
         mindmap
