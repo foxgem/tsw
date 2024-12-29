@@ -2,7 +2,6 @@ import { CopyIcon } from "lucide-react";
 import { marked } from "marked";
 import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
-import { type ToolResult, ToolViews } from "~ai/tools";
 import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { ActionIcon } from "./ActionIcon";
 import type { Message } from "./ChatUI";
@@ -10,6 +9,7 @@ import { StreamMessage } from "./StreamMessage";
 import { Button } from "./ui/button";
 import { RefreshIcon } from "./ui/icons/refresh";
 import { SquarePenIcon } from "./ui/icons/square-pen";
+import { ToolViews, type ToolResult } from "./ToolViewe";
 
 interface UserMessageProps {
   message: Message;

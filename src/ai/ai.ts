@@ -414,13 +414,14 @@ export const chatWithPage = async (
     const apiKey = await loadApiKey(provider);
     const model =
       provider === "gemini"
-        ? createGoogleGenerativeAI({ apiKey })(modelName, {
-            useSearchGrounding: modelName === "gemini-2.0-flash-exp",
-          })
+        ? createGoogleGenerativeAI({ apiKey })(modelName)
         : createGroq({ apiKey })(modelName);
+
     const filteredTools: Record<string, CoreTool> = {};
-    for (const [key, tool] of Object.entries(tools)) {
-      filteredTools[key] = (tool as Tool).handler;
+    if (modelName !== "gemini-2.0-flash-thinking-exp") {
+      for (const [key, tool] of Object.entries(tools)) {
+        filteredTools[key] = (tool as Tool).handler;
+      }
     }
 
     const { textStream, toolResults } = streamText({

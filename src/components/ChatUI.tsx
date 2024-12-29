@@ -19,7 +19,7 @@ import { readInstantInputs } from "~utils/storage";
 import { getEnabledTools } from "~utils/toolsstorage";
 import textselectStyles from "../css/textselect.module.css";
 import { ExportDialog } from "./ExportDialog";
-import { AssistantMessage, ToolMessage, UserMessage } from "./MessageRenders";
+import { AssistantMessage, ToolMessage, UserMessage } from "./MessageRenderers";
 import ModelMenu from "./ModelMenu";
 import { SelectInstantInput } from "./SelectInstantInput";
 import { ToolsSelect } from "./ToolsSelect";

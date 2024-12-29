@@ -7,7 +7,7 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import { THINKING_ROUND_COUNT } from "~utils/constants";
 import type { Message } from "./ChatUI";
-import { AssistantMessage, UserMessage } from "./MessageRenders";
+import { AssistantMessage, UserMessage } from "./MessageRenderers";
 import { TSWToolBar } from "./TSWToolBar";
 
 marked.setOptions({
