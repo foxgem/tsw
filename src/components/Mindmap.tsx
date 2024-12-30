@@ -1,3 +1,4 @@
+import mermaidSvg from "data-base64:/assets/mermaid.svg";
 import * as htmlToImage from "html-to-image";
 import { fromUint8Array } from "js-base64";
 import { DownloadIcon } from "lucide-react";
@@ -14,8 +15,10 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import shadcnStyles from "~/css/shadcn.module.css";
 import { cn } from "~lib/utils";
+import { CopyToClipboard } from "./CopyToClipboard";
 import { Loading } from "./Loading";
 import { Button } from "./ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface MindmapProps {
   data: MindmapData;
@@ -88,13 +91,13 @@ const styles = {
     width: "100%",
     maxWidth: "1200px",
     transform: "translate(-50%, -50%)",
-    gap: "16px",
+    gap: "0",
     border: "1px solid var(--border)",
     backgroundColor: "white",
-    padding: "24px",
+    padding: "20px",
     boxShadow: " 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a",
     transitionDuration: "200ms",
-    height: "600px",
+    height: "650px",
   },
   loader: {
     height: "32px",
@@ -111,7 +114,7 @@ const styles = {
   },
   imageContainer: {
     width: "100%",
-    height: "500px",
+    height: "595px",
     border: "none",
     overflow: "hidden",
     display: "flex",
@@ -123,11 +126,77 @@ const styles = {
     maxWidth: "1150px",
     margin: "0 auto",
   },
+  errorContainer: {
+    textAlign: "left",
+    width: "100%",
+    height: "500px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   error: {
     color: "red",
-    textAlign: "center",
+  },
+  tabsContent: {
+    width: "100%",
+    height: "100%",
+  },
+  tabsList: {
+    display: "flex",
+    gap: "8px",
+    borderBottom: "1px solid #e5e7eb",
     width: "100%",
   },
+
+  tabsTrigger: {
+    padding: "8px 16px",
+    backgroundColor: "transparent",
+    borderTop: "none",
+    borderLeft: "none",
+    borderRight: "none",
+    borderBottom: "2px solid transparent",
+    cursor: "pointer",
+    color: "#374151",
+    fontSize: "14px",
+    fontWeight: 500,
+    transition: "all 0.2s",
+  },
+
+  tabsTriggerHovered: {
+    backgroundColor: "#F1F5F9",
+    color: "#2563eb",
+  },
+
+  tabsTriggerActive: {
+    backgroundColor: "#F1F5F9",
+    color: "#2563eb",
+    borderBottom: "2px solid #2563eb",
+  },
+
+  tabsTriggerHover: {
+    backgroundColor: "#F1F5F9",
+    color: "#2563eb",
+  },
+  codeBlock: {
+    backgroundColor: "#1e1e1e",
+    color: "#ffffff",
+    padding: "16px",
+    borderRadius: "4px",
+    fontFamily: "monospace",
+    fontSize: "14px",
+    overflowX: "auto",
+    height: "500px",
+  },
+  debugLink: {
+    color: "#63B3ED",
+    textDecoration: "none",
+    marginTop: "12px",
+    display: "inline-block",
+    "&:hover": {
+      textDecoration: "underline",
+    },
+  },
+  mermaidSvg: { width: "16px", height: "16px" },
 } as const;
 
 const mermaidURL = "https://mermaid.ink/img";
@@ -137,7 +206,9 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [pakoValue, setPakoValue] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [activeTab, setActiveTab] = useState("preview");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [imageSrc, setImageSrc] = useState<string>("");
 
   useEffect(() => {
     if (!pakoValue) {
@@ -149,6 +220,18 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
           const base64 = fromUint8Array(compressed, true);
           onGenerate?.(base64);
           setPakoValue(base64);
+          const response = await fetch(`${mermaidURL}/pako:${base64}?type=png`);
+
+          if (!response.ok) {
+            const textContent = await response.text();
+            setErrorMessage(textContent);
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const imageBlob = await response.blob();
+          const imageUrl = URL.createObjectURL(imageBlob);
+
+          setImageSrc(imageUrl);
         } catch (error) {
           console.error("Error", error);
         }
@@ -183,13 +266,25 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
     }
   };
 
+  const debugHandler = () => {
+    window.open(`https://mermaid.live/edit#pako:${pakoValue}`, "_blank");
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.cardWrapper}>
         <h2 style={styles.title}>{data.title}</h2>
         <p style={styles.content}>{data.description}</p>
 
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            if (open) {
+              setActiveTab("preview");
+            }
+          }}
+        >
           <DialogTrigger asChild>
             <button type="button" style={styles.button}>
               View Mindmap
@@ -201,46 +296,117 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
             </DialogHeader>
 
             <div style={styles.imageContainer}>
-              {pakoValue &&
-                (imageError ? (
-                  <div style={styles.error}>Failed to load mindmap image.</div>
-                ) : (
-                  <>
-                    {isLoading && <Loading message="Loading image" />}
-                    <img
-                      src={`${mermaidURL}/pako:${pakoValue}?type=png`}
-                      alt="mermaid"
-                      id="mermaindDiagram"
-                      style={{
-                        ...styles.diagram,
-                        display: isLoading ? "none" : "block",
-                      }}
-                      onError={() => {
-                        setImageError(true);
-                        setIsLoading(false);
-                      }}
-                      onLoad={() => {
-                        setImageError(false);
-                        setIsLoading(false);
-                      }}
-                    />
-                  </>
-                ))}
+              <Tabs defaultValue="preview" style={styles.tabsContent}>
+                <TabsList style={styles.tabsList}>
+                  <TabsTrigger
+                    value="preview"
+                    style={{
+                      ...styles.tabsTrigger,
+                      ...(activeTab === "preview"
+                        ? styles.tabsTriggerActive
+                        : {}),
+                    }}
+                    onClick={() => setActiveTab("preview")}
+                  >
+                    Preview
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="code"
+                    style={{
+                      ...styles.tabsTrigger,
+                      ...(activeTab === "code" ? styles.tabsTriggerActive : {}),
+                    }}
+                    onClick={() => setActiveTab("code")}
+                  >
+                    Code
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="preview">
+                  {pakoValue &&
+                    (errorMessage ? (
+                      <div style={styles.errorContainer}>
+                        <pre>
+                          <code style={styles.error}>{errorMessage}</code>
+                          <div>
+                            Please view 'Code' tab for details or access{" "}
+                            <a
+                              href={`https://mermaid.live/edit#pako:${pakoValue}`}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              Mermaid Editor
+                            </a>{" "}
+                            to debug.
+                          </div>
+                        </pre>
+                      </div>
+                    ) : (
+                      <>
+                        {isLoading && <Loading message="Loading image" />}
+                        <img
+                          src={`${imageSrc}`}
+                          alt="mermaid"
+                          id="mermaindDiagram"
+                          style={{
+                            ...styles.diagram,
+                            display: isLoading ? "none" : "block",
+                          }}
+                          onLoad={() => {
+                            setErrorMessage("");
+                            setIsLoading(false);
+                          }}
+                        />
+                      </>
+                    ))}
+                  <div className={chatStyles.tswToolBar}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={downloadHandler}
+                      className={cn(
+                        commontyles.tswActionBtn,
+                        shadcnStyles.tswTriggerButton,
+                      )}
+                      disabled={isDownloading}
+                    >
+                      <DownloadIcon size={16} />
+                    </Button>
+                  </div>
+                </TabsContent>
 
-              <div className={chatStyles.tswToolBar}>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={downloadHandler}
-                  className={cn(
-                    commontyles.tswActionBtn,
-                    shadcnStyles.tswTriggerButton,
-                  )}
-                  disabled={isDownloading}
-                >
-                  <DownloadIcon size={16} />
-                </Button>
-              </div>
+                <TabsContent value="code">
+                  <div>
+                    <pre style={styles.codeBlock}>
+                      <code>{data.diagram}</code>
+                    </pre>
+                  </div>
+                  <div className={chatStyles.tswToolBar}>
+                    <CopyToClipboard
+                      content={data.diagram}
+                      className={cn(
+                        commontyles.tswActionBtn,
+                        shadcnStyles.tswTriggerButton,
+                      )}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={debugHandler}
+                      className={cn(
+                        commontyles.tswActionBtn,
+                        shadcnStyles.tswTriggerButton,
+                      )}
+                      disabled={isDownloading}
+                    >
+                      <img
+                        src={mermaidSvg}
+                        alt="mermaid"
+                        style={styles.mermaidSvg}
+                      />
+                    </Button>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </DialogContent>
         </Dialog>

@@ -1,19 +1,18 @@
-import { CopyIcon } from "lucide-react";
 import { marked } from "marked";
 import chatStyles from "~/css/chatui.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import { cn, upperCaseFirstLetter } from "~lib/utils";
 import { ActionIcon } from "./ActionIcon";
 import type { Message } from "./ChatUI";
+import { CopyToClipboard } from "./CopyToClipboard";
 import { StreamMessage } from "./StreamMessage";
+import { type ToolResult, ToolViews } from "./ToolViewer";
 import { Button } from "./ui/button";
 import { RefreshIcon } from "./ui/icons/refresh";
 import { SquarePenIcon } from "./ui/icons/square-pen";
-import { ToolViews, type ToolResult } from "./ToolViewer";
 
 interface UserMessageProps {
   message: Message;
-  onCopy?: (content: string) => void;
   onEdit?: (message: any) => void;
   onSetMessage?: (message: any) => void;
   isChatMode?: boolean;
@@ -26,7 +25,6 @@ interface AssistantMessageProps {
   isStreaming?: boolean;
   editingMessageId?: number | null;
   isThinking?: boolean;
-  onCopy?: (content: string) => void;
   onSetMessage?: (message: any) => void;
   onRefresh?: (e: React.MouseEvent) => void;
 }
@@ -37,7 +35,6 @@ interface ToolMessageProps {
 
 export const UserMessage = ({
   message,
-  onCopy,
   onEdit,
   onSetMessage,
   isChatMode = true,
@@ -102,16 +99,10 @@ export const UserMessage = ({
         >
           {message.content && (
             <>
-              {onCopy && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={chatStyles.tswActionBtn}
-                  onClick={() => onCopy(JSON.stringify(message.content))}
-                >
-                  <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
-                </Button>
-              )}
+              <CopyToClipboard
+                content={JSON.stringify(message.content)}
+                className={chatStyles.tswActionBtn}
+              />
               {onEdit && (
                 <Button
                   variant="ghost"
@@ -139,7 +130,6 @@ export const AssistantMessage = ({
   messageIndex,
   isStreaming,
   editingMessageId,
-  onCopy,
   onSetMessage,
   onRefresh,
 }: AssistantMessageProps) => {
@@ -152,7 +142,6 @@ export const AssistantMessage = ({
         <div
           className={cn(
             chatStyles.chatItemContainer,
-            message.isError ? chatStyles.errorChatItem : "",
             chatStyles.tswChatItem,
             String(message.content).split("\n").length === 1 &&
               message.content.length < 100
@@ -162,7 +151,12 @@ export const AssistantMessage = ({
         >
           <ActionIcon name={upperCaseFirstLetter("assistant")} />
 
-          <div className={chatStyles.messageContent}>
+          <div
+            className={cn(
+              chatStyles.messageContent,
+              message.isError ? chatStyles.errorChatItem : "",
+            )}
+          >
             {message.content === "TSW" ? (
               <div className={chatStyles.loadingContainer}>
                 <div className={chatStyles.loadingDot}>
@@ -205,16 +199,11 @@ export const AssistantMessage = ({
         >
           {message.isComplete && message.content && (
             <>
-              {onCopy && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className={chatStyles.tswActionBtn}
-                  onClick={() => onCopy(JSON.stringify(message.content))}
-                >
-                  <CopyIcon size={16} className={iconsStyles.dynamicIcon} />
-                </Button>
-              )}
+              <CopyToClipboard
+                content={JSON.stringify(message.content)}
+                className={chatStyles.tswActionBtn}
+              />
+
               {messageIndex === messagesLength - 1 && onRefresh && (
                 <Button
                   variant="ghost"
