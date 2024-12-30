@@ -152,7 +152,6 @@ export const AssistantMessage = ({
         <div
           className={cn(
             chatStyles.chatItemContainer,
-            message.isError ? chatStyles.errorChatItem : "",
             chatStyles.tswChatItem,
             String(message.content).split("\n").length === 1 &&
               message.content.length < 100
@@ -162,7 +161,12 @@ export const AssistantMessage = ({
         >
           <ActionIcon name={upperCaseFirstLetter("assistant")} />
 
-          <div className={chatStyles.messageContent}>
+          <div
+            className={cn(
+              chatStyles.messageContent,
+              message.isError ? chatStyles.errorChatItem : "",
+            )}
+          >
             {message.content === "TSW" ? (
               <div className={chatStyles.loadingContainer}>
                 <div className={chatStyles.loadingDot}>

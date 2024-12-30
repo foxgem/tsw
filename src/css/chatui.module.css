@@ -117,7 +117,7 @@
 }
 
 .messageContainer svg path {
-  fill: unset !important;
+  fill: none !important;
 }
 
 .userMessage {
