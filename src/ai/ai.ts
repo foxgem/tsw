@@ -85,9 +85,10 @@ const siMindmap = `Based on the given article:
         Mindmap syntax rules:
         - Each line should not have any quotes marks
         - Do not include 'mermaid' at the start of the diagram
-        - Do not use 3-nesting parentheses, ie: (((...))). The correct format is ((...))
+        - Do not use 3-nesting parentheses for root, ie: "root((Mixture of Experts (MoE)))". The correct is "root((MoE))"
         - Do not use abbreviations with parentheses in the middle of a line, but it can be used at the end of a line
         - Do not use any special characters in the diagram except emojis
+        - Keep function name without parameters when you are reading a programming article, ie: free, not free()
         - Basic structure example:
         <Basic Structure>
         mindmap
@@ -148,6 +149,21 @@ const siMindmap = `Based on the given article:
         The output syntax should be correct. Try to avoid the following common errors:
         - never use \" in the output
         - \`\`\`mermaid in the output
+        <error examples>
+        - Gating network (G) decides experts (E)
+          - fixed: Gating network decides experts
+        - root((Mixture of Experts (MoE)))
+          - fixed: root((MoE))
+        - 2017: Shazeer et al. (Google) - 137B LSTM
+          - fixed: 2017: Shazeer et al. Google 137B LSTM
+        - calloc()
+          - fixed: calloc
+        - sbrk(0) returns current break
+          - fixed: sbrk:0 returns current break
+        - Allocate N + sizeof(header_t) bytes
+          - fixed: Allocate N + sizeof header_t bytes
+
+        Review the output to ensure it is logical and follows the correct syntax, if not, correct it.
     `;
 
 const siKnowledge =
