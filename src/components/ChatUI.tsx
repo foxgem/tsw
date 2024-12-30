@@ -9,7 +9,7 @@ import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
 import chatStyles from "~/css/chatui.module.css";
 import { formatMessageContent, getProviderFromModel } from "~/lib/utils";
-import { toolRegistry, type Tools } from "~ai/tools";
+import { type Tools, toolRegistry } from "~ai/tools";
 import {
   DEFAULT_MODEL,
   DEFAULT_MODEL_PROVIDER,
@@ -231,14 +231,6 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
     }
   };
 
-  const copyToClipboard = (content: string) => {
-    navigator.clipboard.writeText(content).then(() => {
-      toast({
-        description: "Copied.",
-      });
-    });
-  };
-
   const handleEdit = (message: Message) => {
     setEditingMessageId(message.id);
     setInputValue(
@@ -340,17 +332,12 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
             {messages.map((m, index) => (
               <div key={m.id}>
                 {m.role === "user" && (
-                  <UserMessage
-                    message={m}
-                    onCopy={copyToClipboard}
-                    onEdit={handleEdit}
-                  />
+                  <UserMessage message={m} onEdit={handleEdit} />
                 )}
 
                 {m.role === "assistant" && (
                   <AssistantMessage
                     message={m}
-                    onCopy={copyToClipboard}
                     onSetMessage={setMessages}
                     onRefresh={handleRefresh}
                     isStreaming={isStreaming}

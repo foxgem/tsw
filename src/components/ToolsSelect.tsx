@@ -1,5 +1,5 @@
 import { Sparkles } from "lucide-react";
-import { toolRegistry, type Tool, type Tools } from "~ai/tools";
+import { type Tool, type Tools, toolRegistry } from "~ai/tools";
 import { upperCaseFirstLetter } from "~lib/utils";
 import styles from "../css/chatui.module.css";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
