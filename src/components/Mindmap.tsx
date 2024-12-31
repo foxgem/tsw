@@ -98,6 +98,7 @@ const styles = {
     boxShadow: " 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a",
     transitionDuration: "200ms",
     height: "650px",
+    color: "black",
   },
   loader: {
     height: "32px",
@@ -146,6 +147,8 @@ const styles = {
     gap: "8px",
     borderBottom: "1px solid #e5e7eb",
     width: "100%",
+    justifyContent: "start",
+    marginTop: "6px",
   },
 
   tabsTrigger: {
