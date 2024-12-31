@@ -26,8 +26,9 @@ function withOutputPanel(
   title: string,
   handler: () => void,
   children: React.ReactNode,
+  currentTop?: number,
 ) {
-  const { wrapper, innerWrapper, header } = setupWrapperAndBody();
+  const { wrapper, innerWrapper, header } = setupWrapperAndBody(currentTop);
 
   let panel = document.getElementById(outputElm);
 
@@ -92,16 +93,12 @@ function withOutputPanel(
   );
 }
 
-function setupWrapperAndBody(): {
+function setupWrapperAndBody(currentTop: number): {
   wrapper: HTMLElement;
   innerWrapper: HTMLElement;
   header: HTMLElement;
   originalHeaderWidth?: string;
 } {
-  const scrollPosition = {
-    x: window.scrollX,
-    y: window.scrollY,
-  };
   let wrapper = document.getElementById("tsw-outer-wrapper");
   const innerWrapper = document.createElement("div");
 
@@ -140,6 +137,10 @@ function setupWrapperAndBody(): {
     margin-right:10px;
   `;
 
+  const scrollPosition = {
+    x: window.scrollX,
+    y: currentTop ? currentTop : window.scrollY,
+  };
   wrapper.scrollLeft = scrollPosition.x;
   wrapper.scrollTop = scrollPosition.y;
 
@@ -185,6 +186,11 @@ function resetWrapperCss(
   panel: HTMLElement,
   originalHeaderWidth?: string,
 ) {
+  wrapper.removeEventListener("scroll", (e) => {
+    const target = e.target as HTMLElement;
+    window.scrollTo(target.scrollLeft, target.scrollTop);
+  });
+
   const scrollPosition = {
     x: wrapper.scrollLeft,
     y: wrapper.scrollTop,
@@ -202,7 +208,6 @@ function resetWrapperCss(
   `;
   innerWrapper.style.cssText = `
     width: 100vw;
-    height: 100vh;
     overflow: visible;
     box-shadow: none;
   `;
@@ -284,7 +289,11 @@ const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
   );
 };
 
-export async function explainSelected(outputElm: string, text: string) {
+export async function explainSelected(
+  outputElm: string,
+  text: string,
+  currentTop: number,
+) {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
 
@@ -302,6 +311,7 @@ export async function explainSelected(outputElm: string, text: string) {
     React.createElement(Loading, {
       message: "Explaining",
     }),
+    currentTop,
   );
 }
 
