@@ -419,6 +419,7 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
   }
 });
 
+let currentTop = 0;
 function createSelectMenu() {
   const container = document.createElement("div");
   container.id = "tsw-select-root";
@@ -437,8 +438,20 @@ function createSelectMenu() {
 
   const onTranslate = async () => {
     const selectedText = window.getSelection()?.toString().trim();
-    await explainSelected("tsw-toggle-panel", selectedText);
+    await explainSelected(
+      "tsw-toggle-panel",
+      selectedText,
+      Math.max(window.scrollY, currentTop),
+    );
     window.getSelection()?.removeAllRanges();
+
+    const wrapper = document.getElementById("tsw-outer-wrapper");
+    if (wrapper) {
+      wrapper.addEventListener("scroll", (e) => {
+        const target = e.target as HTMLElement;
+        currentTop = target.scrollTop;
+      });
+    }
   };
 
   let hasSelection = false;
@@ -454,7 +467,6 @@ function createSelectMenu() {
   document.addEventListener("mouseup", () => {
     if (!hasSelection) return;
     const selection = window.getSelection();
-
     const togglePanel = document.getElementById("tsw-toggle-panel");
     const selectionNode = selection?.anchorNode?.parentElement;
     if (togglePanel?.contains(selectionNode)) {
@@ -492,7 +504,7 @@ function createSelectMenu() {
             rect.left + window.scrollX + rect.width / 2,
             window.innerWidth - 100,
           ),
-          y: Math.max(rect.bottom + window.scrollY, 0),
+          y: Math.max(rect.bottom + Math.max(window.scrollY, currentTop), 0),
         };
       }
 
