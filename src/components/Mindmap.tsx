@@ -29,6 +29,8 @@ export interface MindmapData {
   title: string;
   description: string;
   diagram: string;
+  error?: boolean;
+  message?: string;
 }
 
 const spinKeyframes = `
@@ -212,6 +214,26 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
   const [activeTab, setActiveTab] = useState("preview");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [imageSrc, setImageSrc] = useState<string>("");
+
+  if (data.error) {
+    return (
+      <div style={styles.container}>
+        <div
+          style={{
+            ...styles.cardWrapper,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "rgb(220, 38, 38)",
+            fontSize: "18px",
+            fontWeight: "bold",
+          }}
+        >
+          {data.message || "Fail to generate Knowledge Card."}
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (!pakoValue) {
@@ -454,8 +476,8 @@ const createDownloadContainer = async (
   tempContainer.appendChild(newImage);
 
   const sourceElement = document.createElement("div");
-  sourceElement.textContent = `Source: ${window.location.origin}`;
-  sourceElement.style.textAlign = "right";
+  sourceElement.textContent = `Source: ${window.location.href}`;
+  sourceElement.style.textAlign = "left";
   sourceElement.style.marginTop = "10px";
   sourceElement.style.color = "#666";
   sourceElement.style.fontSize = "12px";

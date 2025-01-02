@@ -166,8 +166,12 @@ export const ToolsSetting: React.FC = () => {
           renderSettingsForm()
         ) : (
           <div className="space-y-4">
-            <div className="flex justify-between items-center">
+            <div>
               <h2 className="text-lg font-semibold">Tools Configuration</h2>
+              <p className="text-xs text-yellow-900">
+                ⚠️ Note: If you changed the configuration, please refresh the
+                page.
+              </p>
             </div>
             {Object.entries(tools).map(([toolName, tool]) => (
               <div

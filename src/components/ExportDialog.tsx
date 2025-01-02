@@ -7,7 +7,7 @@ import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
 import { cn } from "~lib/utils";
 import { Button } from "./ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -126,10 +126,16 @@ export function ExportDialog({
     clonedContent.insertBefore(titleElement, clonedContent.firstChild);
 
     const footerElement = document.createElement("div");
-    footerElement.textContent = `source: ${window.location.href}`;
+    footerElement.textContent = `Source: ${window.location.href}`;
     footerElement.id = "footerElement";
-    footerElement.style.margin = "20px 0";
-    footerElement.style.color = "#666";
+    footerElement.style.cssText = `
+        margin: 20px 0;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        color: #666;
+        width: ${panel.scrollWidth}px;
+    `;
     clonedContent.appendChild(footerElement);
 
     const tempContainer = document.createElement("div");
@@ -303,9 +309,9 @@ export function ExportDialog({
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(styles.dialogContent, styles.dialogOverlay)}>
+        <DialogTitle>Dowload {title}</DialogTitle>
         <div className={chatStyles.dialogContentDiv}>
           <div className={chatStyles.dialogContentRadioDiv}>
-            <h4 className={chatStyles.dialogChoseTitle}>Dowload {title}</h4>
             <RadioGroup
               value={exportType}
               onValueChange={(value) => {
