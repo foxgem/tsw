@@ -10,6 +10,8 @@ export interface KnowledgeCardData {
     tools?: { title: string; link: string }[];
     attachments: { title: string; link: string }[];
   };
+  error?: boolean;
+  message?: string;
 }
 
 interface KnowledgeCardProps {
@@ -161,17 +163,18 @@ const styles = {
     transition: "all 0.3s ease",
   },
   activeDot: {
-    width: "9px",
-    height: "9px",
+    width: "12px",
+    height: "12px",
     backgroundColor: "transparent",
     border: "2px solid #111827",
+    boxSizing: "border-box",
   },
 } as const;
 
 const KnowledgeCard: React.FC<KnowledgeCardProps> = ({ data }) => {
   const [currentCard, setCurrentCard] = useState(0);
   const { title, keyPoints, keywords, references, originalLink } = data;
-  const [mounted, setMounted] = useState(false); // 添加mounted状态
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -196,6 +199,26 @@ const KnowledgeCard: React.FC<KnowledgeCardProps> = ({ data }) => {
       pointerEvents: currentCard === cardIndex ? "auto" : "none",
     };
   };
+
+  if (data.error) {
+    return (
+      <div style={styles.container}>
+        <div
+          style={{
+            ...styles.cardWrapper,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "rgb(220, 38, 38)",
+            fontSize: "18px",
+            fontWeight: "bold",
+          }}
+        >
+          {data.message || "Fail to generate Knowledge Card."}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
