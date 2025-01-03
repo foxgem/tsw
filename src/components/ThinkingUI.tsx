@@ -48,7 +48,7 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
   useEffect(() => {
     if (messages.length > 0) {
       const viewport = document.querySelector(
-        "[data-radix-scroll-area-viewport]",
+        "#tsw-output-body [data-radix-scroll-area-viewport]",
       );
       if (viewport) {
         requestAnimationFrame(() => {

@@ -174,7 +174,7 @@ export function ExportDialog({
           }
 
           const viewport = document.querySelector(
-            "[data-radix-scroll-area-viewport]",
+            "#tsw-output-body [data-radix-scroll-area-viewport]",
           );
           const contentDiv = viewport
             ? viewport.querySelector("div")
@@ -216,7 +216,7 @@ export function ExportDialog({
 
             setTimeout(() => {
               if (tempContainer?.parentNode) {
-                tempContainer.parentNode.removeChild(tempContainer);
+                //tempContainer.parentNode.removeChild(tempContainer);
               }
             }, 100);
 

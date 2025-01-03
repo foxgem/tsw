@@ -83,7 +83,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
   useEffect(() => {
     if (messages.length > 0) {
       const viewport = document.querySelector(
-        "[data-radix-scroll-area-viewport]",
+        "#tsw-output-body [data-radix-scroll-area-viewport]",
       );
       if (viewport) {
         requestAnimationFrame(() => {
