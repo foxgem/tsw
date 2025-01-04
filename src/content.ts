@@ -436,16 +436,26 @@ function createSelectMenu() {
     window.getSelection()?.removeAllRanges();
   };
 
+  const getWrapper = () => {
+    return document.getElementById("tsw-outer-wrapper");
+  };
+
   const onTranslate = async () => {
     const selectedText = window.getSelection()?.toString().trim();
+    window.getSelection()?.removeAllRanges();
+
+    let wrapper = getWrapper();
+    if (!wrapper) {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+
     await explainSelected(
       "tsw-toggle-panel",
       selectedText,
       Math.max(window.scrollY, currentTop),
     );
-    window.getSelection()?.removeAllRanges();
 
-    const wrapper = document.getElementById("tsw-outer-wrapper");
+    wrapper = getWrapper();
     if (wrapper) {
       wrapper.addEventListener("scroll", (e) => {
         const target = e.target as HTMLElement;
