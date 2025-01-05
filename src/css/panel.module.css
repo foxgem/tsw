@@ -101,6 +101,11 @@
   padding: 0;
 }
 
+.tswActionBtn svg {
+  transition: transform 0.2s ease-in-out;
+  fill: none !important;
+}
+
 .tswPanelHeaderSeparator {
   margin-left: 8px;
   margin-right: 8px;

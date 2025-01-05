@@ -1,3 +1,3 @@
 .dynamicIcon {
-  @apply cursor-pointer select-none rounded-md transition-colors duration-200 flex items-center justify-center;
+  @apply cursor-pointer select-none rounded-md transition-colors duration-200 flex items-center justify-center w-4 h-4;
 }

@@ -113,6 +113,7 @@ const styles = {
     marginLeft: "4px",
     width: "16px",
     height: "16px",
+    fill: "none",
   },
   backHeader: {
     padding: "10px",
