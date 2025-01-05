@@ -1,7 +1,6 @@
 import mermaidSvg from "data-base64:/assets/mermaid.svg";
 import * as htmlToImage from "html-to-image";
 import { fromUint8Array } from "js-base64";
-import { DownloadIcon } from "lucide-react";
 import { deflate } from "pako";
 import { useEffect, useState } from "react";
 import {
@@ -13,11 +12,13 @@ import {
 } from "~/components/ui/dialog";
 import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
+import iconsStyles from "~/css/icons.module.css";
 import shadcnStyles from "~/css/shadcn.module.css";
 import { cn } from "~lib/utils";
 import { CopyToClipboard } from "./CopyToClipboard";
 import { Loading } from "./Loading";
 import { Button } from "./ui/button";
+import { DownloadIcon } from "./ui/icons/download";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface MindmapProps {
@@ -394,7 +395,10 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
                       )}
                       disabled={isDownloading}
                     >
-                      <DownloadIcon size={16} />
+                      <DownloadIcon
+                        size={16}
+                        className={iconsStyles.dynamicIcon}
+                      />
                     </Button>
                   </div>
                 </TabsContent>

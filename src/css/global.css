@@ -79,6 +79,10 @@
   padding: 0;
 }
 
+#tsw-close-right-part svg {
+  fill: none !important;
+}
+
 .tsw-warning {
   position: fixed;
   top: 0;

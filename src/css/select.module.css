@@ -4,6 +4,7 @@
 
 .selectTriggerSVG {
   @apply h-[16px] w-[16px] opacity-50;
+  fill: none !important;
 }
 
 .selectTriggerSVG:hover {
@@ -16,8 +17,14 @@
 
 .scrollButtonSVG {
   @apply h-[16px] w-[16px];
+  fill: none !important;
 }
 
-.CheckButton {
+.checkButton {
   @apply absolute right-[30px] flex h-[14px] w-[14px] items-center justify-center;
+}
+
+.checkButton svg {
+  @apply w-4 h-4;
+  fill: none !important;
 }
