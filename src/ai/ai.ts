@@ -89,6 +89,7 @@ const siMindmap = `Based on the given article:
         - Do not use abbreviations with parentheses in the middle of a line, but it can be used at the end of a line
         - Do not use any special characters in the diagram except emojis
         - Keep function name without parameters when you are reading a programming article, ie: free, not free()
+        - Can only have one root node, ie no other node can be at the same level as the root node.
         - Basic structure example:
         <Basic Structure>
         mindmap
