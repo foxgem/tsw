@@ -35,7 +35,7 @@ export class MemVector {
   async embed(value: string[] | string) {
     const google = createGoogleGenerativeAI({ apiKey: this.apiKey });
     const model = google.textEmbeddingModel("text-embedding-004", {
-      outputDimensionality: 512,
+      outputDimensionality: 256,
     });
 
     if (Array.isArray(value)) {
@@ -67,7 +67,7 @@ export class MemVector {
     });
 
     return similarities
-      .filter((item) => item.similarity > 0.5)
+      .filter((item) => item.similarity > 0.8)
       .map((item) => item.text);
   }
 }
