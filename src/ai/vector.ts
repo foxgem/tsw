@@ -2,6 +2,7 @@ import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { type Embedding, cosineSimilarity, embed, embedMany } from "ai";
 import { loadApiKey, turndown } from "./utils";
+import MiniSearch from "minisearch";
 
 // Use Gemini to embed text into vectors
 export class MemVector {
@@ -12,6 +13,7 @@ export class MemVector {
     text: string;
     embedding: Embedding;
   }>;
+  miniSearch: MiniSearch;
 
   constructor(htmlRoot: HTMLElement) {
     this.htmlRoot = htmlRoot;
@@ -45,8 +47,7 @@ export class MemVector {
     return [(await embed({ model, value })).embedding];
   }
 
-  async indexing() {
-    const values = await this.split();
+  async indexingWithEmbedding(values: string[]) {
     const embeddings = await this.embed(values);
     this.store = [];
     values.forEach((text, i) => {
@@ -57,7 +58,22 @@ export class MemVector {
     });
   }
 
-  async search(query: string) {
+  indexingWithStrings(values: string[]) {
+    const documents = values.map((item, index) => ({ id: index, text: item }));
+    this.miniSearch = new MiniSearch({
+      fields: ["text"],
+      storeFields: ["text"],
+    });
+    this.miniSearch.addAll(documents);
+  }
+
+  async indexing() {
+    const values = await this.split();
+    await this.indexingWithEmbedding(values);
+    this.indexingWithStrings(values);
+  }
+
+  async searchWithEmbedding(query: string) {
     const embedding = (await this.embed(query))[0];
     const similarities = this.store.map((item) => {
       return {
@@ -67,7 +83,25 @@ export class MemVector {
     });
 
     return similarities
-      .filter((item) => item.similarity > 0.8)
+      .filter((item) => item.similarity > 0.9)
       .map((item) => item.text);
+  }
+
+  fuzzySearch(query: string) {
+    const result = this.miniSearch
+      .search(query, { prefix: true, fuzzy: 0.2 })
+      .map((item) => item.text);
+    return result[0] || "";
+  }
+
+  async search(query: string) {
+    const results = await this.searchWithEmbedding(query);
+    if (results.length) {
+      return results;
+    }
+
+    console.log("Fuzzy search");
+
+    return [this.fuzzySearch(query)];
   }
 }
