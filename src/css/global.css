@@ -125,6 +125,7 @@
 }
 
 #tsw-output-body code {
+  color: white;
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -165,9 +166,10 @@
   }
 
   a {
-    color: #3b82f6;
+    color: #3b82f6 !important;
     text-decoration: underline;
     word-break: break-word;
+    background: none !important;
   }
 
   pre {

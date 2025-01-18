@@ -75,18 +75,16 @@
   font-size: 14px;
   line-height: 20px;
   cursor: pointer;
-  height: 28px;
-  color: black;
-  display: flex;
+  color: black !important;
+  display: flex !important;
   justify-content: center;
-  border: 0;
   align-items: center;
-  border-radius: 100%;
+  border-radius: 100% !important;
   height: 36px !important;
   width: 36px !important;
-  background-color: unset;
-  border: 0;
-  padding: 0;
+  background-color: unset !important;
+  border: 0 !important;
+  padding: 0 !important;
 }
 
 .tswActionBtn span {
@@ -96,9 +94,10 @@
 
 .tswActionBtn:hover {
   background-color: rgb(209 213 219) !important;
-  border: 0;
-  color: unset;
-  padding: 0;
+  border: 0 !important;
+  color: unset !important;
+  padding: 0 !important;
+  display: inline-flex !important;
 }
 
 .tswActionBtn svg {

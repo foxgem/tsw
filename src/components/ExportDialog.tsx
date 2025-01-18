@@ -48,7 +48,7 @@ export function ExportDialog({
           const ctx = canvas.getContext("2d");
           if (!ctx) return;
 
-          const tempImg = new Image();
+          const tempImg = document.createElement("img");
           tempImg.crossOrigin = "anonymous";
 
           await new Promise((resolve, reject) => {
@@ -216,7 +216,7 @@ export function ExportDialog({
 
             setTimeout(() => {
               if (tempContainer?.parentNode) {
-                //tempContainer.parentNode.removeChild(tempContainer);
+                tempContainer.parentNode.removeChild(tempContainer);
               }
             }, 100);
 
@@ -248,9 +248,10 @@ export function ExportDialog({
                 );
               }
 
-              pdf.save(
-                `${document.title.toLowerCase().replace(/ /g, "-")}.pdf`,
-              );
+              const pdfOutput = pdf.output("blob");
+              const pdfUrl = URL.createObjectURL(pdfOutput);
+              downloadFile(pdfUrl, "pdf");
+              URL.revokeObjectURL(pdfUrl);
             }
           } catch (error) {
             console.error("Failed to generate image:", error);
