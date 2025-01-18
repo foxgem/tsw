@@ -146,14 +146,14 @@
   right: 16px;
   top: 16px;
   opacity: 0.7;
-  transition: opacity;
-  border: none;
-  background-color: white;
-  cursor: pointer;
-  width: 36px;
+  transition: opacity !important;
+  border: none !important;
+  background-color: white !important;
+  cursor: pointer !important;
+  width: 36px !important;
   height: 36px;
-  padding: 0;
-  display: flex;
+  padding: 0 !important;
+  display: flex !important;
   justify-content: center;
   align-items: center;
 }
