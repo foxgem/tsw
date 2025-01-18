@@ -1,8 +1,8 @@
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { type Embedding, cosineSimilarity, embed, embedMany } from "ai";
-import { loadApiKey, turndown } from "./utils";
 import MiniSearch from "minisearch";
+import { loadApiKey, turndown } from "./utils";
 
 // Use Gemini to embed text into vectors
 export class MemVector {
