@@ -166,6 +166,7 @@ const styles = {
     fontSize: "14px",
     fontWeight: 500,
     transition: "all 0.2s",
+    borderRadius: "0",
   },
 
   tabsTriggerHovered: {
@@ -193,6 +194,7 @@ const styles = {
     overflowX: "auto",
     height: "500px",
   },
+  codeContent: { color: "#ffffff" },
   debugLink: {
     color: "#63B3ED",
     textDecoration: "none",
@@ -406,7 +408,7 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
                 <TabsContent value="code">
                   <div>
                     <pre style={styles.codeBlock}>
-                      <code>{data.diagram}</code>
+                      <code style={styles.codeContent}>{data.diagram}</code>
                     </pre>
                   </div>
                   <div className={chatStyles.tswToolBar}>
