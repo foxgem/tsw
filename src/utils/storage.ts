@@ -18,6 +18,9 @@ export async function initDb() {
     { name: "Gemini API", key: gemini || "" },
     { name: "Neon DB URL", key: "" },
     { name: "Groq API", key: "" },
+    { name: "GitHub Token", key: "" },
+    { name: "GitHub Owner", key: "" },
+    { name: "GitHub Notes Repo", key: "" },
   ];
 
   if (!apiKeys || (apiKeys && apiKeys.length === 0)) {

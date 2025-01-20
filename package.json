@@ -19,6 +19,7 @@
     "@ai-sdk/groq": "^1.0.7",
     "@langchain/textsplitters": "^0.1.0",
     "@neondatabase/serverless": "^0.10.1",
+    "@octokit/rest": "^21.1.0",
     "@plasmohq/storage": "^1.12.0",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.2",

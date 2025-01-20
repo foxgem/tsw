@@ -5,12 +5,13 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
-import { cn } from "~lib/utils";
+import { cn, saveToGithub } from "~lib/utils";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { readApiKeys } from "~utils/storage";
 
 interface ExportDialogProps {
   elementId: string;
@@ -23,9 +24,9 @@ export function ExportDialog({
   elementId,
   title = "Chatting History",
 }: ExportDialogProps) {
-  const [exportType, setExportType] = useState<"image" | "pdf" | "markdown">(
-    "image",
-  );
+  const [exportType, setExportType] = useState<
+    "image" | "pdf" | "markdown" | "github"
+  >("image");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [downloadStatus, setDownloadStatus] = useState<string>("");
@@ -268,6 +269,30 @@ export function ExportDialog({
           URL.revokeObjectURL(url);
           break;
         }
+
+        case "github": {
+          const text = `# ${document.title} \n\n${content}\n\nsource: ${window.location.href}`;
+          const token =
+            process.env.PLASMO_PUBLIC_GITHUB_TOKENS ||
+            (await readApiKeys()).find((k) => k.name === "GitHub Token")?.key;
+          const owner =
+            process.env.PLASMO_PUBLIC_GITHUB_OWNER ||
+            (await readApiKeys()).find((k) => k.name === "GitHub Owner")?.key;
+          const repo =
+            process.env.PLASMO_PUBLIC_GITHUB_NOTES_REPO ||
+            (await readApiKeys()).find((k) => k.name === "GitHub Notes Repo")
+              ?.key;
+
+          await saveToGithub(
+            token,
+            owner,
+            repo,
+            `${document.title.toLowerCase().replace(/ /g, "-")}.md`,
+            text,
+            `add a new note, source:  ${window.location.href}`,
+          );
+          break;
+        }
       }
 
       setDownloadStatus(
@@ -332,6 +357,10 @@ export function ExportDialog({
               <div className={chatStyles.radioItem}>
                 <RadioGroupItem value="markdown" id="markdown" />
                 <Label htmlFor="markdown">Markdown</Label>
+              </div>
+              <div className={chatStyles.radioItem}>
+                <RadioGroupItem value="github" id="github" />
+                <Label htmlFor="github">GitHub</Label>
               </div>
             </RadioGroup>
           </div>
