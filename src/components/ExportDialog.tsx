@@ -6,12 +6,12 @@ import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
 import { cn, saveToGithub } from "~lib/utils";
+import { readApiKeys } from "~utils/storage";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { DownloadIcon } from "./ui/icons/download";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { readApiKeys } from "~utils/storage";
 
 interface ExportDialogProps {
   elementId: string;
@@ -296,11 +296,11 @@ export function ExportDialog({
       }
 
       setDownloadStatus(
-        `Downloaded as ${exportType.toUpperCase()} successfully!`,
+        `Exported as ${exportType.toUpperCase()} successfully!`,
       );
     } catch (error) {
       console.error("Export failed:", error);
-      setDownloadStatus("Download failed. Please try again.");
+      setDownloadStatus("Export failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -335,7 +335,7 @@ export function ExportDialog({
         </Button>
       </DialogTrigger>
       <DialogContent className={cn(styles.dialogContent, styles.dialogOverlay)}>
-        <DialogTitle>Dowload {title}</DialogTitle>
+        <DialogTitle>Export {title}</DialogTitle>
         <div className={chatStyles.dialogContentDiv}>
           <div className={chatStyles.dialogContentRadioDiv}>
             <RadioGroup
@@ -374,7 +374,7 @@ export function ExportDialog({
             disabled={isLoading}
             className={chatStyles.downloadButton}
           >
-            {isLoading ? <>Downloading...</> : "Download"}
+            {isLoading ? <>Exporting...</> : "Export"}
           </Button>
         </div>
       </DialogContent>

@@ -121,3 +121,15 @@ export const instantInputSchema = z
   .string()
   .min(1, "Input required")
   .max(200, "String too long");
+
+export function maskApiKey(key: string | undefined): string {
+  if (!key) return "Not set";
+  if (key.length <= 6) return key;
+
+  const prefix = key.slice(0, 3);
+  const suffix = key.slice(-3);
+  const maskedLength = 20 - 6;
+  const masked = "*".repeat(maskedLength);
+
+  return `${prefix}${masked}${suffix}`;
+}
