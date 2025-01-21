@@ -288,7 +288,7 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
       const dataUrl = await generateImage(container);
       downloadImage(dataUrl, data.title);
     } catch (error) {
-      console.error("Download error:", error);
+      console.error("Export error:", error);
     } finally {
       setIsDownloading(false);
     }

@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { FilePenLineIcon } from "~components/ui/icons/file-pen-line";
-import { type ApiKeyEntry, readApiKeys, upsertApiKeys } from "~utils/storage";
+import {
+  type ApiKeyEntry,
+  maskApiKey,
+  readApiKeys,
+  upsertApiKeys,
+} from "~utils/storage";
 import { Input } from "../ui/input";
 
 export function ServiceSettings() {
@@ -36,8 +41,8 @@ export function ServiceSettings() {
 
     await upsertApiKeys(updatedKeys);
     setApiKeys(updatedKeys);
+    setMessage(`${editingKey.name} saved successfully!`);
     reset();
-    setMessage("API Key saved successfully!");
     setTimeout(() => setMessage(""), 3000);
   };
 
@@ -64,7 +69,7 @@ export function ServiceSettings() {
           type="text"
           value={newKey}
           onChange={(e) => setNewKey(e.target.value)}
-          placeholder="Enter API Key"
+          placeholder={`Enter ${editingKey?.name}`}
         />
         {error && <p className="text-red-500 text-xs">{error}</p>}
       </div>
@@ -104,9 +109,7 @@ export function ServiceSettings() {
               className="flex items-center justify-between p-3 border rounded-lg"
             >
               <p className="font-medium w-[150px]">{entry.name}</p>
-              <p className="text-sm text-gray-500">
-                {entry.key ? "**********************" : "Not set"}
-              </p>
+              <p className="text-sm text-gray-500">{maskApiKey(entry.key)}</p>
               <Button
                 variant="outline"
                 size="sm"
