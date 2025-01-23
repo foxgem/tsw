@@ -124,8 +124,15 @@
   transform: rotate(270deg);
 }
 
-#tsw-output-body code {
+#tsw-output-body pre code {
   color: white;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+#tsw-output-body code {
+  color: black;
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;

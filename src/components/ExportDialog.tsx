@@ -5,7 +5,7 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
-import { cn, saveToGithub } from "~lib/utils";
+import { cn, generateHash, saveToGithub } from "~lib/utils";
 import { readApiKeys } from "~utils/storage";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -271,7 +271,11 @@ export function ExportDialog({
         }
 
         case "github": {
-          const text = `# ${document.title} \n\n${content}\n\nsource: ${window.location.href}`;
+          const currentDate = new Date()
+            .toISOString()
+            .replace(/\.\d{3}Z$/, "Z");
+          const slug = await generateHash(document.title);
+          const text = `---\npubDatetime: ${currentDate}\ntitle: "${document.title}"\nslug: ${slug}\n---\n\n${content}\n\nsource: ${window.location.href}`;
           const token =
             process.env.PLASMO_PUBLIC_GITHUB_TOKENS ||
             (await readApiKeys()).find((k) => k.name === "GitHub Token")?.key;
@@ -287,7 +291,7 @@ export function ExportDialog({
             token,
             owner,
             repo,
-            `${document.title.toLowerCase().replace(/ /g, "-")}.md`,
+            `src/content/blog/${slug}.md`,
             text,
             `add a new note, source:  ${window.location.href}`,
           );
