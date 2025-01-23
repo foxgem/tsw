@@ -27,7 +27,9 @@ function cleanPageText(root: HTMLElement, selector = "") {
   const temp = root.cloneNode(true) as HTMLElement;
 
   // Keep only article content if found
-  const articles = temp.querySelectorAll("article:has(h1), section:has(h1)");
+  const articles = temp.querySelectorAll(
+    "article:has(:is(h1, h2)), section:has(:is(h1, h2))",
+  );
   if (articles.length > 0) {
     const mainDiv = document.createElement("div");
     for (const article of articles) {
@@ -38,7 +40,9 @@ function cleanPageText(root: HTMLElement, selector = "") {
 
   // Remove unwanted elements
   for (const el of temp.querySelectorAll(
-    `script, style, form, audio, video, iframe, picture, img${selector ? `, ${selector}` : ""}`,
+    `script, style, form, audio, video, iframe, picture, img${
+      selector ? `, ${selector}` : ""
+    }`,
   )) {
     el.remove();
   }
