@@ -108,23 +108,22 @@ export async function generateHash(message: string): Promise<string> {
     .join("")
     .slice(0, 32);
 }
+export function generateTagsHeader(content: string) {
+  const keywordMatch = content.match(
+    /\**(?:keywords?|关键字)\**[:：]\s*([^\n]+)/i,
+  );
 
-export function getTags(document: HTMLDocument) {
-  const paragraphs = document.getElementsByTagName("p");
-  for (let i = paragraphs.length - 1; i >= 0; i--) {
-    const text = paragraphs[i].textContent || "";
-    const lowerText = text.toLowerCase();
-    if (lowerText.includes("关键字") || lowerText.includes("keyword")) {
-      const colonIndex = Math.max(text.indexOf(":"), text.indexOf("："));
+  if (keywordMatch) {
+    const tagsText = keywordMatch[1].trim();
+    const tags = tagsText
+      .split(/[,，]/)
+      .map((tag) => tag.trim().replace(/\*\*/g, "").replace(/\s+/g, " ").trim())
+      .filter((tag) => tag.length > 0);
 
-      if (colonIndex === -1) continue;
-
-      const tagsText = text.substring(colonIndex + 1).trim();
-      return tagsText
-        .split(/[,，]/)
-        .map((tag) => tag.trim())
-        .filter((tag) => tag.length > 0);
-    }
+    return tags.length > 0
+      ? `tags:\n${tags.map((tag) => `  - ${tag.toLowerCase()}`).join("\n")}`
+      : "tags: []";
   }
-  return [];
+
+  return "tags: []";
 }

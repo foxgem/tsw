@@ -5,7 +5,7 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
-import { cn, generateHash, saveToGithub, getTags } from "~lib/utils";
+import { cn, generateHash, saveToGithub, generateTagsHeader } from "~lib/utils";
 import { readApiKeys } from "~utils/storage";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -273,20 +273,11 @@ export function ExportDialog({
         }
 
         case "github": {
-          const textDiv = document.getElementById("tsw-output-body");
-          const tags = getTags(textDiv);
-          const tagsSection =
-            tags.length > 0
-              ? `tags:\n${tags
-                  .map((tag) => `  - ${tag.toLowerCase()}`)
-                  .join("\n")}`
-              : "tags: []";
-          console.log(tags);
-          console.log(tagsSection);
           const currentDate = new Date()
             .toISOString()
             .replace(/\.\d{3}Z$/, "Z");
           const slug = await generateHash(document.title);
+          const tagsSection = generateTagsHeader(content);
           const text = `---\npubDatetime: ${currentDate}\ntitle: "${document.title}"\nslug: ${slug}\n${tagsSection}\n---\n\n${content}\n\nsource: ${window.location.href}`;
           const token =
             process.env.PLASMO_PUBLIC_GITHUB_TOKENS ||
