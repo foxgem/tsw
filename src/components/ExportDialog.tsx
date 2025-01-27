@@ -5,7 +5,7 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
-import { cn, generateHash, saveToGithub } from "~lib/utils";
+import { cn, generateHash, saveToGithub, getTags } from "~lib/utils";
 import { readApiKeys } from "~utils/storage";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -155,7 +155,9 @@ export function ExportDialog({
 
   const downloadFile = (url: string, type: "md" | "pdf" | "png") => {
     const link = document.createElement("a");
-    link.download = `${document.title.toLowerCase().replace(/ /g, "-")}.${type}`;
+    link.download = `${document.title
+      .toLowerCase()
+      .replace(/ /g, "-")}.${type}`;
     link.href = url;
     link.click();
   };
@@ -271,11 +273,21 @@ export function ExportDialog({
         }
 
         case "github": {
+          const textDiv = document.getElementById("tsw-output-body");
+          const tags = getTags(textDiv);
+          const tagsSection =
+            tags.length > 0
+              ? `tags:\n${tags
+                  .map((tag) => `  - ${tag.toLowerCase()}`)
+                  .join("\n")}`
+              : "tags: []";
+          console.log(tags);
+          console.log(tagsSection);
           const currentDate = new Date()
             .toISOString()
             .replace(/\.\d{3}Z$/, "Z");
           const slug = await generateHash(document.title);
-          const text = `---\npubDatetime: ${currentDate}\ntitle: "${document.title}"\nslug: ${slug}\n---\n\n${content}\n\nsource: ${window.location.href}`;
+          const text = `---\npubDatetime: ${currentDate}\ntitle: "${document.title}"\nslug: ${slug}\n${tagsSection}\n---\n\n${content}\n\nsource: ${window.location.href}`;
           const token =
             process.env.PLASMO_PUBLIC_GITHUB_TOKENS ||
             (await readApiKeys()).find((k) => k.name === "GitHub Token")?.key;
