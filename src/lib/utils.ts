@@ -108,3 +108,22 @@ export async function generateHash(message: string): Promise<string> {
     .join("")
     .slice(0, 32);
 }
+export function generateTagsHeader(content: string) {
+  const keywordMatch = content.match(
+    /\**(?:keywords?|关键字)\**[:：]\s*([^\n]+)/i,
+  );
+
+  if (keywordMatch) {
+    const tagsText = keywordMatch[1].trim();
+    const tags = tagsText
+      .split(/[,，]/)
+      .map((tag) => tag.trim().replace(/\*\*/g, "").replace(/\s+/g, " ").trim())
+      .filter((tag) => tag.length > 0);
+
+    return tags.length > 0
+      ? `tags:\n${tags.map((tag) => `  - ${tag.toLowerCase()}`).join("\n")}`
+      : "tags: []";
+  }
+
+  return "tags: []";
+}
