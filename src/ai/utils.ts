@@ -28,8 +28,9 @@ function cleanPageText(root: HTMLElement, selector = "") {
 
   // Keep only article content if found
   const articles = temp.querySelectorAll(
-    "article:has(:is(h1, h2)), section:has(:is(h1, h2))",
+    "article:has(:is(h1, h2)), section:has(:is(h1, h2)), main",
   );
+
   if (articles.length > 0) {
     const mainDiv = document.createElement("div");
     for (const article of articles) {
