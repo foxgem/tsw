@@ -50,13 +50,13 @@
 .radiogroupItem {
   aspect-ratio: 1;
   height: 16px;
-  width: 16px;
-  border-radius: 9999px;
-  border: 1px solid var(--tsw-purple);
-  color: var(--tsw-purple);
-  background: white;
+  width: 16px !important;
+  border-radius: 9999px !important;
+  border: 1px solid var(--tsw-purple) !important;
+  color: var(--tsw-purple) !important;
+  background: white !important;
   position: relative;
-  padding: 0;
+  padding: 0 !important;
 }
 
 .radiogroupItem:hover {
