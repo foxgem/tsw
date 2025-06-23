@@ -49,6 +49,7 @@ const styles = {
     fontSize: "30px",
     fontWeight: "bold",
     margin: 0,
+    color: "#ffffff",
   },
   weatherIcon: {
     width: "60px",

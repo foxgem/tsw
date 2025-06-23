@@ -231,7 +231,7 @@
 }
 
 .radioItem {
-  @apply flex items-center space-x-[8px] text-black m-0;
+  @apply flex items-center space-x-[8px] text-black m-0 w-10;
 }
 
 .downloadStatus {
