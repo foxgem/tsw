@@ -20,12 +20,15 @@ import { TSWPanel } from "./components/TSWPanel";
 import { iconArray } from "./content";
 
 const panelRoots = new Map<string, ReturnType<typeof createRoot>>();
+let globalShadowRoot: ShadowRoot | null = null;
+let panelRoot: ReturnType<typeof createRoot> | null = null;
 
 function withOutputPanel(
   outputElm: string,
+  cssText: string,
   title: string,
   handler: () => void,
-  children: React.ReactNode,
+  children: (shadowRoot?: ShadowRoot) => React.ReactNode,
   currentTop?: number,
 ) {
   const { wrapper, innerWrapper, header } = setupWrapperAndBody(currentTop);
@@ -58,15 +61,30 @@ function withOutputPanel(
   panel.style.boxShadow = "-2px 0 5px rgba(0,0,0,0.1)";
   panel.style.display = "block";
   panel.innerHTML = "";
-  const root = createRoot(panel);
-  panelRoots.set(outputElm, root);
 
-  root.render(
+  globalShadowRoot = panel.shadowRoot;
+  if (!globalShadowRoot) {
+    globalShadowRoot = panel.attachShadow({ mode: "open" });
+    const stylePanel = document.createElement("style");
+    stylePanel.textContent = `body{all:unset;}\n${cssText}`;
+    globalShadowRoot.appendChild(stylePanel);
+  }
+
+  const oldPanel = globalShadowRoot.getElementById("tsw-panel-root");
+  if (oldPanel) {
+    oldPanel.remove();
+  }
+
+  panelRoot = createRoot(globalShadowRoot);
+  panelRoots.set(outputElm, panelRoot);
+  panelRoot.render(
     React.createElement(TSWPanel, {
       title: title,
-      children,
+      children: children(globalShadowRoot),
       onRender: () => {
-        const closeButton = document.querySelector("#tsw-close-right-part");
+        const closeButton = globalShadowRoot.querySelector(
+          "#tsw-close-right-part",
+        );
         if (closeButton) {
           closeButton.addEventListener("click", () => {
             resetWrapperCss(wrapper, innerWrapper, header, panel);
@@ -74,7 +92,7 @@ function withOutputPanel(
         }
 
         for (const icon of iconArray) {
-          const button = document.querySelector(
+          const button = globalShadowRoot.querySelector(
             `#tsw-${icon.name.toLowerCase()}-btn`,
           );
           if (button) {
@@ -168,6 +186,7 @@ function setupWrapperAndBody(currentTop: number): {
 }
 
 function cleanupPanel(outputElm: string) {
+  console.log("cleanupPanel", outputElm);
   const root = panelRoots.get(outputElm);
   if (root) {
     try {
@@ -227,9 +246,10 @@ function resetWrapperCss(
 export async function summarize(outputElm: string) {
   withOutputPanel(
     outputElm,
+    "",
     "Summary",
     async () => {
-      const summaryElement = document.getElementById("tsw-output-body");
+      const summaryElement = globalShadowRoot.getElementById("tsw-output-body");
       if (summaryElement) {
         const results = await summariseLink(
           document.body,
@@ -237,16 +257,21 @@ export async function summarize(outputElm: string) {
           summaryElement,
         );
 
-        loadToolBar(summaryElement, results);
+        loadToolBar(summaryElement, results, globalShadowRoot);
       }
     },
-    React.createElement(Loading, {
-      message: "Summarizing",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Summarizing",
+      }),
   );
 }
 
-const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
+const loadToolBar = (
+  summaryElement: HTMLElement,
+  results: string[],
+  shadowRoot: ShadowRoot,
+) => {
   const toolbarContainer = document.createElement("div");
   toolbarContainer.id = "tsw-toolbar";
   toolbarContainer.style.cssText = `
@@ -279,12 +304,13 @@ const loadToolBar = (summaryElement: HTMLElement, results: string[]) => {
       toolbarContainer.style.display = "none";
     }, 200);
   });
-
+  console.log("shadowRoot  loadToolBar---", shadowRoot);
   createRoot(exportDialogRoot).render(
     React.createElement(ExportDialog, {
       content: results.map((el) => `${el}`).join(""),
       elementId: "tsw-output-body",
       title: "Summary",
+      shadowRoot,
     }),
   );
 };
@@ -293,24 +319,28 @@ export async function explainSelected(
   outputElm: string,
   text: string,
   currentTop: number,
+  cssText: string,
 ) {
   const isWord = text.split(" ").length === 1;
   const title = isWord ? "单词释义" : "语法解析";
 
   withOutputPanel(
     outputElm,
+    cssText,
     `${title}`,
     async () => {
-      const explanationElement = document.getElementById("tsw-output-body");
+      const explanationElement =
+        globalShadowRoot.getElementById("tsw-output-body");
       if (explanationElement) {
         isWord
           ? await explainWord(text, explanationElement)
           : await explainSentence(text, explanationElement);
       }
     },
-    React.createElement(Loading, {
-      message: "Explaining",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Explaining",
+      }),
     currentTop,
   );
 }
@@ -322,9 +352,11 @@ export async function ocrHandler(
 ) {
   withOutputPanel(
     outputElm,
+    "",
     "Text in Image",
     async () => {
-      const imgContentElement = document.getElementById("tsw-output-body");
+      const imgContentElement =
+        globalShadowRoot.getElementById("tsw-output-body");
       if (imgContentElement) {
         try {
           await ocr(imgSrc, imgContentElement, postPrompt);
@@ -333,25 +365,29 @@ export async function ocrHandler(
         }
       }
     },
-    React.createElement(Loading, {
-      message: "Processing",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Processing",
+      }),
   );
 }
 
 export function codeHandler(outputElm: string, code: string) {
   withOutputPanel(
     outputElm,
+    "",
     "Code Block Explanation",
     async () => {
-      const codeContentElement = document.getElementById("tsw-output-body");
+      const codeContentElement =
+        globalShadowRoot.getElementById("tsw-output-body");
       if (codeContentElement) {
         await explainCode(code, codeContentElement);
       }
     },
-    React.createElement(Loading, {
-      message: "Explaining",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Explaining",
+      }),
   );
 }
 
@@ -362,40 +398,49 @@ export function rewriteHandler(
 ) {
   withOutputPanel(
     outputElm,
+    "",
     `Rewrite Code with ${targetLanguage}`,
     async () => {
-      const codeContentElement = document.getElementById("tsw-output-body");
+      const codeContentElement =
+        globalShadowRoot.getElementById("tsw-output-body");
       if (codeContentElement) {
         await rewriteCode(code, targetLanguage, codeContentElement);
       }
     },
-    React.createElement(Loading, {
-      message: "Rewriting",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Rewriting",
+      }),
   );
 }
 
-export function chattingHandler(outputElm: string) {
+export function chattingHandler(outputElm: string, cssText: string) {
   withOutputPanel(
     outputElm,
+    cssText,
     "Chatting With Page",
     async () => {},
-    React.createElement(ChatUI, {
-      pageRoot: document.body,
-      pageURL: window.location.href,
-    }),
+    (shadowRoot) =>
+      React.createElement(ChatUI, {
+        pageRoot: document.body,
+        pageURL: window.location.href,
+        shadowRoot, // 这里拿到的是最新的
+      }),
   );
 }
 
 export function thinkingHandler(outputElm: string) {
   withOutputPanel(
     outputElm,
+    "",
     "Thinking on Page",
     async () => {},
-    React.createElement(ThinkingUI, {
-      pageRoot: document.body,
-      pageURL: window.location.href,
-    }),
+    (shadowRoot) =>
+      React.createElement(ThinkingUI, {
+        pageRoot: document.body,
+        pageURL: window.location.href,
+        shadowRoot,
+      }),
   );
 }
 
@@ -403,12 +448,14 @@ export async function callQuickPromptWithSelected(
   command: QuickPrompt,
   outputElm: string,
   textSelected: string,
+  cssText: string,
 ) {
   withOutputPanel(
     outputElm,
+    cssText,
     `Quick Prompt: ${command.name}`,
     async () => {
-      const element = document.getElementById("tsw-output-body");
+      const element = globalShadowRoot.getElementById("tsw-output-body");
       if (textSelected) {
         await callPrompt(
           command.prompt.replace("#input#", textSelected),
@@ -417,32 +464,38 @@ export async function callQuickPromptWithSelected(
         );
       }
     },
-    React.createElement(Loading, {
-      message: "Rewriting",
-    }),
+    () =>
+      React.createElement(Loading, {
+        message: "Rewriting",
+      }),
   );
 }
 
 export function knowledgeCardHandler(outputElm: string) {
   withOutputPanel(
     outputElm,
+    "",
     "Knowledge Card",
     async () => {},
-    React.createElement(KnowledgeCardUI, {
-      pageRoot: document.body,
-      pageURL: window.location.href,
-    }),
+    () =>
+      React.createElement(KnowledgeCardUI, {
+        pageRoot: document.body,
+        pageURL: window.location.href,
+      }),
   );
 }
 
 export function mindmapHandler(outputElm: string) {
   withOutputPanel(
     outputElm,
+    "",
     "Mindmap",
     async () => {},
-    React.createElement(MindmapUI, {
-      pageRoot: document.body,
-      pageURL: window.location.href,
-    }),
+    (shadowRoot) =>
+      React.createElement(MindmapUI, {
+        pageRoot: document.body,
+        pageURL: window.location.href,
+        shadowRoot,
+      }),
   );
 }

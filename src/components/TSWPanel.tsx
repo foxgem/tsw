@@ -18,8 +18,8 @@ export function TSWPanel({ title, onRender, children }: PanelProps) {
   }, [onRender]);
 
   return (
-    <div className={panelStyles.tswPanel}>
-      <div className={panelStyles.tswPanelHeader}>
+    <div className={panelStyles.tswPanel} id="tsw-panel-root">
+      <div className={panelStyles.tswPanelHeader} id="tsw-panel-header">
         <div className={panelStyles.tswPanelHeaderLogo}>
           <ActionIcon name="Logo" />
           <span>{title}</span>

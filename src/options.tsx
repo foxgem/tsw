@@ -25,9 +25,8 @@ export default function OptionsIndex() {
         </p>
         <div
           data-orientation="horizontal"
-          role="none"
           className="shrink-0 bg-border h-[1px] w-full my-6"
-        ></div>
+        />
         <div className="flex justify-start gap-8">
           <SettingsSidebar
             onSelect={(key) => {

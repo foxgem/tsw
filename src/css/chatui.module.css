@@ -94,8 +94,8 @@
 }
 
 .chatContainer {
-  @apply flex flex-col overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
+  @apply flex flex-col overflow-y-auto border border-red-500;
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 30px);
 }
 
 .chatContent {
@@ -104,7 +104,7 @@
 
 .scrollArea {
   @apply overflow-y-auto;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 30px);
 }
 
 .welcomeMessage {
@@ -114,7 +114,7 @@
   background-clip: text;
   color: transparent;
   opacity: 0.5;
-  height: calc(97vh - var(--header-height) - var(--footer-height) - 160px);
+  height: calc(97vh - var(--header-height) - var(--footer-height) - 140px);
 }
 
 .messageContainer {
@@ -231,7 +231,7 @@
 }
 
 .radioItem {
-  @apply flex items-center space-x-[8px] text-black m-0 w-10;
+  @apply flex items-center space-x-[8px] text-black m-0;
 }
 
 .downloadStatus {

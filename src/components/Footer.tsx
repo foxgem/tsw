@@ -30,7 +30,6 @@ export default function Footer({ className, showDivider }: FooterProps) {
       {showDivider && (
         <div
           data-orientation="horizontal"
-          role="none"
           className="shrink-0 bg-border h-[1px] w-full my-6"
         />
       )}

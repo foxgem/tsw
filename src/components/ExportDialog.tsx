@@ -5,7 +5,7 @@ import chatStyles from "~/css/chatui.module.css";
 import commontyles from "~/css/common.module.css";
 import iconsStyles from "~/css/icons.module.css";
 import styles from "~/css/shadcn.module.css";
-import { cn, generateHash, saveToGithub, generateTagsHeader } from "~lib/utils";
+import { cn, generateHash, generateTagsHeader, saveToGithub } from "~lib/utils";
 import { readApiKeys } from "~utils/storage";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
@@ -17,12 +17,14 @@ interface ExportDialogProps {
   elementId: string;
   content: string;
   title?: string;
+  shadowRoot?: ShadowRoot;
 }
 
 export function ExportDialog({
   content,
   elementId,
   title = "Chatting History",
+  shadowRoot,
 }: ExportDialogProps) {
   const [exportType, setExportType] = useState<
     "image" | "pdf" | "markdown" | "github"
@@ -165,7 +167,7 @@ export function ExportDialog({
   const handleExport = async () => {
     setIsLoading(true);
     setDownloadStatus("");
-    const panel = document.getElementById(elementId);
+    const panel = shadowRoot.getElementById(elementId);
     const padding = 16;
 
     try {
@@ -176,7 +178,7 @@ export function ExportDialog({
             throw new Error("Target element not found");
           }
 
-          const viewport = document.querySelector(
+          const viewport = shadowRoot.querySelector(
             "#tsw-output-body [data-radix-scroll-area-viewport]",
           );
           const contentDiv = viewport
@@ -314,8 +316,10 @@ export function ExportDialog({
   };
 
   useEffect(() => {
-    const panel = document.getElementById("tsw-toggle-panel");
-    const selectionOverlay = document.getElementById("selection-overlay");
+    if (!shadowRoot) return;
+
+    const panel = shadowRoot.getElementById("tsw-toggle-panel");
+    const selectionOverlay = shadowRoot.getElementById("selection-overlay");
 
     if (panel) {
       panel.style.zIndex = isOpen ? "10" : "1000";
@@ -328,8 +332,7 @@ export function ExportDialog({
     if (isOpen) {
       setDownloadStatus("");
     }
-  }, [isOpen]);
-
+  }, [isOpen, shadowRoot]);
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -341,7 +344,10 @@ export function ExportDialog({
           <DownloadIcon size={16} className={iconsStyles.dynamicIcon} />
         </Button>
       </DialogTrigger>
-      <DialogContent className={cn(styles.dialogContent, styles.dialogOverlay)}>
+      <DialogContent
+        className={cn(styles.dialogContent, styles.dialogOverlay)}
+        container={shadowRoot}
+      >
         <DialogTitle>Export {title}</DialogTitle>
         <div className={chatStyles.dialogContentDiv}>
           <div className={chatStyles.dialogContentRadioDiv}>

@@ -19,6 +19,23 @@ import {
   summarize,
   thinkingHandler,
 } from "./handlers";
+
+import chatuiStyleText from "data-text:./css/chatui.module.css";
+import commonStyleText from "data-text:./css/common.module.css";
+import globalStyleText from "data-text:./css/global.css";
+import iconsStyleText from "data-text:./css/icons.module.css";
+import instantInputsStyleText from "data-text:./css/instantInputs.module.css";
+import modelselectStyleText from "data-text:./css/modelselect.module.css";
+import panelStyleText from "data-text:./css/panel.module.css";
+import selectStyleText from "data-text:./css/select.module.css";
+import settingsStyleText from "data-text:./css/settings.module.css";
+import shadcnStyleText from "data-text:./css/shadcn.module.css";
+import textselectStyleText from "data-text:./css/textselect.module.css";
+import toastStyleText from "data-text:./css/toast.module.css";
+import wrapperStyleText from "data-text:./css/wrapper.module.css";
+
+const styleText = `${globalStyleText} \n ${panelStyleText} \n ${chatuiStyleText} \n ${commonStyleText} \n ${iconsStyleText} \n ${instantInputsStyleText} \n ${modelselectStyleText} \n ${selectStyleText} \n ${textselectStyleText} \n ${settingsStyleText} \n ${shadcnStyleText} \n ${toastStyleText} \n ${wrapperStyleText}`;
+
 type PickingChecker = (element: HTMLElement) => boolean;
 declare global {
   interface Window {
@@ -340,7 +357,7 @@ export const iconArray = [
   {
     name: "Chat",
     action: () => {
-      chattingHandler("tsw-toggle-panel");
+      chattingHandler("tsw-toggle-panel", styleText);
     },
   },
 ];
@@ -406,7 +423,7 @@ const showWarning = () => {
 chrome.runtime.onMessage.addListener((request) => {
   switch (request.action) {
     case "openChat":
-      chattingHandler("tsw-toggle-panel");
+      chattingHandler("tsw-toggle-panel", styleText);
       break;
   }
 });
@@ -415,7 +432,7 @@ document.addEventListener("keydown", (e: KeyboardEvent) => {
   // cmd + @
   if (e.metaKey && e.shiftKey && e.key === "2") {
     e.preventDefault();
-    chattingHandler("tsw-toggle-panel");
+    chattingHandler("tsw-toggle-panel", styleText);
   }
 });
 
@@ -432,6 +449,7 @@ function createSelectMenu() {
       command,
       "tsw-toggle-panel",
       selectedText,
+      styleText,
     );
     window.getSelection()?.removeAllRanges();
   };
@@ -453,6 +471,7 @@ function createSelectMenu() {
       "tsw-toggle-panel",
       selectedText,
       Math.max(window.scrollY, currentTop),
+      styleText,
     );
 
     wrapper = getWrapper();
