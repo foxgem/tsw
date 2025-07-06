@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 interface MindmapProps {
   data: MindmapData;
+  shadowRoot?: ShadowRoot;
   onGenerate?: (pakoValue: string | null) => void;
 }
 
@@ -209,7 +210,7 @@ const styles = {
 
 const mermaidURL = "https://mermaid.ink/img";
 
-const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
+const Mindmap: React.FC<MindmapProps> = ({ data, shadowRoot, onGenerate }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [pakoValue, setPakoValue] = useState(null);
@@ -270,8 +271,9 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
   }, [pakoValue, data.diagram, onGenerate]);
 
   useEffect(() => {
-    const panel = document.getElementById("tsw-toggle-panel");
-    const selectionOverlay = document.getElementById("selection-overlay");
+    if (!shadowRoot) return;
+    const panel = shadowRoot.getElementById("tsw-toggle-panel");
+    const selectionOverlay = shadowRoot.getElementById("selection-overlay");
 
     if (panel) {
       panel.style.zIndex = isOpen ? "10" : "1000";
@@ -280,7 +282,7 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
     if (selectionOverlay) {
       selectionOverlay.style.zIndex = isOpen ? "9" : "999";
     }
-  }, [isOpen]);
+  }, [isOpen, shadowRoot]);
   const downloadHandler = async () => {
     setIsDownloading(true);
     try {
@@ -297,7 +299,7 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
   const debugHandler = () => {
     window.open(`https://mermaid.live/edit#pako:${pakoValue}`, "_blank");
   };
-
+  console.log("shadowRoot  mindmap---", shadowRoot);
   return (
     <div style={styles.container}>
       <div style={styles.cardWrapper}>
@@ -318,7 +320,11 @@ const Mindmap: React.FC<MindmapProps> = ({ data, onGenerate }) => {
               View Mindmap
             </button>
           </DialogTrigger>
-          <DialogContent style={styles.dialogContent} id="tsw-mindmap-content">
+          <DialogContent
+            style={styles.dialogContent}
+            id="tsw-mindmap-content"
+            container={shadowRoot}
+          >
             <DialogHeader>
               <DialogTitle>{data.title}</DialogTitle>
             </DialogHeader>

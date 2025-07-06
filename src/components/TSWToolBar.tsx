@@ -10,6 +10,7 @@ interface TSWToolBarProps {
   messages?: Message[];
   onStop?: () => void;
   exportTitle?: string;
+  shadowRoot?: ShadowRoot;
 }
 
 export function TSWToolBar({
@@ -17,6 +18,7 @@ export function TSWToolBar({
   onStop,
   messages,
   exportTitle,
+  shadowRoot,
 }: TSWToolBarProps) {
   return (
     <>
@@ -42,6 +44,7 @@ export function TSWToolBar({
               .join("\n\n")}
             elementId="tsw-chat-container"
             title={exportTitle}
+            shadowRoot={shadowRoot}
           />
         </div>
       ) : null}

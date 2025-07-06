@@ -44,9 +44,10 @@ export type Message = CoreMessage & {
 export interface ChatUIProps {
   readonly pageRoot: HTMLElement;
   readonly pageURL: string;
+  readonly shadowRoot: ShadowRoot;
 }
 
-export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
+export function ChatUI({ pageRoot, pageURL, shadowRoot }: ChatUIProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,8 +82,8 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
   }, []);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      const viewport = document.querySelector(
+    if (messages.length > 0 && shadowRoot) {
+      const viewport = shadowRoot.querySelector(
         "#tsw-output-body [data-radix-scroll-area-viewport]",
       );
       if (viewport) {
@@ -96,11 +97,14 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
         });
       }
     }
-  }, [messages]);
+  }, [messages, shadowRoot]);
 
   useEffect(() => {
-    const header = document.getElementById("tsw-panel-header");
-    const footer = document.getElementById("tsw-panel-footer");
+    if (!shadowRoot) return;
+    const header = shadowRoot.getElementById("tsw-panel-header");
+
+    const footer = shadowRoot.getElementById("tsw-panel-footer");
+
     if (header && footer) {
       document.documentElement.style.setProperty(
         "--header-height",
@@ -111,7 +115,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
         `${footer.getBoundingClientRect().height}px`,
       );
     }
-  }, []);
+  }, [shadowRoot]);
 
   const handleStopChat = () => {
     if (abortController.current) {
@@ -151,7 +155,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
         ) as Message[];
 
         setInputValue("");
-        const textarea = document.getElementById("tsw-chat-textarea");
+        const textarea = shadowRoot.getElementById("tsw-chat-textarea");
         if (textarea) {
           textarea.style.height = "80px";
         }
@@ -240,7 +244,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
     );
 
     requestAnimationFrame(() => {
-      const textarea = document.getElementById(
+      const textarea = shadowRoot.getElementById(
         "tsw-chat-textarea",
       ) as HTMLTextAreaElement;
       if (textarea) {
@@ -504,6 +508,7 @@ export function ChatUI({ pageRoot, pageURL }: ChatUIProps) {
                   )
                   .join("\n\n")}
                 elementId="tsw-chat-container"
+                shadowRoot={shadowRoot}
               />
             </div>
           )}
