@@ -17,9 +17,10 @@ marked.setOptions({
 export interface ThinkingUIProps {
   readonly pageRoot: HTMLElement;
   readonly pageURL: string;
+  readonly shadowRoot: ShadowRoot;
 }
 
-export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
+export function ThinkingUI({ pageRoot, pageURL, shadowRoot }: ThinkingUIProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const abortController = useRef<AbortController | null>(null);
   const [round, setRound] = useState(0);
@@ -46,8 +47,8 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
   }, [round, messages]);
 
   useEffect(() => {
-    if (messages.length > 0) {
-      const viewport = document.querySelector(
+    if (messages.length > 0 && shadowRoot) {
+      const viewport = shadowRoot.querySelector(
         "#tsw-output-body [data-radix-scroll-area-viewport]",
       );
       if (viewport) {
@@ -61,7 +62,7 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
         });
       }
     }
-  }, [messages]);
+  }, [messages, shadowRoot]);
 
   const generateThinkingMessages = () => {
     const thinkingMessages: CoreMessage[] = [];
@@ -230,6 +231,7 @@ export function ThinkingUI({ pageRoot, pageURL }: ThinkingUIProps) {
           onStop={handleStop}
           messages={messages}
           exportTitle="Thinking History"
+          shadowRoot={shadowRoot}
         />
       </div>
     </>

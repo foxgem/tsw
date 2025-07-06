@@ -13,9 +13,11 @@ marked.setOptions({
 export interface MindmapProps {
   readonly pageRoot: HTMLElement;
   readonly pageURL: string;
+  readonly shadowRoot: ShadowRoot;
 }
 
-export function MindmapUI({ pageRoot, pageURL }: MindmapProps) {
+export function MindmapUI({ pageRoot, pageURL, shadowRoot }: MindmapProps) {
+  console.log("shadowRoot  mindmap ui---", shadowRoot);
   const [mindmapData, setMindmapData] = useState<MindmapData>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [pakoValue, setPakoValue] = useState(null);
@@ -47,6 +49,7 @@ export function MindmapUI({ pageRoot, pageURL }: MindmapProps) {
               onGenerate={(pakoValue) => {
                 setPakoValue(pakoValue);
               }}
+              shadowRoot={shadowRoot}
             />
           )
         )}

@@ -23,7 +23,7 @@
 }
 
 .textareaComponent {
-  @apply flex rounded-md px-[10px] py-[8px] text-[16px] w-full shadow-none;
+  @apply flex rounded-md px-[10px] py-[8px] text-[16px] w-full shadow-none border;
 }
 
 .textareaComponent::placeholder {
